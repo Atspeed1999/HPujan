@@ -1,0 +1,121 @@
+{
+  "app_name": "HomePujan",
+  "design_style": "Vedic Luxury Minimalist",
+  "technical_stack": {
+    "framework": "Standalone HTML",
+    "css": "Tailwind CSS (CDN)",
+    "js": "Vanilla JS",
+    "animation": "AOS (Animate On Scroll) CDN",
+    "fonts": "Google Fonts CDN"
+  },
+  "colors": {
+    "primary": "#4A0E0E",
+    "primary_foreground": "#FDFBF7",
+    "secondary": "#D4AF37",
+    "background": "#FDFBF7",
+    "text_main": "#1A1A1A",
+    "text_muted": "#5A4A4A",
+    "border_color": "#E5DED0",
+    "glass_bg": "rgba(253, 251, 247, 0.8)",
+    "glass_border": "rgba(212, 175, 55, 0.2)"
+  },
+  "typography": {
+    "headings": {
+      "font_family": "'Playfair Display', serif",
+      "weights": ["600", "700"],
+      "letter_spacing": "-0.02em"
+    },
+    "body": {
+      "font_family": "'Inter', sans-serif",
+      "weights": ["400", "500"],
+      "line_height": "1.6"
+    }
+  },
+  "layout_strategies": {
+    "container": "max-w-7xl mx-auto px-6 md:px-12",
+    "spacing": "Relaxed (py-20 or py-24 for sections)",
+    "grid_system": "Bento Grid for Services (Asymmetrical)"
+  },
+  "ui_components": {
+    "navbar": {
+      "style": "Glassmorphism",
+      "background": "bg-[#FDFBF7]/80 backdrop-blur-md",
+      "border": "border-b border-[#D4AF37]/20",
+      "logo_text": "text-[#4A0E0E] font-serif font-bold text-2xl"
+    },
+    "buttons": {
+      "primary": "bg-[#4A0E0E] text-[#FDFBF7] px-8 py-3 rounded-none border border-[#4A0E0E] hover:bg-transparent hover:text-[#4A0E0E] transition-all duration-300 shadow-lg",
+      "secondary": "bg-transparent text-[#4A0E0E] px-8 py-3 rounded-none border border-[#4A0E0E] hover:bg-[#4A0E0E] hover:text-[#FDFBF7] transition-all duration-300",
+      "whatsapp_float": "fixed bottom-8 right-8 bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform z-50 flex items-center justify-center w-16 h-16"
+    },
+    "cards": {
+      "service_card": "bg-white border border-[#E5DED0] hover:border-[#D4AF37] p-8 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group relative overflow-hidden"
+    }
+  },
+  "image_assets": {
+    "hero_macro": {
+      "url": "https://images.pexels.com/photos/4086702/pexels-photo-4086702.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "alt": "Vedic Flame Macro",
+      "description": "Close up of luminous flame for hero section atmosphere"
+    },
+    "texture_overlay": {
+      "url": "https://images.pexels.com/photos/12039703/pexels-photo-12039703.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "alt": "Ancient Manuscript Texture",
+      "description": "Use as low opacity background overlay for 'Pedigree' section"
+    },
+    "service_vastu": {
+      "url": "https://images.unsplash.com/photo-1682662046457-74fd5b199b92?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA3MDB8MHwxfHNlYXJjaHwyfHxtaW5pbWFsaXN0JTIwbHV4dXJ5JTIwbGl2aW5nJTIwcm9vbSUyMGluZGlhfGVufDB8fHx8MTc3MjE1MTgzMHww&ixlib=rb-4.1.0&q=85",
+      "alt": "Vastu Living Space",
+      "description": "Minimalist luxury interior for Vastu Shanti service"
+    },
+    "service_ritual": {
+      "url": "https://images.pexels.com/photos/29226134/pexels-photo-29226134.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "alt": "Lakshmi Kuber Kalash",
+      "description": "Decorated copper kalash for wealth rituals"
+    },
+    "service_fire": {
+      "url": "https://images.unsplash.com/photo-1630764883473-e8c2056f0589?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2OTF8MHwxfHNlYXJjaHwzfHx2ZWRpYyUyMGZpcmUlMjByaXR1YWwlMjBtYWNyb3xlbnwwfHx8fDE3NzIxNTE4MTZ8MA&ixlib=rb-4.1.0&q=85",
+      "alt": "Maha Mrityunjaya Fire",
+      "description": "Fire ritual in woven basket for health rituals"
+    }
+  },
+  "sections_guidelines": {
+    "hero": {
+      "layout": "Two column: Left Text (Serif Headline), Right Image (Macro Flame or Kalash)",
+      "elements": ["Headline: 'Sanctify Your Space with Vedic Precision'", "Subhead: 'Authentic rituals by 20-year Gurukul scholars for the discerning home.'", "CTA Primary: 'Book a Consultation'", "CTA Secondary: 'View Services'"]
+    },
+    "trust_bar": {
+      "layout": "3 Columns, Centered Icons/Text",
+      "style": "Border-y border-[#D4AF37]/30 py-12 bg-[#FDFBF7]"
+    },
+    "pedigree": {
+      "style": "Dark Mode Section",
+      "bg": "bg-[#4A0E0E]",
+      "text": "text-[#FDFBF7]",
+      "accent": "text-[#D4AF37]"
+    },
+    "process": {
+      "style": "Timeline or 3-Step Horizontal Cards",
+      "cards": "Minimalist, Numbered 01, 02, 03 in Gold Serif"
+    },
+    "faq": {
+      "style": "Accordion with Plus/Minus icons",
+      "border": "border-b border-[#E5DED0]"
+    }
+  },
+  "instructions_to_main_agent": [
+    "Create a SINGLE file named 'landing.html' in the '/app/frontend/public/' directory (or root if preferred).",
+    "Use Tailwind CSS via CDN: <script src='https://cdn.tailwindcss.com'></script>",
+    "Configure Tailwind theme in the script tag to match the colors provided.",
+    "Use Google Fonts for Playfair Display and Inter.",
+    "Do NOT use the existing React App structure for this specific request, as the user asked for a standalone HTML file.",
+    "Ensure the design is mobile-responsive.",
+    "Add 'data-testid' attributes to all buttons and interactive elements."
+  ],
+  "universal_guidelines": [
+    "Use 2-3x more spacing than typical designs.",
+    "Avoid gradients, use solid colors or subtle texture overlays.",
+    "Use 'lenis' or smooth scroll CSS behavior.",
+    "Ensure high contrast for accessibility."
+  ]
+}
