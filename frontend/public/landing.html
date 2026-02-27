@@ -1,20 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="HomePujan — Vedic rituals by lifelong Gurukul scholars. Authentic Vedic ceremonies for Tier 1 homes. Vastu Shanti, Lakshmi-Kuber Havan, Maha Mrityunjaya." />
-  <title>HomePujan — 20 Years in a Gurukul. One Sacred Space: Yours.</title>
-
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
-
-  <!-- AOS CSS -->
-  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
-
-  <!-- Tailwind CDN -->
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="HomePujan — Gurukul scholars bringing 20 years of Vedic precision to your home. Vastu Shanti, Lakshmi-Kuber Havan, Maha Mrityunjaya."/>
+  <title>HomePujan — Ancient Precision. Modern Peace.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet"/>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -25,9 +19,11 @@
             gold: '#D4AF37',
             parchment: '#FDFBF7',
             cream: '#F5EFE0',
+            charcoal: '#2D2D2D',
             muted: '#5A4A4A',
           },
           fontFamily: {
+            cinzel: ['Cinzel', 'Georgia', 'serif'],
             serif: ['"Playfair Display"', 'Georgia', 'serif'],
             sans: ['Inter', 'system-ui', 'sans-serif'],
           },
@@ -35,1095 +31,1122 @@
       },
     };
   </script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', sans-serif; background: #FDFBF7; color: #2D2D2D; overflow-x: hidden; }
 
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #FDFBF7;
-      color: #1A1A1A;
-      overflow-x: hidden;
-    }
+/* ── BODY NOISE TEXTURE ── */
+body::after {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9998;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  opacity: 0.55;
+}
 
-    /* Paper grain texture overlay */
-    body::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 9998;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
-      opacity: 0.6;
-    }
+/* ── NAVBAR ── */
+#navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(253,251,247,0.84);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(212,175,55,0.3);
+  transition: box-shadow 0.3s ease, background 0.3s ease;
+}
+#navbar.scrolled { box-shadow: 0 4px 30px rgba(0,0,0,0.1); background: rgba(253,251,247,0.96); }
+.nav-link {
+  color: #5A4A4A; font-size: 0.78rem; font-weight: 500;
+  letter-spacing: 0.09em; text-transform: uppercase; text-decoration: none;
+  position: relative; padding-bottom: 2px; transition: color 0.2s;
+}
+.nav-link::after {
+  content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+  height: 1px; background: #D4AF37; transform: scaleX(0); transform-origin: left; transition: transform 0.3s;
+}
+.nav-link:hover { color: #4A0E0E; }
+.nav-link:hover::after { transform: scaleX(1); }
 
-    /* ── NAV ── */
-    #navbar {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      background: rgba(253, 251, 247, 0.82);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(212, 175, 55, 0.18);
-      transition: background 0.3s ease, box-shadow 0.3s ease;
-    }
-    #navbar.scrolled {
-      background: rgba(253, 251, 247, 0.96);
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    }
-    .nav-link {
-      color: #5A4A4A;
-      font-size: 0.8rem;
-      font-weight: 500;
-      letter-spacing: 0.09em;
-      text-transform: uppercase;
-      text-decoration: none;
-      position: relative;
-      padding-bottom: 2px;
-      transition: color 0.25s ease;
-    }
-    .nav-link::after {
-      content: '';
-      position: absolute;
-      bottom: -2px; left: 0; right: 0;
-      height: 1px;
-      background: #D4AF37;
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.3s ease;
-    }
-    .nav-link:hover { color: #4A0E0E; }
-    .nav-link:hover::after { transform: scaleX(1); }
+/* ── NAV DROPDOWN ── */
+.nav-dropdown { position: relative; }
+.nav-dropdown-menu {
+  display: none; position: absolute; top: calc(100% + 10px); left: 50%;
+  transform: translateX(-50%); min-width: 220px;
+  background: rgba(253,251,247,0.98); backdrop-filter: blur(20px);
+  border: 1px solid rgba(212,175,55,0.25); box-shadow: 0 12px 40px rgba(74,14,14,0.1);
+  z-index: 300; padding: 0.4rem 0;
+}
+.nav-dropdown:hover .nav-dropdown-menu { display: block; }
+.nav-dropdown-item {
+  display: block; padding: 0.75rem 1.25rem; font-size: 0.75rem;
+  text-transform: uppercase; letter-spacing: 0.11em; color: #5A4A4A;
+  text-decoration: none; font-weight: 500; transition: color 0.2s, background 0.2s;
+}
+.nav-dropdown-item:hover { color: #4A0E0E; background: rgba(212,175,55,0.07); }
+.nav-chevron { display: inline-block; transition: transform 0.25s; vertical-align: middle; margin-left: 3px; }
+.nav-dropdown:hover .nav-chevron { transform: rotate(180deg); }
 
-    /* ── BUTTONS ── */
-    .btn-primary {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      background: #4A0E0E; color: #D4AF37;
-      padding: 0.875rem 2rem;
-      border: 2px solid #4A0E0E;
-      font-family: 'Inter', sans-serif; font-weight: 500;
-      font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
-      text-decoration: none; cursor: pointer;
-      transition: background 0.3s ease, color 0.3s ease;
-    }
-    .btn-primary:hover { background: transparent; color: #4A0E0E; }
+/* ── BUTTONS ── */
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: #4A0E0E; color: #D4AF37; padding: 0.875rem 2rem;
+  border: 2px solid #4A0E0E; font-family: 'Inter', sans-serif;
+  font-weight: 500; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
+  text-decoration: none; cursor: pointer; transition: background 0.3s, color 0.3s;
+}
+.btn-primary:hover { background: transparent; color: #4A0E0E; }
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: transparent; color: #4A0E0E; padding: 0.875rem 2rem;
+  border: 2px solid #4A0E0E; font-family: 'Inter', sans-serif;
+  font-weight: 500; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
+  text-decoration: none; cursor: pointer; transition: background 0.3s, color 0.3s;
+}
+.btn-secondary:hover { background: #4A0E0E; color: #FDFBF7; }
+.btn-consult {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  background: transparent; color: #4A0E0E; padding: 0.6rem 1.25rem;
+  border: 1px solid rgba(212,175,55,0.6); font-size: 0.78rem; font-weight: 500;
+  letter-spacing: 0.06em; text-decoration: none; transition: all 0.25s;
+}
+.btn-consult:hover { background: #D4AF37; border-color: #D4AF37; color: #4A0E0E; }
 
-    .btn-secondary {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      background: transparent; color: #4A0E0E;
-      padding: 0.875rem 2rem;
-      border: 2px solid #4A0E0E;
-      font-family: 'Inter', sans-serif; font-weight: 500;
-      font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
-      text-decoration: none; cursor: pointer;
-      transition: background 0.3s ease, color 0.3s ease;
-    }
-    .btn-secondary:hover { background: #4A0E0E; color: #FDFBF7; }
+/* ── HERO DOUBLE-STROKE FRAME ── */
+.hero-frame-outer {
+  border: 2px solid #D4AF37; padding: 10px; background: #FDFBF7;
+  position: relative;
+}
+.hero-frame-inner {
+  border: 2px solid rgba(212,175,55,0.7); overflow: hidden;
+  position: relative;
+}
+.hero-frame-corner {
+  position: absolute; width: 16px; height: 16px; z-index: 2;
+  border-color: #D4AF37; border-style: solid; border-width: 0;
+}
+.hero-frame-corner.tl { top: -2px; left: -2px; border-top-width: 2px; border-left-width: 2px; }
+.hero-frame-corner.tr { top: -2px; right: -2px; border-top-width: 2px; border-right-width: 2px; }
+.hero-frame-corner.bl { bottom: -2px; left: -2px; border-bottom-width: 2px; border-left-width: 2px; }
+.hero-frame-corner.br { bottom: -2px; right: -2px; border-bottom-width: 2px; border-right-width: 2px; }
 
-    .btn-wa-outline {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      background: transparent; color: #4A0E0E;
-      padding: 0.6rem 1.25rem;
-      border: 1px solid rgba(212, 175, 55, 0.55);
-      font-family: 'Inter', sans-serif; font-weight: 500;
-      font-size: 0.78rem; letter-spacing: 0.07em;
-      text-decoration: none; cursor: pointer;
-      transition: background 0.25s, border-color 0.25s, color 0.25s;
-    }
-    .btn-wa-outline:hover { background: #D4AF37; border-color: #D4AF37; color: #4A0E0E; }
+/* ── GOLD DIVIDER & SECTION LABEL ── */
+.gold-divider { width: 56px; height: 2px; background: linear-gradient(90deg, transparent, #D4AF37, transparent); }
+.section-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: #D4AF37; }
 
-    /* ── GOLD DIVIDER ── */
-    .gold-divider {
-      width: 56px; height: 2px;
-      background: linear-gradient(90deg, transparent, #D4AF37, transparent);
-    }
+/* ── TRUST BAR ── */
+.trust-col:not(:last-child) { border-right: 1px solid rgba(212,175,55,0.22); }
+@media (max-width: 639px) {
+  .trust-col:not(:last-child) { border-right: none; border-bottom: 1px solid rgba(212,175,55,0.22); }
+}
 
-    /* ── SECTION LABEL ── */
-    .section-label {
-      font-size: 0.72rem; font-weight: 600;
-      letter-spacing: 0.22em; text-transform: uppercase;
-      color: #D4AF37;
-    }
+/* ── PATH TILES (FILTER) ── */
+.path-tile {
+  background: #fff; border: 1px solid #E5DED0;
+  display: flex; flex-direction: column; cursor: pointer;
+  padding: 2rem; text-decoration: none; text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+  position: relative; overflow: hidden; user-select: none;
+}
+.path-tile::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: #D4AF37; transform: scaleX(0); transform-origin: left; transition: transform 0.35s ease;
+}
+.path-tile:hover, .path-tile.active { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(74,14,14,0.1); border-color: rgba(212,175,55,0.5); }
+.path-tile.active { background: rgba(212,175,55,0.04); }
+.path-tile:hover::before, .path-tile.active::before { transform: scaleX(1); }
+.path-tile-icon { width: 56px; height: 56px; border: 1px solid rgba(212,175,55,0.35); display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; transition: all 0.3s; }
+.path-tile:hover .path-tile-icon, .path-tile.active .path-tile-icon { background: rgba(212,175,55,0.08); border-color: rgba(212,175,55,0.7); }
+.path-tile-cta { margin-top: auto; padding-top: 1.25rem; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #D4AF37; transition: color 0.2s; }
+.path-tile:hover .path-tile-cta, .path-tile.active .path-tile-cta { color: #4A0E0E; }
 
-    /* ── TRUST BAR ── */
-    .trust-col:not(:last-child) {
-      border-right: 1px solid rgba(212, 175, 55, 0.22);
-    }
-    @media (max-width: 639px) {
-      .trust-col:not(:last-child) { border-right: none; border-bottom: 1px solid rgba(212, 175, 55, 0.22); }
-    }
+/* ── SERVICE CARDS ── */
+.service-card {
+  background: #fff; border: 1px solid #E5DED0; overflow: hidden;
+  cursor: pointer; text-align: left;
+  transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease, opacity 0.4s ease;
+}
+.service-card:hover { transform: translateY(-8px); box-shadow: 0 24px 60px rgba(74,14,14,0.11); border-color: #D4AF37; }
+.service-card.filtered-out { opacity: 0.15; transform: scale(0.97); pointer-events: none; }
+.service-card.filtered-in { opacity: 1; transform: scale(1.01); }
+.card-img { transition: transform 0.6s ease; }
+.service-card:hover .card-img { transform: scale(1.06); }
 
-    /* ── SERVICE CARDS ── */
-    .service-card {
-      background: #fff;
-      border: 1px solid #E5DED0;
-      transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
-      overflow: hidden;
-    }
-    .service-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 28px 64px rgba(74, 14, 14, 0.11);
-      border-color: #D4AF37;
-    }
-    .card-img { transition: transform 0.65s ease; }
-    .service-card:hover .card-img { transform: scale(1.06); }
+/* ── PARAMPARA SECTION ── */
+.pedigree-line-top, .pedigree-line-bottom {
+  position: absolute; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+}
+.pedigree-line-top { top: 0; } .pedigree-line-bottom { bottom: 0; }
 
-    /* ── PROCESS STEPS ── */
-    .step-num {
-      font-family: 'Playfair Display', Georgia, serif;
-      font-size: 4.5rem; font-weight: 700;
-      color: rgba(212, 175, 55, 0.2);
-      line-height: 1;
-      transition: color 0.35s ease;
-    }
-    .process-card:hover .step-num { color: rgba(212, 175, 55, 0.55); }
+/* ── PROCESS ── */
+.step-num { font-family: 'Cinzel', serif; font-size: 4rem; font-weight: 700; color: rgba(212,175,55,0.2); line-height: 1; transition: color 0.35s; }
+.process-card:hover .step-num { color: rgba(212,175,55,0.55); }
+.process-icon { margin-bottom: 1.2rem; }
 
-    /* ── FAQ ── */
-    .faq-item { border-bottom: 1px solid #E5DED0; }
-    .faq-question {
-      width: 100%; background: none; border: none; cursor: pointer;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 1.5rem 0;
-      font-family: 'Playfair Display', Georgia, serif;
-      font-size: 1.05rem; color: #4A0E0E; text-align: left;
-      transition: color 0.2s ease;
-      user-select: none;
-    }
-    .faq-question:hover { color: #6B1515; }
-    .faq-icon {
-      color: #D4AF37; font-size: 1.4rem; font-weight: 300;
-      min-width: 22px; text-align: center;
-      transition: transform 0.3s ease;
-      flex-shrink: 0;
-    }
-    .faq-icon.rotated { transform: rotate(45deg); }
-    .faq-answer {
-      max-height: 0; overflow: hidden;
-      transition: max-height 0.45s ease;
-    }
-    .faq-answer.open { max-height: 320px; }
-    .faq-answer-text {
-      padding-bottom: 1.5rem;
-      color: #5A4A4A; line-height: 1.75; font-size: 0.92rem;
-    }
+/* ── FAQ ── */
+.faq-item { border-bottom: 1px solid #E5DED0; }
+.faq-question {
+  width: 100%; background: none; border: none; cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.5rem 0; font-family: 'Playfair Display', serif; font-size: 1.05rem;
+  color: #4A0E0E; text-align: left; transition: color 0.2s; user-select: none;
+}
+.faq-question:hover { color: #6B1515; }
+.faq-icon { color: #D4AF37; font-size: 1.4rem; font-weight: 300; min-width: 22px; text-align: center; transition: transform 0.3s; flex-shrink: 0; }
+.faq-icon.rotated { transform: rotate(45deg); }
+.faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.45s ease; }
+.faq-answer.open { max-height: 350px; }
+.faq-answer-text { padding-bottom: 1.5rem; color: #5A4A4A; line-height: 1.75; font-size: 0.92rem; }
 
-    /* ── FLOATING WHATSAPP ── */
-    .wa-float {
-      position: fixed; bottom: 2rem; right: 2rem; z-index: 999;
-      width: 58px; height: 58px;
-      background: #25D366; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 8px 32px rgba(37, 211, 102, 0.45);
-      text-decoration: none;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .wa-float:hover { transform: scale(1.12); box-shadow: 0 12px 44px rgba(37, 211, 102, 0.55); }
-    .wa-float::before {
-      content: '';
-      position: absolute; inset: -5px; border-radius: 50%;
-      border: 2px solid rgba(37, 211, 102, 0.38);
-      animation: waRing 2.2s ease-out infinite;
-    }
-    @keyframes waRing {
-      0%   { transform: scale(1); opacity: 0.7; }
-      100% { transform: scale(1.5); opacity: 0; }
-    }
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(20,4,4,0.8); z-index: 500;
+  display: none; align-items: center; justify-content: center;
+  padding: 1rem; opacity: 0; transition: opacity 0.3s ease;
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+.modal-overlay.visible { opacity: 1; }
+.modal-drop { filter: drop-shadow(0 24px 50px rgba(74,14,14,0.3)); max-width: 620px; width: 100%; }
+.modal-paper {
+  background: #FDFBF7;
+  clip-path: polygon(
+    0% 2%, 2.5% 0.4%, 5% 1.6%, 7.5% 0%, 10% 1.8%, 12.5% 0.3%, 15% 1.5%,
+    17.5% 0%, 20% 1.8%, 22.5% 0.4%, 25% 1.6%, 27.5% 0%, 30% 1.8%, 32.5% 0.4%,
+    35% 1.5%, 37.5% 0%, 40% 1.8%, 42.5% 0.3%, 45% 1.6%, 47.5% 0%, 50% 1.8%,
+    52.5% 0.4%, 55% 1.5%, 57.5% 0%, 60% 1.8%, 62.5% 0.3%, 65% 1.6%, 67.5% 0%,
+    70% 1.8%, 72.5% 0.4%, 75% 1.5%, 77.5% 0%, 80% 1.8%, 82.5% 0.3%, 85% 1.6%,
+    87.5% 0%, 90% 1.8%, 92.5% 0.4%, 95% 1.5%, 97.5% 0%, 100% 1.5%,
+    100% 98.5%,
+    97.5% 100%, 95% 98.4%, 92.5% 99.8%, 90% 98.2%, 87.5% 100%, 85% 98.5%,
+    82.5% 99.7%, 80% 98.2%, 77.5% 100%, 75% 98.5%, 72.5% 99.6%, 70% 98.2%,
+    67.5% 100%, 65% 98.4%, 62.5% 99.7%, 60% 98.2%, 57.5% 100%, 55% 98.5%,
+    52.5% 99.6%, 50% 98.2%, 47.5% 100%, 45% 98.4%, 42.5% 99.7%, 40% 98.2%,
+    37.5% 100%, 35% 98.5%, 32.5% 99.6%, 30% 98.2%, 27.5% 100%, 25% 98.4%,
+    22.5% 99.7%, 20% 98.2%, 17.5% 100%, 15% 98.5%, 12.5% 99.6%, 10% 98.2%,
+    7.5% 100%, 5% 98.4%, 2.5% 99.7%, 0% 98%
+  );
+  position: relative; overflow: hidden;
+  transform: translateY(24px); transition: transform 0.35s cubic-bezier(0.34,1.3,0.64,1);
+}
+.modal-overlay.visible .modal-paper { transform: translateY(0); }
+.modal-inner { padding: 2.25rem 2.5rem 2.5rem; }
+/* Subtle grain on modal */
+.modal-paper::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='fn'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23fn)' opacity='0.05'/%3E%3C/svg%3E");
+  opacity: 0.5;
+}
+.modal-inner > * { position: relative; z-index: 1; }
+.modal-close {
+  position: absolute; top: 1.25rem; right: 1.5rem; z-index: 10;
+  width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+  background: none; border: none; cursor: pointer;
+  color: #5A4A4A; font-size: 1.4rem; font-family: 'Inter', sans-serif;
+  transition: color 0.2s; line-height: 1;
+}
+.modal-close:hover { color: #4A0E0E; }
+.modal-tag {
+  display: inline-block; font-size: 0.65rem; font-weight: 600;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: #D4AF37; background: rgba(212,175,55,0.1);
+  border: 1px solid rgba(212,175,55,0.3); padding: 3px 8px;
+  margin-right: 6px; margin-bottom: 4px;
+}
+.modal-detail-row { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.6rem; }
+.modal-detail-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #5A4A4A; min-width: 90px; padding-top: 2px; }
+.modal-detail-val { font-size: 0.88rem; color: #2D2D2D; line-height: 1.5; }
+.btn-discuss {
+  display: inline-flex; align-items: center; gap: 0.5rem; width: 100%;
+  justify-content: center; background: #4A0E0E; color: #D4AF37;
+  padding: 1rem 2rem; border: 2px solid #4A0E0E; font-size: 0.82rem;
+  font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+  text-decoration: none; margin-top: 1.5rem; transition: background 0.3s, color 0.3s;
+}
+.btn-discuss:hover { background: transparent; color: #4A0E0E; }
 
-    /* ── HERO ── */
-    .hero-frame {
-      position: absolute; top: -12px; right: -12px;
-      width: calc(100% + 12px); height: calc(100% + 12px);
-      border: 1px solid rgba(212, 175, 55, 0.3);
-      pointer-events: none; z-index: 10;
-    }
+/* ── GOLD LOTUS (scroll to top) ── */
+#gold-lotus {
+  position: fixed; bottom: 2rem; left: 2rem; z-index: 999;
+  width: 52px; height: 52px; background: #4A0E0E;
+  border: 1.5px solid #D4AF37; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; opacity: 0; transform: translateY(16px);
+  transition: opacity 0.4s ease, transform 0.4s ease, background 0.25s ease;
+}
+#gold-lotus.visible { opacity: 1; transform: translateY(0); }
+#gold-lotus:hover { background: #D4AF37; }
+#gold-lotus:hover svg { stroke: #4A0E0E; }
 
-    /* ── MOBILE MENU ── */
-    #mob-menu { display: none; }
-    #mob-menu.open { display: block; }
+/* ── FLOATING WHATSAPP ── */
+.wa-float {
+  position: fixed; bottom: 2rem; right: 2rem; z-index: 999;
+  width: 58px; height: 58px; background: #25D366; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 8px 32px rgba(37,211,102,0.45); text-decoration: none;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.wa-float:hover { transform: scale(1.1); box-shadow: 0 12px 44px rgba(37,211,102,0.55); }
+.wa-float::before {
+  content: ''; position: absolute; inset: -5px; border-radius: 50%;
+  border: 2px solid rgba(37,211,102,0.38); animation: waRing 2.2s ease-out infinite;
+}
+@keyframes waRing { 0% { transform: scale(1); opacity: 0.7; } 100% { transform: scale(1.5); opacity: 0; } }
 
-    /* anchor offset for sticky nav */
-    section[id] { scroll-margin-top: 80px; }
+/* ── FOOTER CHARCOAL ── */
+#footer { background: #2D2D2D; position: relative; overflow: hidden; border-top: 2px solid #D4AF37; }
+#footer::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='fn'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23fn)' opacity='0.07'/%3E%3C/svg%3E");
+  opacity: 0.5;
+}
+#footer > div { position: relative; z-index: 1; }
+.footer-link { color: rgba(255,255,255,0.38); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; }
+.footer-link:hover { color: #D4AF37; }
 
-    /* Pedigree section gold line top/bottom */
-    .pedigree-line-top,
-    .pedigree-line-bottom {
-      position: absolute; left: 0; right: 0; height: 1px;
-      background: linear-gradient(90deg, transparent 0%, #D4AF37 50%, transparent 100%);
-    }
-    .pedigree-line-top { top: 0; }
-    .pedigree-line-bottom { bottom: 0; }
+/* ── MOBILE MENU ── */
+#mob-menu { display: none; }
+#mob-menu.open { display: block; }
+section[id] { scroll-margin-top: 80px; }
 
-    /* Footer link hover */
-    .footer-link { color: rgba(253,251,247,0.45); text-decoration: none; font-size: 0.875rem; transition: color 0.2s ease; }
-    .footer-link:hover { color: #D4AF37; }
-
-    /* ── NAV DROPDOWN ── */
-    .nav-dropdown { position: relative; }
-    .nav-dropdown-menu {
-      display: none;
-      position: absolute;
-      top: calc(100% + 10px);
-      left: 50%;
-      transform: translateX(-50%);
-      min-width: 210px;
-      background: rgba(253,251,247,0.97);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(212,175,55,0.25);
-      box-shadow: 0 12px 40px rgba(74,14,14,0.1);
-      z-index: 200;
-      padding: 0.4rem 0;
-    }
-    .nav-dropdown:hover .nav-dropdown-menu { display: block; }
-    .nav-dropdown-item {
-      display: block;
-      padding: 0.75rem 1.25rem;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.11em;
-      color: #5A4A4A;
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s ease, background 0.2s ease;
-    }
-    .nav-dropdown-item:hover { color: #4A0E0E; background: rgba(212,175,55,0.07); }
-    .nav-chevron {
-      display: inline-block;
-      transition: transform 0.25s ease;
-      vertical-align: middle;
-      flex-shrink: 0;
-    }
-    .nav-dropdown:hover .nav-chevron { transform: rotate(180deg); }
-
-    /* ── PATH TILES ── */
-    .path-tile {
-      display: flex; flex-direction: column;
-      background: #fff;
-      border: 1px solid #E5DED0;
-      padding: 2rem 2rem 1.75rem;
-      text-decoration: none;
-      transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
-    }
-    .path-tile:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 20px 50px rgba(74,14,14,0.1);
-      border-color: #D4AF37;
-    }
-    .path-tile-icon {
-      width: 64px; height: 64px;
-      border: 1px solid rgba(212,175,55,0.3);
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 1.5rem;
-      transition: background 0.3s ease, border-color 0.3s ease;
-    }
-    .path-tile:hover .path-tile-icon {
-      background: rgba(212,175,55,0.06);
-      border-color: rgba(212,175,55,0.6);
-    }
-    .path-tile-cta {
-      margin-top: auto;
-      padding-top: 1.25rem;
-      font-size: 0.72rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: #D4AF37;
-      transition: color 0.2s ease;
-    }
-    .path-tile:hover .path-tile-cta { color: #4A0E0E; }
-
-    /* ── PROCESS ICON ── */
-    .process-icon { margin-bottom: 1.25rem; }
-  </style>
+/* ── MOBILE RESPONSIVE ── */
+@media (max-width: 767px) {
+  .trust-col:not(:last-child) { border-right: none; border-bottom: 1px solid rgba(212,175,55,0.22); }
+  .modal-inner { padding: 1.75rem 1.5rem 2rem; }
+  .modal-detail-row { flex-direction: column; gap: 0.25rem; }
+  .modal-detail-label { min-width: auto; }
+  .btn-discuss { font-size: 0.78rem; padding: 0.875rem 1.5rem; }
+}
+</style>
 </head>
-
 <body>
 
-  <!-- =========================================
-       FLOATING WHATSAPP
-  ========================================= -->
-  <a href="https://wa.me/919667039964?text=I'm%20interested%20in%20booking%20a%20Vedic%20service."
-     target="_blank" rel="noopener noreferrer"
-     class="wa-float" data-testid="whatsapp-float-btn" aria-label="WhatsApp a Scholar">
-    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="white">
-      <path d="M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652c1.746.943 3.71 1.444 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.48-8.45zM12.045 21.785h-.006c-1.773 0-3.513-.474-5.031-1.37l-.361-.213-3.741.977 1.004-3.648-.235-.374a9.716 9.716 0 0 1-1.502-5.163c.002-5.374 4.406-9.744 9.83-9.744 2.626 0 5.092 1.018 6.948 2.865a9.716 9.716 0 0 1 2.883 6.894c-.002 5.374-4.406 9.776-9.789 9.776zm5.362-7.316c-.293-.146-1.736-.852-2.004-.949-.27-.098-.466-.146-.663.146-.196.293-.76.949-.93 1.145-.17.195-.342.22-.636.073-.293-.146-1.24-.455-2.362-1.45-.872-.775-1.462-1.733-1.634-2.027-.17-.293-.018-.452.129-.597.13-.13.293-.342.44-.512.146-.17.195-.293.293-.488.097-.196.049-.367-.024-.513-.073-.146-.663-1.587-.907-2.175-.239-.57-.483-.494-.664-.502-.17-.007-.367-.009-.563-.009s-.513.073-.782.366c-.27.293-1.026.998-1.026 2.43 0 1.432 1.05 2.815 1.196 3.01.146.195 2.063 3.137 5 4.4.699.3 1.245.48 1.67.614.7.224 1.338.193 1.842.117.562-.083 1.73-.704 1.975-1.386.244-.68.244-1.263.17-1.386-.073-.122-.268-.195-.562-.341z"/>
-    </svg>
-  </a>
+<!-- =========================================
+     GOLD LOTUS — SCROLL TO TOP
+========================================= -->
+<button id="gold-lotus" data-testid="lotus-scroll-top" aria-label="Back to top">
+  <svg width="24" height="24" viewBox="0 0 30 30" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round">
+    <path d="M15 22 C12 18 12 11 15 8 C18 11 18 18 15 22Z"/>
+    <path d="M15 20 C10 17 8 10 11 7 C11 7 13 12 14 16"/>
+    <path d="M15 20 C20 17 22 10 19 7 C19 7 17 12 16 16"/>
+    <path d="M14 17 C8 15 6 8 9 5 C9 5 12 10 13 14"/>
+    <path d="M16 17 C22 15 24 8 21 5 C21 5 18 10 17 14"/>
+    <path d="M9 24 Q15 27 21 24"/>
+    <line x1="15" y1="22" x2="15" y2="26"/>
+  </svg>
+</button>
 
-  <!-- =========================================
-       NAVIGATION
-  ========================================= -->
-  <nav id="navbar" role="navigation" aria-label="Main navigation">
-    <div class="max-w-7xl mx-auto px-6 md:px-12">
-      <div class="flex items-center justify-between" style="height:76px;">
+<!-- =========================================
+     FLOATING WHATSAPP
+========================================= -->
+<a href="https://wa.me/919667039964?text=I'm%20interested%20in%20finding%20my%20Vedic%20path."
+   target="_blank" rel="noopener noreferrer"
+   class="wa-float" data-testid="whatsapp-float-btn" aria-label="WhatsApp us">
+  <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="white">
+    <path d="M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652c1.746.943 3.71 1.444 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.48-8.45zM12.045 21.785h-.006c-1.773 0-3.513-.474-5.031-1.37l-.361-.213-3.741.977 1.004-3.648-.235-.374a9.716 9.716 0 0 1-1.502-5.163c.002-5.374 4.406-9.744 9.83-9.744 2.626 0 5.092 1.018 6.948 2.865a9.716 9.716 0 0 1 2.883 6.894c-.002 5.374-4.406 9.776-9.789 9.776zm5.362-7.316c-.293-.146-1.736-.852-2.004-.949-.27-.098-.466-.146-.663.146-.196.293-.76.949-.93 1.145-.17.195-.342.22-.636.073-.293-.146-1.24-.455-2.362-1.45-.872-.775-1.462-1.733-1.634-2.027-.17-.293-.018-.452.129-.597.13-.13.293-.342.44-.512.146-.17.195-.293.293-.488.097-.196.049-.367-.024-.513-.073-.146-.663-1.587-.907-2.175-.239-.57-.483-.494-.664-.502-.17-.007-.367-.009-.563-.009s-.513.073-.782.366c-.27.293-1.026.998-1.026 2.43 0 1.432 1.05 2.815 1.196 3.01.146.195 2.063 3.137 5 4.4.699.3 1.245.48 1.67.614.7.224 1.338.193 1.842.117.562-.083 1.73-.704 1.975-1.386.244-.68.244-1.263.17-1.386-.073-.122-.268-.195-.562-.341z"/>
+  </svg>
+</a>
 
-        <!-- Logo -->
-        <a href="#" class="font-serif font-bold text-2xl text-maroon no-underline" style="letter-spacing:-0.01em;" data-testid="nav-logo">
-          Home<span style="color:#D4AF37;">Pujan</span>
-        </a>
+<!-- =========================================
+     NAVIGATION
+========================================= -->
+<nav id="navbar" role="navigation">
+  <div class="max-w-7xl mx-auto px-6 md:px-12">
+    <div class="flex items-center justify-between" style="height:76px;">
 
-        <!-- Desktop Nav Links -->
-        <div class="hidden md:flex items-center gap-10">
-          <a href="#lineage" class="nav-link" data-testid="nav-lineage">Our Lineage</a>
-          <div class="nav-dropdown" data-testid="nav-services-dropdown">
-            <a href="#services" class="nav-link" style="display:inline-flex;align-items:center;gap:3px;" data-testid="nav-services">
-              Services
-              <svg class="nav-chevron" xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-            </a>
-            <div class="nav-dropdown-menu">
-              <a href="#find-path" class="nav-dropdown-item" data-testid="nav-dropdown-occasion">Shop by Occasion</a>
-              <div style="height:1px;background:rgba(212,175,55,0.18);margin:0.2rem 0;"></div>
-              <a href="#services" class="nav-dropdown-item" data-testid="nav-dropdown-resolution">Shop by Resolution</a>
-            </div>
-          </div>
-          <a href="#process" class="nav-link" data-testid="nav-process">Process</a>
-          <a href="#faq" class="nav-link" data-testid="nav-faq">FAQ</a>
-        </div>
+      <a href="#" class="font-cinzel font-bold text-maroon no-underline" style="font-size:1.3rem; letter-spacing:0.04em;" data-testid="nav-logo">
+        HOME<span style="color:#D4AF37;">PUJAN</span>
+      </a>
 
-        <!-- Desktop CTA -->
-        <div class="hidden md:block">
-          <a href="https://wa.me/919667039964?text=I'm%20interested%20in%20booking%20a%20Vedic%20service."
-             target="_blank" rel="noopener noreferrer"
-             class="btn-wa-outline" data-testid="nav-whatsapp-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652c1.746.943 3.71 1.444 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.48-8.45zM12.045 21.785h-.006c-1.773 0-3.513-.474-5.031-1.37l-.361-.213-3.741.977 1.004-3.648-.235-.374a9.716 9.716 0 0 1-1.502-5.163c.002-5.374 4.406-9.744 9.83-9.744 2.626 0 5.092 1.018 6.948 2.865a9.716 9.716 0 0 1 2.883 6.894c-.002 5.374-4.406 9.776-9.789 9.776zm5.362-7.316c-.293-.146-1.736-.852-2.004-.949-.27-.098-.466-.146-.663.146-.196.293-.76.949-.93 1.145-.17.195-.342.22-.636.073-.293-.146-1.24-.455-2.362-1.45-.872-.775-1.462-1.733-1.634-2.027-.17-.293-.018-.452.129-.597.13-.13.293-.342.44-.512.146-.17.195-.293.293-.488.097-.196.049-.367-.024-.513-.073-.146-.663-1.587-.907-2.175-.239-.57-.483-.494-.664-.502-.17-.007-.367-.009-.563-.009s-.513.073-.782.366c-.27.293-1.026.998-1.026 2.43 0 1.432 1.05 2.815 1.196 3.01.146.195 2.063 3.137 5 4.4.699.3 1.245.48 1.67.614.7.224 1.338.193 1.842.117.562-.083 1.73-.704 1.975-1.386.244-.68.244-1.263.17-1.386-.073-.122-.268-.195-.562-.341z"/>
-            </svg>
-            WhatsApp a Scholar
+      <div class="hidden md:flex items-center gap-10">
+        <a href="#lineage" class="nav-link" data-testid="nav-lineage">Lineage</a>
+        <div class="nav-dropdown" data-testid="nav-services-dropdown">
+          <a href="#services" class="nav-link" style="display:inline-flex;align-items:center;gap:3px;" data-testid="nav-services">
+            Services
+            <svg class="nav-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
           </a>
-        </div>
-
-        <!-- Hamburger -->
-        <button id="menu-btn" class="md:hidden flex flex-col gap-1.5 p-2 cursor-pointer" aria-label="Toggle menu" data-testid="mobile-menu-toggle" style="background:none;border:none;">
-          <span class="block w-6 h-0.5 bg-maroon transition-all duration-300" id="ham1"></span>
-          <span class="block w-6 h-0.5 bg-maroon transition-all duration-300" id="ham2"></span>
-          <span class="block w-6 h-0.5 bg-maroon transition-all duration-300" id="ham3"></span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Mobile Menu -->
-    <div id="mob-menu" style="border-top:1px solid rgba(212,175,55,0.18); background:rgba(253,251,247,0.98); backdrop-filter:blur(20px);">
-      <div class="max-w-7xl mx-auto px-6 py-6 flex flex-col gap-4">
-        <a href="#lineage" class="nav-link py-2" onclick="closeMob()" data-testid="mob-nav-lineage">Our Lineage</a>
-        <a href="#services" class="nav-link py-2" onclick="closeMob()" data-testid="mob-nav-services">Services</a>
-        <a href="#process" class="nav-link py-2" onclick="closeMob()" data-testid="mob-nav-process">Process</a>
-        <a href="#faq" class="nav-link py-2" onclick="closeMob()" data-testid="mob-nav-faq">FAQ</a>
-        <div style="border-top:1px solid rgba(212,175,55,0.18); padding-top:1rem;">
-          <a href="https://wa.me/919667039964?text=I'm%20interested%20in%20booking%20a%20Vedic%20service."
-             target="_blank" class="btn-wa-outline" style="justify-content:center; width:100%;" data-testid="mob-nav-whatsapp">
-            WhatsApp a Scholar
-          </a>
-        </div>
-      </div>
-    </div>
-  </nav>
-
-  <!-- =========================================
-       HERO SECTION
-  ========================================= -->
-  <section id="hero" class="relative overflow-hidden bg-parchment" style="min-height:100vh; padding-top:76px;">
-
-    <!-- Subtle warm radial glow -->
-    <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(ellipse 80% 60% at 70% 50%, rgba(212,175,55,0.05) 0%, transparent 70%), radial-gradient(ellipse 60% 80% at 10% 30%, rgba(74,14,14,0.04) 0%, transparent 60%);"></div>
-
-    <div class="max-w-7xl mx-auto px-6 md:px-12">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center" style="min-height:calc(100vh - 76px); padding-top:3rem; padding-bottom:3rem;">
-
-        <!-- LEFT: Text -->
-        <div class="relative z-10">
-          <p class="section-label mb-5" data-aos="fade-up" data-aos-duration="600">Gurukul-Certified Vedic Scholars</p>
-
-          <h1 class="font-serif font-bold text-maroon leading-tight mb-6"
-              style="font-size: clamp(2.4rem, 5vw, 4rem); letter-spacing:-0.02em;"
-              data-aos="fade-up" data-aos-delay="80" data-aos-duration="750">
-            Ancient Precision.<br>
-            Modern Peace.<br>
-            <span style="color:#D4AF37;">20 Years of Scholarly Mastery.</span>
-          </h1>
-
-          <!-- Gold rule -->
-          <div class="gold-divider mb-6" data-aos="fade-right" data-aos-delay="180" data-aos-duration="600"></div>
-
-          <p class="text-muted text-base leading-relaxed mb-10 max-w-xl"
-             style="font-size:1.05rem;"
-             data-aos="fade-up" data-aos-delay="240" data-aos-duration="700">
-            Invite the uncompromised phonetic precision of the Vedas into your home.
-            Rituals performed by lifelong scholars, ensuring every mantra manifests its true intent.
-          </p>
-
-          <div class="flex flex-wrap gap-4" data-aos="fade-up" data-aos-delay="360" data-aos-duration="600">
-            <a href="#services" class="btn-primary" data-testid="hero-view-services-btn">
-              View Vedic Services
-              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </a>
-            <a href="#lineage" class="btn-secondary" data-testid="hero-pedigree-btn">
-              The Scholar's Pedigree
-            </a>
-          </div>
-
-          <p class="text-xs text-muted mt-6 flex items-center gap-2" data-aos="fade-up" data-aos-delay="460"
-             style="color:#7A6A6A; font-size:0.78rem; letter-spacing:0.04em;">
-            <span style="display:inline-block;width:18px;height:1px;background:#D4AF37;"></span>
-            No aggregators. Direct scholar booking. Serving Delhi NCR &amp; beyond.
-          </p>
-        </div>
-
-        <!-- RIGHT: Hero Image -->
-        <div class="relative" style="height:500px;" data-aos="fade-left" data-aos-delay="200" data-aos-duration="900">
-          <!-- Gold frame accent -->
-          <div class="hero-frame"></div>
-
-          <img src="https://images.unsplash.com/photo-1630764883473-e8c2056f0589?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=1200"
-               alt="Sacred havan fire in woven vessel — HomePujan"
-               class="card-img w-full h-full object-cover"
-               loading="eager" decoding="async"
-               data-testid="hero-image" />
-
-          <!-- Subtle gradient overlay -->
-          <div class="absolute inset-0" style="background: linear-gradient(to top, rgba(74,14,14,0.28) 0%, transparent 55%); pointer-events:none;"></div>
-
-          <!-- Floating badge -->
-          <div class="absolute bottom-6 left-6"
-               style="background:rgba(253,251,247,0.92); backdrop-filter:blur(8px); border:1px solid rgba(212,175,55,0.3); padding:1rem 1.25rem;"
-               data-aos="fade-up" data-aos-delay="650">
-            <p class="font-serif font-bold text-maroon" style="font-size:1.75rem; line-height:1;">20+</p>
-            <p style="font-size:0.7rem; color:#5A4A4A; text-transform:uppercase; letter-spacing:0.13em; margin-top:2px;">Years Gurukul Training</p>
+          <div class="nav-dropdown-menu">
+            <a href="#find-path" class="nav-dropdown-item" data-testid="nav-browse-purpose">Browse by Purpose</a>
+            <div style="height:1px;background:rgba(212,175,55,0.18);margin:0.2rem 0;"></div>
+            <a href="#services" class="nav-dropdown-item" data-testid="nav-browse-need">Browse by Need</a>
           </div>
         </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- =========================================
-       TRUST BAR
-  ========================================= -->
-  <section id="trust" style="background:#F5EFE0; border-top:1px solid rgba(212,175,55,0.22); border-bottom:1px solid rgba(212,175,55,0.22);">
-    <div class="max-w-7xl mx-auto px-6 md:px-12 py-14">
-      <div class="grid grid-cols-1 sm:grid-cols-3">
-
-        <div class="trust-col text-center px-6 py-4" data-aos="fade-up" data-aos-delay="0" data-testid="trust-years">
-          <p class="font-serif font-bold" style="font-size:clamp(2.5rem,5vw,3.5rem); color:#D4AF37;">20+</p>
-          <div class="gold-divider mx-auto my-3" style="width:36px;"></div>
-          <p style="font-size:0.72rem; text-transform:uppercase; letter-spacing:0.15em; color:#5A4A4A; font-weight:500;">Years of Vedic Study</p>
-        </div>
-
-        <div class="trust-col text-center px-6 py-4" data-aos="fade-up" data-aos-delay="130" data-testid="trust-shlokas">
-          <p class="font-serif font-bold" style="font-size:clamp(2.5rem,5vw,3.5rem); color:#D4AF37;">10,000+</p>
-          <div class="gold-divider mx-auto my-3" style="width:36px;"></div>
-          <p style="font-size:0.72rem; text-transform:uppercase; letter-spacing:0.15em; color:#5A4A4A; font-weight:500;">Shlokas Memorized</p>
-        </div>
-
-        <div class="trust-col text-center px-6 py-4" data-aos="fade-up" data-aos-delay="260" data-testid="trust-samagri">
-          <p class="font-serif font-bold" style="font-size:clamp(2.5rem,5vw,3.5rem); color:#D4AF37;">100%</p>
-          <div class="gold-divider mx-auto my-3" style="width:36px;"></div>
-          <p style="font-size:0.72rem; text-transform:uppercase; letter-spacing:0.15em; color:#5A4A4A; font-weight:500;">Authentic Himalayan Samagri</p>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- =========================================
-       FIND YOUR PATH (Problem-Solution Funnel)
-  ========================================= -->
-  <section id="find-path" class="py-20 bg-parchment" style="border-top:1px solid rgba(212,175,55,0.15);">
-    <div class="max-w-7xl mx-auto px-6 md:px-12">
-
-      <!-- Header -->
-      <div class="text-center mb-12" data-aos="fade-up">
-        <p class="section-label mb-4">Choose Your Intention</p>
-        <h2 class="font-serif font-bold text-maroon mb-4" style="font-size:clamp(1.8rem,3.5vw,2.8rem); letter-spacing:-0.02em;">Find Your Path</h2>
-        <div class="gold-divider mx-auto mb-5"></div>
-        <p style="font-size:0.93rem; color:#5A4A4A; line-height:1.7; max-width:480px; margin:0 auto;">
-          Every Vedic ritual begins with an intention. Select the chapter that resonates most with your life right now.
-        </p>
+        <a href="#process" class="nav-link" data-testid="nav-process">Process</a>
+        <a href="#faq" class="nav-link" data-testid="nav-faq">FAQ</a>
       </div>
 
-      <!-- Tiles -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-        <!-- Tile 1: New Beginnings -->
-        <a href="https://wa.me/919667039964?text=I'm%20interested%20in%20Vedic%20rituals%20for%20New%20Beginnings%20(Home%2FOffice)."
+      <div class="hidden md:block">
+        <a href="https://wa.me/919667039964?text=I%20would%20like%20to%20consult%20a%20Scholar%20for%20a%20Vedic%20service."
            target="_blank" rel="noopener noreferrer"
-           class="path-tile" data-aos="fade-up" data-aos-delay="0" data-testid="path-tile-beginnings">
-          <div class="path-tile-icon">
-            <svg width="36" height="36" viewBox="0 0 38 38" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 20 L19 8 L34 20"/>
-              <path d="M8 17 L8 32 L30 32 L30 17"/>
-              <path d="M15 32 L15 24 L23 24 L23 32"/>
-              <line x1="19" y1="8" x2="19" y2="4"/>
-              <line x1="16" y1="4" x2="22" y2="4"/>
-            </svg>
-          </div>
-          <h3 class="font-serif font-bold text-maroon mb-2" style="font-size:1.2rem;">New Beginnings</h3>
-          <p style="font-size:0.78rem; color:#D4AF37; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.75rem;">Home / Office</p>
-          <p style="font-size:0.87rem; color:#5A4A4A; line-height:1.65; flex-grow:1;">
-            Griha Pravesh, Vastu Shanti, new office consecration — Vedic ceremonies that sanctify your fresh starts with scholarly precision.
-          </p>
-          <span class="path-tile-cta">Explore Rituals &rarr;</span>
-        </a>
-
-        <!-- Tile 2: Success & Growth -->
-        <a href="https://wa.me/919667039964?text=I'm%20interested%20in%20Vedic%20rituals%20for%20Success%20and%20Growth%20(Business%2FCareer)."
-           target="_blank" rel="noopener noreferrer"
-           class="path-tile" data-aos="fade-up" data-aos-delay="130" data-testid="path-tile-success">
-          <div class="path-tile-icon">
-            <svg width="36" height="36" viewBox="0 0 38 38" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="19" y1="34" x2="19" y2="20"/>
-              <path d="M19 20 C19 13 12 11 12 11 C12 11 11 18 19 20"/>
-              <path d="M19 20 C19 13 26 11 26 11 C26 11 27 18 19 20"/>
-              <path d="M19 20 C13 16 7 18 7 18 C7 18 9 26 19 23"/>
-              <path d="M19 20 C25 16 31 18 31 18 C31 18 29 26 19 23"/>
-              <path d="M19 11 C19 7 16 5 16 5 C16 5 15 8 19 11"/>
-              <path d="M19 11 C19 7 22 5 22 5 C22 5 23 8 19 11"/>
-            </svg>
-          </div>
-          <h3 class="font-serif font-bold text-maroon mb-2" style="font-size:1.2rem;">Success &amp; Growth</h3>
-          <p style="font-size:0.78rem; color:#D4AF37; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.75rem;">Business / Career</p>
-          <p style="font-size:0.87rem; color:#5A4A4A; line-height:1.65; flex-grow:1;">
-            Lakshmi-Kuber Havan, Saraswati Puja, business invocations — aligning your endeavors with Vedic abundance and scholarly intention.
-          </p>
-          <span class="path-tile-cta">Explore Rituals &rarr;</span>
-        </a>
-
-        <!-- Tile 3: Health & Protection -->
-        <a href="https://wa.me/919667039964?text=I'm%20interested%20in%20Vedic%20rituals%20for%20Health%20and%20Protection%20(Wellness%2FPeace)."
-           target="_blank" rel="noopener noreferrer"
-           class="path-tile" data-aos="fade-up" data-aos-delay="260" data-testid="path-tile-health">
-          <div class="path-tile-icon">
-            <svg width="36" height="36" viewBox="0 0 38 38" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M19 5 L31 9 L31 21 C31 28 19 34 19 34 C19 34 7 28 7 21 L7 9 Z"/>
-              <line x1="19" y1="24" x2="19" y2="16"/>
-              <path d="M19 20 C15 16 13 18 13 18 C13 18 15 22 19 22"/>
-              <path d="M19 20 C23 16 25 18 25 18 C25 18 23 22 19 22"/>
-            </svg>
-          </div>
-          <h3 class="font-serif font-bold text-maroon mb-2" style="font-size:1.2rem;">Health &amp; Protection</h3>
-          <p style="font-size:0.78rem; color:#D4AF37; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.75rem;">Wellness / Peace</p>
-          <p style="font-size:0.87rem; color:#5A4A4A; line-height:1.65; flex-grow:1;">
-            Maha Mrityunjaya Havan, Navagraha Shanti, ancestral rites — invoking divine protection and longevity for your family.
-          </p>
-          <span class="path-tile-cta">Explore Rituals &rarr;</span>
-        </a>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- =========================================
-       SERVICES
-  ========================================= -->
-  <section id="services" class="py-24 bg-parchment">
-    <div class="max-w-7xl mx-auto px-6 md:px-12">
-
-      <!-- Header -->
-      <div class="text-center mb-16" data-aos="fade-up">
-        <p class="section-label mb-4">Our Sacred Offerings</p>
-        <h2 class="font-serif font-bold text-maroon mb-4" style="font-size:clamp(2rem,4vw,3rem); letter-spacing:-0.02em;">Vedic Services</h2>
-        <div class="gold-divider mx-auto mb-5"></div>
-        <p class="text-muted max-w-xl mx-auto" style="font-size:0.95rem; line-height:1.7;">
-          Each ritual is meticulously designed following Vedic scripture, performed with unadulterated materials sourced directly from the Himalayas.
-        </p>
-      </div>
-
-      <!-- Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-
-        <!-- Card 1: Vastu Shanti -->
-        <div class="service-card" data-aos="fade-up" data-aos-delay="0" data-testid="service-card-vastu">
-          <div class="overflow-hidden relative" style="height:210px;">
-            <img src="https://images.unsplash.com/photo-1682662046457-74fd5b199b92?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=700"
-                 alt="Vastu Shanti Havan" class="card-img w-full h-full object-cover" loading="lazy" />
-            <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(74,14,14,0.5) 0%, transparent 55%); pointer-events:none;"></div>
-            <span class="absolute top-4 left-4" style="font-size:0.68rem; font-weight:600; letter-spacing:0.15em; text-transform:uppercase; color:#D4AF37; background:rgba(74,14,14,0.78); padding:4px 10px; backdrop-filter:blur(4px);">Havan</span>
-          </div>
-          <div class="p-8">
-            <h3 class="font-serif font-bold text-maroon mb-1" style="font-size:1.2rem;">Vastu Shanti Havan</h3>
-            <p style="font-size:1.25rem; color:#D4AF37; font-weight:500; letter-spacing:0.03em; margin-bottom:0.75rem;">The Science of Home Energy Harmonization</p>
-            <p style="font-size:0.88rem; color:#5A4A4A; line-height:1.7; margin-bottom:1.5rem;">
-              Purify and harmonize your home's cosmic energy. This Vedic ceremony aligns your living space with the five natural elements, ensuring lasting prosperity and peace.
-            </p>
-            <div style="display:flex; align-items:center; justify-content:space-between; padding-top:1rem; border-top:1px solid #E5DED0;">
-              <span class="font-serif font-bold text-maroon" style="font-size:1.4rem;">From ₹15,000</span>
-              <a href="https://wa.me/919667039964?text=I'm%20interested%20in%20Vastu%20Shanti%20Havan."
-                 target="_blank"
-                 style="font-size:0.72rem; text-transform:uppercase; letter-spacing:0.12em; color:#D4AF37; font-weight:500; text-decoration:none; display:flex; align-items:center; gap:4px; transition:color 0.2s;"
-                 onmouseover="this.style.color='#4A0E0E'" onmouseout="this.style.color='#D4AF37'"
-                 data-testid="service-vastu-inquire-btn">
-                Inquire
-                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 2: Lakshmi-Kuber -->
-        <div class="service-card" data-aos="fade-up" data-aos-delay="140" data-testid="service-card-lakshmi">
-          <div class="overflow-hidden relative" style="height:210px;">
-            <img src="https://images.pexels.com/photos/29226134/pexels-photo-29226134.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=420&w=700"
-                 alt="Lakshmi-Kuber Havan" class="card-img w-full h-full object-cover" loading="lazy" />
-            <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(74,14,14,0.5) 0%, transparent 55%); pointer-events:none;"></div>
-            <span class="absolute top-4 left-4" style="font-size:0.68rem; font-weight:600; letter-spacing:0.15em; text-transform:uppercase; color:#D4AF37; background:rgba(74,14,14,0.78); padding:4px 10px; backdrop-filter:blur(4px);">Prosperity</span>
-          </div>
-          <div class="p-8">
-            <h3 class="font-serif font-bold text-maroon mb-1" style="font-size:1.2rem;">Lakshmi-Kuber Havan</h3>
-            <p style="font-size:1.25rem; color:#D4AF37; font-weight:500; letter-spacing:0.03em; margin-bottom:0.75rem;">Vedic Invocation for Prosperity &amp; Success</p>
-            <p style="font-size:0.88rem; color:#5A4A4A; line-height:1.7; margin-bottom:1.5rem;">
-              Invoke the divine energies of wealth and abundance. A precise Vedic ritual that opens pathways to material and spiritual prosperity for your household.
-            </p>
-            <div style="display:flex; align-items:center; justify-content:space-between; padding-top:1rem; border-top:1px solid #E5DED0;">
-              <span class="font-serif font-bold text-maroon" style="font-size:1.4rem;">From ₹11,000</span>
-              <a href="https://wa.me/919667039964?text=I'm%20interested%20in%20Lakshmi-Kuber%20Havan."
-                 target="_blank"
-                 style="font-size:0.72rem; text-transform:uppercase; letter-spacing:0.12em; color:#D4AF37; font-weight:500; text-decoration:none; display:flex; align-items:center; gap:4px; transition:color 0.2s;"
-                 onmouseover="this.style.color='#4A0E0E'" onmouseout="this.style.color='#D4AF37'"
-                 data-testid="service-lakshmi-inquire-btn">
-                Inquire
-                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 3: Maha Mrityunjaya -->
-        <div class="service-card" data-aos="fade-up" data-aos-delay="280" data-testid="service-card-maha">
-          <div class="overflow-hidden relative" style="height:210px;">
-            <img src="https://images.unsplash.com/photo-1640431289359-8957a03763f5?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=700"
-                 alt="Maha Mrityunjaya Havan" class="card-img w-full h-full object-cover" loading="lazy" />
-            <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(74,14,14,0.5) 0%, transparent 55%); pointer-events:none;"></div>
-            <span class="absolute top-4 left-4" style="font-size:0.68rem; font-weight:600; letter-spacing:0.15em; text-transform:uppercase; color:#D4AF37; background:rgba(74,14,14,0.78); padding:4px 10px; backdrop-filter:blur(4px);">Supreme</span>
-          </div>
-          <div class="p-8">
-            <h3 class="font-serif font-bold text-maroon mb-1" style="font-size:1.2rem;">Maha Mrityunjaya</h3>
-            <p style="font-size:1.25rem; color:#D4AF37; font-weight:500; letter-spacing:0.03em; margin-bottom:0.75rem;">Supreme Ritual for Health &amp; Longevity</p>
-            <p style="font-size:0.88rem; color:#5A4A4A; line-height:1.7; margin-bottom:1.5rem;">
-              The most potent Vedic invocation for health, protection, and longevity. 108 Mrityunjaya mantras recited with precise phonetic discipline.
-            </p>
-            <div style="display:flex; align-items:center; justify-content:space-between; padding-top:1rem; border-top:1px solid #E5DED0;">
-              <span class="font-serif font-bold text-maroon" style="font-size:1.4rem;">From ₹21,000</span>
-              <a href="https://wa.me/919667039964?text=I'm%20interested%20in%20Maha%20Mrityunjaya%20Havan."
-                 target="_blank"
-                 style="font-size:0.72rem; text-transform:uppercase; letter-spacing:0.12em; color:#D4AF37; font-weight:500; text-decoration:none; display:flex; align-items:center; gap:4px; transition:color 0.2s;"
-                 onmouseover="this.style.color='#4A0E0E'" onmouseout="this.style.color='#D4AF37'"
-                 data-testid="service-maha-inquire-btn">
-                Inquire
-                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-              </a>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Bottom CTA -->
-      <div class="text-center mt-12" data-aos="fade-up" data-aos-delay="350">
-        <p style="font-size:0.85rem; color:#5A4A4A; margin-bottom:1rem;">Not sure which ritual is right for your home?</p>
-        <a href="https://wa.me/919667039964?text=I%20need%20guidance%20on%20choosing%20the%20right%20Vedic%20service."
-           target="_blank" class="btn-wa-outline" data-testid="services-consult-btn">
+           class="btn-consult" data-testid="nav-consult-btn">
           Consult a Scholar
         </a>
       </div>
 
+      <button id="menu-btn" class="md:hidden p-2 cursor-pointer" style="background:none;border:none;" aria-label="Menu" data-testid="mobile-menu-toggle">
+        <span class="block w-6 h-0.5 bg-maroon mb-1.5 transition-all" id="h1"></span>
+        <span class="block w-6 h-0.5 bg-maroon mb-1.5 transition-all" id="h2"></span>
+        <span class="block w-6 h-0.5 bg-maroon transition-all" id="h3"></span>
+      </button>
     </div>
-  </section>
+  </div>
 
-  <!-- =========================================
-       PEDIGREE / LINEAGE
-  ========================================= -->
-  <section id="lineage" class="relative overflow-hidden py-24" style="background-color:#4A0E0E;">
-    <!-- Lines -->
-    <div class="pedigree-line-top"></div>
-    <div class="pedigree-line-bottom"></div>
-
-    <!-- Mandala watermark -->
-    <div class="absolute inset-0" style="display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0.05;overflow:hidden;">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="-20 -20 440 440" width="680" height="680" fill="none" stroke="white" stroke-width="0.9" overflow="visible">
-        <g transform="translate(200,200)">
-          <circle r="185"/><circle r="135"/><circle r="80"/><circle r="32"/><circle r="7" fill="white" stroke="none"/>
-          <line x1="0" y1="-185" x2="0" y2="185"/>
-          <line x1="0" y1="-185" x2="0" y2="185" transform="rotate(45)"/>
-          <line x1="0" y1="-185" x2="0" y2="185" transform="rotate(90)"/>
-          <line x1="0" y1="-185" x2="0" y2="185" transform="rotate(135)"/>
-          <ellipse rx="26" ry="52" transform="translate(0,-160)"/>
-          <ellipse rx="26" ry="52" transform="rotate(45) translate(0,-160)"/>
-          <ellipse rx="26" ry="52" transform="rotate(90) translate(0,-160)"/>
-          <ellipse rx="26" ry="52" transform="rotate(135) translate(0,-160)"/>
-          <ellipse rx="26" ry="52" transform="rotate(180) translate(0,-160)"/>
-          <ellipse rx="26" ry="52" transform="rotate(225) translate(0,-160)"/>
-          <ellipse rx="26" ry="52" transform="rotate(270) translate(0,-160)"/>
-          <ellipse rx="26" ry="52" transform="rotate(315) translate(0,-160)"/>
-          <ellipse rx="14" ry="30" transform="translate(0,-107)"/>
-          <ellipse rx="14" ry="30" transform="rotate(45) translate(0,-107)"/>
-          <ellipse rx="14" ry="30" transform="rotate(90) translate(0,-107)"/>
-          <ellipse rx="14" ry="30" transform="rotate(135) translate(0,-107)"/>
-          <ellipse rx="14" ry="30" transform="rotate(180) translate(0,-107)"/>
-          <ellipse rx="14" ry="30" transform="rotate(225) translate(0,-107)"/>
-          <ellipse rx="14" ry="30" transform="rotate(270) translate(0,-107)"/>
-          <ellipse rx="14" ry="30" transform="rotate(315) translate(0,-107)"/>
-          <polygon points="0,-57 9,-47 0,-37 -9,-47"/>
-          <polygon points="0,-57 9,-47 0,-37 -9,-47" transform="rotate(45)"/>
-          <polygon points="0,-57 9,-47 0,-37 -9,-47" transform="rotate(90)"/>
-          <polygon points="0,-57 9,-47 0,-37 -9,-47" transform="rotate(135)"/>
-          <polygon points="0,-57 9,-47 0,-37 -9,-47" transform="rotate(180)"/>
-          <polygon points="0,-57 9,-47 0,-37 -9,-47" transform="rotate(225)"/>
-          <polygon points="0,-57 9,-47 0,-37 -9,-47" transform="rotate(270)"/>
-          <polygon points="0,-57 9,-47 0,-37 -9,-47" transform="rotate(315)"/>
-        </g>
-      </svg>
-    </div>
-
-    <div class="max-w-4xl mx-auto px-6 md:px-12 relative text-center" style="z-index:1;">
-
-      <p class="section-label mb-8" style="color:rgba(212,175,55,0.65);" data-aos="fade-up">The Scholar's Pedigree</p>
-
-      <!-- Opening ornament -->
-      <div class="font-serif italic font-bold text-center" style="font-size:6rem; line-height:0.6; color:rgba(212,175,55,0.1); margin-bottom:0.5rem;" data-aos="fade-up" data-aos-delay="80" aria-hidden="true">"</div>
-
-      <h2 class="font-serif font-bold mb-6 leading-tight"
-          style="font-size:clamp(1.8rem,4vw,3rem); color:#D4AF37; letter-spacing:-0.02em;"
-          data-aos="fade-up" data-aos-delay="120">
-        Beyond a Profession,<br>A Lifelong Penance.
-      </h2>
-
-      <div class="gold-divider mx-auto mb-8" data-aos="fade-up" data-aos-delay="200"></div>
-
-      <p class="leading-relaxed max-w-3xl mx-auto mb-10"
-         style="font-size:1.05rem; color:rgba(253,251,247,0.78); line-height:1.8;"
-         data-aos="fade-up" data-aos-delay="250">
-        HomePujan is not an aggregator; it is a collective of Gurukul scholars led by
-        <strong style="color:#D4AF37; font-weight:600;">Jaynendra</strong>.
-        We don't just chant; we invoke with the exact phonetic vibrations mastered over decades of study.
-        Every syllable, every accent, every pause — delivered with the precision of a lifelong dedication to the Vedas.
-      </p>
-
-      <!-- Scholar credentials -->
-      <div class="flex flex-wrap justify-center gap-x-10 gap-y-4" data-aos="fade-up" data-aos-delay="340">
-        <div class="flex items-center gap-2" style="font-size:0.8rem; color:rgba(212,175,55,0.65); letter-spacing:0.08em;">
-          <span style="display:inline-block;width:16px;height:1px;background:rgba(212,175,55,0.4);"></span>
-          Schooled in Traditional Gurukuls for 20 Years
-        </div>
-        <div class="flex items-center gap-2" style="font-size:0.8rem; color:rgba(212,175,55,0.65); letter-spacing:0.08em;">
-          <span style="display:inline-block;width:16px;height:1px;background:rgba(212,175,55,0.4);"></span>
-          Rigveda &amp; Atharvaveda Specialist
-        </div>
-        <div class="flex items-center gap-2" style="font-size:0.8rem; color:rgba(212,175,55,0.65); letter-spacing:0.08em;">
-          <span style="display:inline-block;width:16px;height:1px;background:rgba(212,175,55,0.4);"></span>
-          Sanskrit Phonetics Authority
-        </div>
+  <div id="mob-menu" style="border-top:1px solid rgba(212,175,55,0.18);background:rgba(253,251,247,0.98);backdrop-filter:blur(20px);">
+    <div class="max-w-7xl mx-auto px-6 py-6 flex flex-col gap-4">
+      <a href="#lineage" class="nav-link py-2" onclick="closeMob()" data-testid="mob-lineage">Lineage</a>
+      <a href="#find-path" class="nav-link py-2" onclick="closeMob()" data-testid="mob-purpose">Browse by Purpose</a>
+      <a href="#services" class="nav-link py-2" onclick="closeMob()" data-testid="mob-services">Browse by Need</a>
+      <a href="#process" class="nav-link py-2" onclick="closeMob()" data-testid="mob-process">Process</a>
+      <a href="#faq" class="nav-link py-2" onclick="closeMob()" data-testid="mob-faq">FAQ</a>
+      <div style="border-top:1px solid rgba(212,175,55,0.18);padding-top:1rem;">
+        <a href="https://wa.me/919667039964?text=I%20would%20like%20to%20consult%20a%20Scholar."
+           target="_blank" class="btn-consult" style="justify-content:center;width:100%;" data-testid="mob-consult">Consult a Scholar</a>
       </div>
-
     </div>
-  </section>
+  </div>
+</nav>
 
-  <!-- =========================================
-       PROCESS
-  ========================================= -->
-  <section id="process" class="py-24 bg-parchment">
-    <div class="max-w-7xl mx-auto px-6 md:px-12">
+<!-- =========================================
+     HERO
+========================================= -->
+<section id="hero" class="relative overflow-hidden bg-parchment" style="min-height:100vh;padding-top:76px;">
+  <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse 80% 60% at 72% 50%,rgba(212,175,55,0.05) 0%,transparent 65%),radial-gradient(ellipse 55% 70% at 8% 30%,rgba(74,14,14,0.04) 0%,transparent 60%);"></div>
 
-      <!-- Header -->
-      <div class="text-center mb-16" data-aos="fade-up">
-        <p class="section-label mb-4">How It Works</p>
-        <h2 class="font-serif font-bold text-maroon mb-4" style="font-size:clamp(2rem,4vw,3rem); letter-spacing:-0.02em;">The Sacred Process</h2>
-        <div class="gold-divider mx-auto mb-5"></div>
-        <p class="text-muted max-w-lg mx-auto" style="font-size:0.95rem; line-height:1.7;">
-          From consultation to ceremony, every step is guided by scholarship, precision, and reverence.
+  <div class="max-w-7xl mx-auto px-6 md:px-12">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center" style="min-height:calc(100vh - 76px);padding-top:3rem;padding-bottom:3rem;">
+
+      <!-- TEXT -->
+      <div class="relative z-10">
+        <p class="section-label mb-5" data-aos="fade-up" data-aos-duration="600">Gurukul-Certified Vedic Scholars</p>
+        <h1 class="font-cinzel font-bold text-maroon leading-tight mb-6"
+            style="font-size:clamp(2rem,4.5vw,3.6rem);letter-spacing:0.02em;line-height:1.15;"
+            data-aos="fade-up" data-aos-delay="80">
+          Ancient Precision.<br>Modern Peace.<br>
+          <span style="color:#D4AF37;">20 Years of<br>Scholarly Mastery.</span>
+        </h1>
+        <div class="gold-divider mb-6" data-aos="fade-right" data-aos-delay="180"></div>
+        <p class="text-muted leading-relaxed mb-10 max-w-xl"
+           style="font-size:1.05rem;color:#5A4A4A;"
+           data-aos="fade-up" data-aos-delay="240">
+          Invite the uncompromised phonetic vibrations of the Vedas into your home. Rituals performed by lifelong scholars, ensuring every mantra manifests its true intent.
+        </p>
+        <div class="flex flex-wrap gap-4" data-aos="fade-up" data-aos-delay="360">
+          <a href="#services" class="btn-primary" data-testid="hero-view-services-btn">
+            Vedic Exchange
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+          <a href="#lineage" class="btn-secondary" data-testid="hero-pedigree-btn">The Scholar's Lineage</a>
+        </div>
+        <p style="font-size:0.76rem;color:#7A6A6A;margin-top:1.5rem;display:flex;align-items:center;gap:8px;" data-aos="fade-up" data-aos-delay="460">
+          <span style="display:inline-block;width:18px;height:1px;background:#D4AF37;"></span>
+          No aggregators. Direct scholar access. Delhi NCR &amp; beyond.
         </p>
       </div>
 
-      <!-- Steps -->
-      <div class="grid grid-cols-1 md:grid-cols-3">
-
-        <!-- Step 1 -->
-        <div class="process-card px-8 py-10 relative" data-aos="fade-up" data-aos-delay="0" data-testid="process-step-1"
-             style="border-right:1px solid rgba(212,175,55,0.15);">
-          <!-- Right connector line (desktop) -->
-          <div class="hidden md:block absolute right-0 top-16 h-px w-8" style="background:linear-gradient(to right, rgba(212,175,55,0.3), transparent);"></div>
-
-          <div class="process-icon">
-            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round">
-              <circle cx="20" cy="20" r="15"/>
-              <line x1="20" y1="5" x2="20" y2="8"/><line x1="35" y1="20" x2="32" y2="20"/>
-              <line x1="20" y1="35" x2="20" y2="32"/><line x1="5" y1="20" x2="8" y2="20"/>
-              <line x1="30.3" y1="9.7" x2="28.2" y2="11.8"/><line x1="30.3" y1="30.3" x2="28.2" y2="28.2"/>
-              <line x1="9.7" y1="30.3" x2="11.8" y2="28.2"/><line x1="9.7" y1="9.7" x2="11.8" y2="11.8"/>
-              <line x1="20" y1="20" x2="13" y2="11" stroke-width="1.8"/>
-              <line x1="20" y1="20" x2="20" y2="9"/>
-              <circle cx="20" cy="20" r="2" fill="#D4AF37" stroke="none"/>
-            </svg>
+      <!-- HERO IMAGE — DOUBLE-STROKE GOLD FRAME -->
+      <div style="position:relative;" data-aos="fade-left" data-aos-delay="200" data-aos-duration="900">
+        <div class="hero-frame-outer">
+          <div class="hero-frame-corner tl"></div>
+          <div class="hero-frame-corner tr"></div>
+          <div class="hero-frame-corner bl"></div>
+          <div class="hero-frame-corner br"></div>
+          <div class="hero-frame-inner" style="height:480px;">
+            <img src="https://images.unsplash.com/photo-1630764883473-e8c2056f0589?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=1200"
+                 alt="Sacred havan fire — HomePujan"
+                 class="card-img w-full h-full object-cover"
+                 loading="eager" decoding="async" data-testid="hero-image"/>
+            <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(74,14,14,0.25) 0%,transparent 55%);pointer-events:none;"></div>
           </div>
-          <span class="step-num block mb-4">01</span>
-          <div style="width:28px; height:2px; background:#D4AF37; margin-bottom:1rem;"></div>
-          <h3 class="font-serif font-bold text-maroon mb-3" style="font-size:1.15rem;">Muhurta Consultation</h3>
-          <p style="font-size:0.87rem; color:#5A4A4A; line-height:1.75;">
-            Our scholars determine the most auspicious date and time for your ritual — aligned with Vedic astrological principles and your household's unique energy signature.
-          </p>
         </div>
-
-        <!-- Mobile connector -->
-        <div class="flex justify-center md:hidden py-4">
-          <div style="width:1px; height:32px; background:rgba(212,175,55,0.3);"></div>
+        <div class="absolute bottom-6 left-6 z-10"
+             style="background:rgba(253,251,247,0.92);backdrop-filter:blur(8px);border:1px solid rgba(212,175,55,0.35);padding:0.875rem 1.2rem;"
+             data-aos="fade-up" data-aos-delay="650">
+          <p class="font-cinzel font-bold text-maroon" style="font-size:1.65rem;line-height:1;">20+</p>
+          <p style="font-size:0.68rem;color:#5A4A4A;text-transform:uppercase;letter-spacing:0.14em;margin-top:2px;">Years Gurukul Training</p>
         </div>
-
-        <!-- Step 2 -->
-        <div class="process-card px-8 py-10 relative" data-aos="fade-up" data-aos-delay="150" data-testid="process-step-2"
-             style="border-right:1px solid rgba(212,175,55,0.15);">
-          <div class="process-icon">
-            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="14" y1="36" x2="16" y2="14"/>
-              <line x1="20" y1="36" x2="20" y2="12"/>
-              <line x1="26" y1="36" x2="24" y2="14"/>
-              <path d="M12 30 Q20 26 28 30"/>
-              <path d="M16 22 Q10 18 12 14"/>
-              <path d="M24 22 Q30 18 28 14"/>
-              <circle cx="16" cy="12" r="2.5" fill="rgba(212,175,55,0.35)" stroke="#D4AF37" stroke-width="1"/>
-              <circle cx="20" cy="10" r="2.5" fill="rgba(212,175,55,0.35)" stroke="#D4AF37" stroke-width="1"/>
-              <circle cx="24" cy="12" r="2.5" fill="rgba(212,175,55,0.35)" stroke="#D4AF37" stroke-width="1"/>
-            </svg>
-          </div>
-          <span class="step-num block mb-4">02</span>
-          <div style="width:28px; height:2px; background:#D4AF37; margin-bottom:1rem;"></div>
-          <h3 class="font-serif font-bold text-maroon mb-3" style="font-size:1.15rem;">Scholarly Preparation</h3>
-          <p style="font-size:0.87rem; color:#5A4A4A; line-height:1.75;">
-            We source unadulterated ritual ingredients — hand-picked Himalayan herbs, pure Desi ghee, and sacred wood — each verified against Vedic and Ayurvedic texts for purity.
-          </p>
-        </div>
-
-        <!-- Mobile connector -->
-        <div class="flex justify-center md:hidden py-4">
-          <div style="width:1px; height:32px; background:rgba(212,175,55,0.3);"></div>
-        </div>
-
-        <!-- Step 3 -->
-        <div class="process-card px-8 py-10" data-aos="fade-up" data-aos-delay="300" data-testid="process-step-3">
-          <div class="process-icon">
-            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M9 33 L13 25 L27 25 L31 33 Z"/>
-              <line x1="7" y1="33" x2="33" y2="33"/>
-              <path d="M20 25 C20 21 16 18 18 14 C19 12 21 14 23 12 C25 9 23 6 20 5 C20 5 27 9 25 15 C28 13 29 15 27 19 C26 21 20 23 20 25Z" fill="rgba(212,175,55,0.1)"/>
-              <path d="M20 23 C20 21 18 19 19 17 C20 16 21 17 22 16 C23 14 22 12 20 11" stroke-width="0.9" stroke-opacity="0.55"/>
-            </svg>
-          </div>
-          <span class="step-num block mb-4">03</span>
-          <div style="width:28px; height:2px; background:#D4AF37; margin-bottom:1rem;"></div>
-          <h3 class="font-serif font-bold text-maroon mb-3" style="font-size:1.15rem;">Vedic Execution</h3>
-          <p style="font-size:0.87rem; color:#5A4A4A; line-height:1.75;">
-            An immersive, scholar-led ceremony in your home. Every mantra recited with meticulous phonetic precision, every offering made with complete ceremonial awareness and reverence.
-          </p>
-        </div>
-
       </div>
 
-      <!-- CTA -->
-      <div class="text-center mt-14" data-aos="fade-up" data-aos-delay="400">
-        <a href="https://wa.me/919667039964?text=I'm%20interested%20in%20booking%20a%20Vedic%20service."
-           target="_blank" class="btn-primary" data-testid="process-book-btn">
-          Begin Your Muhurta Consultation
+    </div>
+  </div>
+</section>
+
+<!-- =========================================
+     TRUST BAR
+========================================= -->
+<section id="trust" style="background:#F5EFE0;border-top:1px solid rgba(212,175,55,0.22);border-bottom:1px solid rgba(212,175,55,0.22);">
+  <div class="max-w-7xl mx-auto px-6 md:px-12 py-12">
+    <div class="grid grid-cols-1 sm:grid-cols-3">
+      <div class="trust-col text-center px-6 py-4" data-aos="fade-up" data-aos-delay="0" data-testid="trust-years">
+        <p class="font-cinzel font-bold" style="font-size:clamp(2.2rem,4.5vw,3.2rem);color:#D4AF37;">20+</p>
+        <div class="gold-divider mx-auto my-3" style="width:36px;"></div>
+        <p style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.15em;color:#5A4A4A;font-weight:500;">Years of Vedic Study</p>
+      </div>
+      <div class="trust-col text-center px-6 py-4" data-aos="fade-up" data-aos-delay="120" data-testid="trust-shlokas">
+        <p class="font-cinzel font-bold" style="font-size:clamp(2.2rem,4.5vw,3.2rem);color:#D4AF37;">10,000+</p>
+        <div class="gold-divider mx-auto my-3" style="width:36px;"></div>
+        <p style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.15em;color:#5A4A4A;font-weight:500;">Shlokas Memorized</p>
+      </div>
+      <div class="trust-col text-center px-6 py-4" data-aos="fade-up" data-aos-delay="240" data-testid="trust-samagri">
+        <p class="font-cinzel font-bold" style="font-size:clamp(2.2rem,4.5vw,3.2rem);color:#D4AF37;">100%</p>
+        <div class="gold-divider mx-auto my-3" style="width:36px;"></div>
+        <p style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.15em;color:#5A4A4A;font-weight:500;">Authentic Himalayan Samagri</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================
+     FIND YOUR PATH (DIAGNOSTIC FUNNEL)
+========================================= -->
+<section id="find-path" class="py-20 bg-parchment" style="border-top:1px solid rgba(212,175,55,0.15);">
+  <div class="max-w-7xl mx-auto px-6 md:px-12">
+
+    <div class="text-center mb-12" data-aos="fade-up">
+      <p class="section-label mb-4">Choose Your Intention</p>
+      <h2 class="font-serif font-bold text-maroon mb-4" style="font-size:clamp(1.8rem,3.5vw,2.8rem);letter-spacing:-0.02em;">Find Your Path</h2>
+      <div class="gold-divider mx-auto mb-5"></div>
+      <p style="font-size:0.93rem;color:#5A4A4A;line-height:1.7;max-width:480px;margin:0 auto;">
+        Every Vedic ritual begins with an intention. Select the chapter that resonates most — and discover your aligned ceremony below.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+      <div class="path-tile" data-filter="beginnings" onclick="filterServices('beginnings')" data-testid="path-tile-beginnings" role="button" tabindex="0">
+        <div class="path-tile-icon">
+          <svg width="34" height="34" viewBox="0 0 38 38" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 20 L19 8 L34 20"/><path d="M8 17 L8 32 L30 32 L30 17"/>
+            <path d="M15 32 L15 24 L23 24 L23 32"/><line x1="19" y1="8" x2="19" y2="4"/>
+            <line x1="16" y1="4" x2="22" y2="4"/>
+          </svg>
+        </div>
+        <h3 class="font-serif font-bold text-maroon mb-1" style="font-size:1.2rem;">New Beginnings</h3>
+        <p style="font-size:0.75rem;color:#D4AF37;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem;">Home / Office</p>
+        <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.65;flex-grow:1;">Griha Pravesh, Vastu Shanti, new office consecration — sanctifying your fresh starts with scholarly precision.</p>
+        <span class="path-tile-cta">Explore Rituals &rarr;</span>
+      </div>
+
+      <div class="path-tile" data-filter="success" onclick="filterServices('success')" data-testid="path-tile-success" role="button" tabindex="0">
+        <div class="path-tile-icon">
+          <svg width="34" height="34" viewBox="0 0 38 38" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="34" x2="19" y2="20"/>
+            <path d="M19 20 C19 13 12 11 12 11 C12 11 11 18 19 20"/>
+            <path d="M19 20 C19 13 26 11 26 11 C26 11 27 18 19 20"/>
+            <path d="M19 20 C13 16 7 18 7 18 C7 18 9 26 19 23"/>
+            <path d="M19 20 C25 16 31 18 31 18 C31 18 29 26 19 23"/>
+            <path d="M19 11 C19 7 16 5 16 5 C16 5 15 8 19 11"/>
+            <path d="M19 11 C19 7 22 5 22 5 C22 5 23 8 19 11"/>
+          </svg>
+        </div>
+        <h3 class="font-serif font-bold text-maroon mb-1" style="font-size:1.2rem;">Success &amp; Growth</h3>
+        <p style="font-size:0.75rem;color:#D4AF37;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem;">Business / Career</p>
+        <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.65;flex-grow:1;">Lakshmi-Kuber Havan, Saraswati Puja, business invocations — aligning your endeavors with Vedic abundance.</p>
+        <span class="path-tile-cta">Explore Rituals &rarr;</span>
+      </div>
+
+      <div class="path-tile" data-filter="health" onclick="filterServices('health')" data-testid="path-tile-health" role="button" tabindex="0">
+        <div class="path-tile-icon">
+          <svg width="34" height="34" viewBox="0 0 38 38" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 5 L31 9 L31 21 C31 28 19 34 19 34 C19 34 7 28 7 21 L7 9 Z"/>
+            <line x1="19" y1="24" x2="19" y2="16"/>
+            <path d="M19 20 C15 16 13 18 13 18 C13 18 15 22 19 22"/>
+            <path d="M19 20 C23 16 25 18 25 18 C25 18 23 22 19 22"/>
+          </svg>
+        </div>
+        <h3 class="font-serif font-bold text-maroon mb-1" style="font-size:1.2rem;">Health &amp; Protection</h3>
+        <p style="font-size:0.75rem;color:#D4AF37;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem;">Wellness / Peace</p>
+        <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.65;flex-grow:1;">Maha Mrityunjaya Havan, Navagraha Shanti, ancestral rites — invoking divine protection and longevity.</p>
+        <span class="path-tile-cta">Explore Rituals &rarr;</span>
+      </div>
+
+    </div>
+
+    <!-- Section footer -->
+    <p class="text-center mt-10" style="font-size:0.88rem;color:#5A4A4A;" data-aos="fade-up" data-aos-delay="300">
+      Not sure which path to choose for yourself?
+      <a href="https://wa.me/919667039964?text=I%20need%20guidance%20on%20choosing%20the%20right%20Vedic%20path."
+         target="_blank"
+         style="color:#D4AF37;font-weight:600;text-decoration:underline;text-underline-offset:3px;" data-testid="path-consult-link">
+        Consult a Scholar
+      </a>
+    </p>
+
+  </div>
+</section>
+
+<!-- =========================================
+     VEDIC SERVICES (FILTERED GRID)
+========================================= -->
+<section id="services" class="py-24 bg-parchment" style="border-top:1px solid rgba(212,175,55,0.12);">
+  <div class="max-w-7xl mx-auto px-6 md:px-12">
+
+    <div class="text-center mb-16" data-aos="fade-up">
+      <p class="section-label mb-4">Vedic Exchange</p>
+      <h2 class="font-serif font-bold text-maroon mb-4" style="font-size:clamp(2rem,4vw,3rem);letter-spacing:-0.02em;">Sacred Ceremonies</h2>
+      <div class="gold-divider mx-auto mb-5"></div>
+      <p id="filter-label" style="font-size:0.9rem;color:#5A4A4A;line-height:1.7;max-width:500px;margin:0 auto;transition:all 0.3s;">
+        Each ceremony is meticulously designed following Vedic scripture, performed with unadulterated Himalayan materials.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="services-grid">
+
+      <!-- CARD 1: VASTU SHANTI -->
+      <div class="service-card" data-category="beginnings" data-testid="service-card-vastu">
+        <div class="overflow-hidden relative" style="height:210px;">
+          <img src="https://images.unsplash.com/photo-1682662046457-74fd5b199b92?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=700"
+               alt="Vastu Shanti Havan" class="card-img w-full h-full object-cover" loading="lazy"/>
+          <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(74,14,14,0.5) 0%,transparent 55%);pointer-events:none;"></div>
+          <span class="absolute top-4 left-4" style="font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#D4AF37;background:rgba(74,14,14,0.8);padding:4px 10px;backdrop-filter:blur(4px);">New Beginnings</span>
+        </div>
+        <div class="p-8">
+          <h3 class="font-serif font-bold text-maroon mb-1" style="font-size:1.2rem;">Vastu Shanti Havan</h3>
+          <p style="font-size:1.25rem;color:#D4AF37;font-weight:500;letter-spacing:0.03em;margin-bottom:0.75rem;line-height:1.3;">Space Harmonization &amp; Corrective Vedic Protocol</p>
+          <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.7;margin-bottom:1.5rem;">
+            Recalibrate the five elemental energies of your home. A complete Vedic ceremony addressing accumulated energetic imbalances through targeted mantra and offering sequences.
+          </p>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid #E5DED0;">
+            <span class="font-serif font-bold text-maroon" style="font-size:1.4rem;">From ₹15,000</span>
+            <button onclick="openModal('vastu')"
+                    style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.12em;color:#D4AF37;font-weight:500;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;transition:color 0.2s;"
+                    onmouseover="this.style.color='#4A0E0E'" onmouseout="this.style.color='#D4AF37'"
+                    data-testid="service-vastu-explore-btn">
+              Explore
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 2: LAKSHMI-KUBER -->
+      <div class="service-card" data-category="success" data-testid="service-card-lakshmi">
+        <div class="overflow-hidden relative" style="height:210px;">
+          <img src="https://images.pexels.com/photos/29226134/pexels-photo-29226134.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=420&w=700"
+               alt="Lakshmi-Kuber Havan" class="card-img w-full h-full object-cover" loading="lazy"/>
+          <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(74,14,14,0.5) 0%,transparent 55%);pointer-events:none;"></div>
+          <span class="absolute top-4 left-4" style="font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#D4AF37;background:rgba(74,14,14,0.8);padding:4px 10px;backdrop-filter:blur(4px);">Success &amp; Growth</span>
+        </div>
+        <div class="p-8">
+          <h3 class="font-serif font-bold text-maroon mb-1" style="font-size:1.2rem;">Lakshmi-Kuber Havan</h3>
+          <p style="font-size:1.25rem;color:#D4AF37;font-weight:500;letter-spacing:0.03em;margin-bottom:0.75rem;line-height:1.3;">Invoking Prosperity &amp; Removing Professional Blockages</p>
+          <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.7;margin-bottom:1.5rem;">
+            A precise dual invocation of Goddess Lakshmi and Lord Kubera. This Havan creates Vedic pathways for material abundance, addressing blockages in income flow and career momentum.
+          </p>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid #E5DED0;">
+            <span class="font-serif font-bold text-maroon" style="font-size:1.4rem;">From ₹11,000</span>
+            <button onclick="openModal('lakshmi')"
+                    style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.12em;color:#D4AF37;font-weight:500;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;transition:color 0.2s;"
+                    onmouseover="this.style.color='#4A0E0E'" onmouseout="this.style.color='#D4AF37'"
+                    data-testid="service-lakshmi-explore-btn">
+              Explore
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 3: MAHA MRITYUNJAYA -->
+      <div class="service-card" data-category="health" data-testid="service-card-maha">
+        <div class="overflow-hidden relative" style="height:210px;">
+          <img src="https://images.unsplash.com/photo-1640431289359-8957a03763f5?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=700"
+               alt="Maha Mrityunjaya Havan" class="card-img w-full h-full object-cover" loading="lazy"/>
+          <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(74,14,14,0.5) 0%,transparent 55%);pointer-events:none;"></div>
+          <span class="absolute top-4 left-4" style="font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#D4AF37;background:rgba(74,14,14,0.8);padding:4px 10px;backdrop-filter:blur(4px);">Health &amp; Protection</span>
+        </div>
+        <div class="p-8">
+          <h3 class="font-serif font-bold text-maroon mb-1" style="font-size:1.2rem;">Maha Mrityunjaya Havan</h3>
+          <p style="font-size:1.25rem;color:#D4AF37;font-weight:500;letter-spacing:0.03em;margin-bottom:0.75rem;line-height:1.3;">Supreme Vitality &amp; Protecting Life Force</p>
+          <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.7;margin-bottom:1.5rem;">
+            The most potent Vedic invocation for health and longevity. 108 Mrityunjaya mantras recited with meticulous phonetic precision, each offering made with specific Himalayan medicinal herbs.
+          </p>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid #E5DED0;">
+            <span class="font-serif font-bold text-maroon" style="font-size:1.4rem;">From ₹21,000</span>
+            <button onclick="openModal('maha')"
+                    style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.12em;color:#D4AF37;font-weight:500;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;transition:color 0.2s;"
+                    onmouseover="this.style.color='#4A0E0E'" onmouseout="this.style.color='#D4AF37'"
+                    data-testid="service-maha-explore-btn">
+              Explore
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="text-center mt-12" data-aos="fade-up" data-aos-delay="350">
+      <p style="font-size:0.85rem;color:#5A4A4A;margin-bottom:1rem;">Have a specific intention not listed here?</p>
+      <a href="https://wa.me/919667039964?text=I%20have%20a%20specific%20Vedic%20ritual%20requirement%20to%20discuss."
+         target="_blank" class="btn-consult" data-testid="services-custom-btn">Consult a Scholar for a Custom Ceremony</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- =========================================
+     SCHOLARLY PARAMPARA (LINEAGE)
+========================================= -->
+<section id="lineage" class="relative overflow-hidden py-24" style="background-color:#4A0E0E;">
+  <div class="pedigree-line-top"></div>
+  <div class="pedigree-line-bottom"></div>
+
+  <!-- Mandala watermark -->
+  <div class="absolute inset-0" style="display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0.05;overflow:hidden;">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-20 -20 440 440" width="700" height="700" fill="none" stroke="white" stroke-width="0.9" overflow="visible">
+      <g transform="translate(200,200)">
+        <circle r="185"/><circle r="135"/><circle r="80"/><circle r="32"/><circle r="7" fill="white" stroke="none"/>
+        <line x1="0" y1="-185" x2="0" y2="185"/>
+        <line x1="0" y1="-185" x2="0" y2="185" transform="rotate(45)"/>
+        <line x1="0" y1="-185" x2="0" y2="185" transform="rotate(90)"/>
+        <line x1="0" y1="-185" x2="0" y2="185" transform="rotate(135)"/>
+        <ellipse rx="26" ry="52" transform="translate(0,-160)"/>
+        <ellipse rx="26" ry="52" transform="rotate(45) translate(0,-160)"/>
+        <ellipse rx="26" ry="52" transform="rotate(90) translate(0,-160)"/>
+        <ellipse rx="26" ry="52" transform="rotate(135) translate(0,-160)"/>
+        <ellipse rx="26" ry="52" transform="rotate(180) translate(0,-160)"/>
+        <ellipse rx="26" ry="52" transform="rotate(225) translate(0,-160)"/>
+        <ellipse rx="26" ry="52" transform="rotate(270) translate(0,-160)"/>
+        <ellipse rx="26" ry="52" transform="rotate(315) translate(0,-160)"/>
+        <ellipse rx="14" ry="30" transform="translate(0,-107)"/>
+        <ellipse rx="14" ry="30" transform="rotate(45) translate(0,-107)"/>
+        <ellipse rx="14" ry="30" transform="rotate(90) translate(0,-107)"/>
+        <ellipse rx="14" ry="30" transform="rotate(135) translate(0,-107)"/>
+        <ellipse rx="14" ry="30" transform="rotate(180) translate(0,-107)"/>
+        <ellipse rx="14" ry="30" transform="rotate(225) translate(0,-107)"/>
+        <ellipse rx="14" ry="30" transform="rotate(270) translate(0,-107)"/>
+        <ellipse rx="14" ry="30" transform="rotate(315) translate(0,-107)"/>
+        <polygon points="0,-57 9,-47 0,-37 -9,-47"/>
+        <polygon points="0,-57 9,-47 0,-37 -9,-47" transform="rotate(45)"/>
+        <polygon points="0,-57 9,-47 0,-37 -9,-47" transform="rotate(90)"/>
+        <polygon points="0,-57 9,-47 0,-37 -9,-47" transform="rotate(135)"/>
+        <polygon points="0,-57 9,-47 0,-37 -9,-47" transform="rotate(180)"/>
+        <polygon points="0,-57 9,-47 0,-37 -9,-47" transform="rotate(225)"/>
+        <polygon points="0,-57 9,-47 0,-37 -9,-47" transform="rotate(270)"/>
+        <polygon points="0,-57 9,-47 0,-37 -9,-47" transform="rotate(315)"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="max-w-4xl mx-auto px-6 md:px-12 relative text-center" style="z-index:1;">
+    <p class="section-label mb-8" style="color:rgba(212,175,55,0.65);" data-aos="fade-up">Scholarly Parampara</p>
+    <div class="font-serif italic font-bold" style="font-size:5.5rem;line-height:0.65;color:rgba(212,175,55,0.1);margin-bottom:0.5rem;" aria-hidden="true" data-aos="fade-up" data-aos-delay="80">"</div>
+    <h2 class="font-serif font-bold mb-6 leading-tight"
+        style="font-size:clamp(1.8rem,4vw,3rem);color:#D4AF37;letter-spacing:-0.02em;"
+        data-aos="fade-up" data-aos-delay="120">
+      The Scholarly Parampara:<br>A 20-Year Lineage.
+    </h2>
+    <div class="gold-divider mx-auto mb-8" data-aos="fade-up" data-aos-delay="200"></div>
+    <p class="leading-relaxed max-w-3xl mx-auto mb-6"
+       style="font-size:1.05rem;color:rgba(253,251,247,0.78);line-height:1.8;"
+       data-aos="fade-up" data-aos-delay="250">
+      HomePujan is not a single-scholar service — it is a carefully curated collective of Gurukul-trained teachers and peers, united by <strong style="color:#D4AF37;">Jaynendra</strong> and bound by a shared commitment to phonetic purity. The scholars within this Parampara have collectively mentored hundreds of students in Vedic recitation, shaping the next generation of traditional practitioners.
+    </p>
+    <p class="leading-relaxed max-w-3xl mx-auto mb-10"
+       style="font-size:1rem;color:rgba(253,251,247,0.6);line-height:1.8;"
+       data-aos="fade-up" data-aos-delay="300">
+      We don't just chant; we invoke with the exact phonetic vibrations mastered over decades of residential study. Every syllable, every tonal accent, every breath pause — delivered with the authority of a living, unbroken tradition.
+    </p>
+    <div class="flex flex-wrap justify-center gap-x-10 gap-y-4" data-aos="fade-up" data-aos-delay="360">
+      <div class="flex items-center gap-2" style="font-size:0.78rem;color:rgba(212,175,55,0.65);letter-spacing:0.08em;">
+        <span style="display:inline-block;width:14px;height:1px;background:rgba(212,175,55,0.4);"></span>
+        Schooled in Traditional Gurukuls for 20 Years
+      </div>
+      <div class="flex items-center gap-2" style="font-size:0.78rem;color:rgba(212,175,55,0.65);letter-spacing:0.08em;">
+        <span style="display:inline-block;width:14px;height:1px;background:rgba(212,175,55,0.4);"></span>
+        Rigveda &amp; Atharvaveda Collective
+      </div>
+      <div class="flex items-center gap-2" style="font-size:0.78rem;color:rgba(212,175,55,0.65);letter-spacing:0.08em;">
+        <span style="display:inline-block;width:14px;height:1px;background:rgba(212,175,55,0.4);"></span>
+        Sanskrit Phonetics Authority
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================
+     SACRED PROCESS
+========================================= -->
+<section id="process" class="py-24 bg-parchment">
+  <div class="max-w-7xl mx-auto px-6 md:px-12">
+
+    <div class="text-center mb-16" data-aos="fade-up">
+      <p class="section-label mb-4">How It Works</p>
+      <h2 class="font-serif font-bold text-maroon mb-4" style="font-size:clamp(2rem,4vw,3rem);letter-spacing:-0.02em;">The Sacred Process</h2>
+      <div class="gold-divider mx-auto mb-5"></div>
+      <p style="font-size:0.95rem;color:#5A4A4A;line-height:1.7;max-width:440px;margin:0 auto;">
+        From consultation to ceremony — every step is guided by scholarship, precision, and reverence.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3">
+
+      <div class="process-card px-8 py-10 relative" style="border-right:1px solid rgba(212,175,55,0.15);" data-aos="fade-up" data-aos-delay="0" data-testid="process-step-1">
+        <div class="process-icon">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round">
+            <circle cx="20" cy="20" r="15"/>
+            <line x1="20" y1="5" x2="20" y2="8"/><line x1="35" y1="20" x2="32" y2="20"/>
+            <line x1="20" y1="35" x2="20" y2="32"/><line x1="5" y1="20" x2="8" y2="20"/>
+            <line x1="30.3" y1="9.7" x2="28.2" y2="11.8"/><line x1="30.3" y1="30.3" x2="28.2" y2="28.2"/>
+            <line x1="9.7" y1="30.3" x2="11.8" y2="28.2"/><line x1="9.7" y1="9.7" x2="11.8" y2="11.8"/>
+            <line x1="20" y1="20" x2="13" y2="11" stroke-width="1.8"/>
+            <line x1="20" y1="20" x2="20" y2="9"/>
+            <circle cx="20" cy="20" r="2" fill="#D4AF37" stroke="none"/>
+          </svg>
+        </div>
+        <span class="step-num block mb-3">01</span>
+        <div style="width:28px;height:2px;background:#D4AF37;margin-bottom:1rem;"></div>
+        <h3 class="font-serif font-bold text-maroon mb-3" style="font-size:1.15rem;">Muhurta Consultation</h3>
+        <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.75;">
+          Our scholars determine the most auspicious date and time for your ritual — aligned with Vedic astrological principles and your household's unique energy signature.
+        </p>
+      </div>
+
+      <div class="flex justify-center md:hidden py-4">
+        <div style="width:1px;height:32px;background:rgba(212,175,55,0.3);"></div>
+      </div>
+
+      <div class="process-card px-8 py-10 relative" style="border-right:1px solid rgba(212,175,55,0.15);" data-aos="fade-up" data-aos-delay="150" data-testid="process-step-2">
+        <div class="process-icon">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="14" y1="36" x2="16" y2="14"/><line x1="20" y1="36" x2="20" y2="12"/>
+            <line x1="26" y1="36" x2="24" y2="14"/>
+            <path d="M12 30 Q20 26 28 30"/>
+            <path d="M16 22 Q10 18 12 14"/><path d="M24 22 Q30 18 28 14"/>
+            <circle cx="16" cy="12" r="2.5" fill="rgba(212,175,55,0.35)" stroke="#D4AF37" stroke-width="1"/>
+            <circle cx="20" cy="10" r="2.5" fill="rgba(212,175,55,0.35)" stroke="#D4AF37" stroke-width="1"/>
+            <circle cx="24" cy="12" r="2.5" fill="rgba(212,175,55,0.35)" stroke="#D4AF37" stroke-width="1"/>
+          </svg>
+        </div>
+        <span class="step-num block mb-3">02</span>
+        <div style="width:28px;height:2px;background:#D4AF37;margin-bottom:1rem;"></div>
+        <h3 class="font-serif font-bold text-maroon mb-3" style="font-size:1.15rem;">Scholarly Preparation</h3>
+        <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.75;">
+          We source unadulterated ritual ingredients — hand-picked Himalayan herbs, pure Desi ghee, and sacred wood — each verified against Vedic and Ayurvedic botanical texts for purity.
+        </p>
+      </div>
+
+      <div class="flex justify-center md:hidden py-4">
+        <div style="width:1px;height:32px;background:rgba(212,175,55,0.3);"></div>
+      </div>
+
+      <div class="process-card px-8 py-10" data-aos="fade-up" data-aos-delay="300" data-testid="process-step-3">
+        <div class="process-icon">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 33 L13 25 L27 25 L31 33 Z"/>
+            <line x1="7" y1="33" x2="33" y2="33"/>
+            <path d="M20 25 C20 21 16 18 18 14 C19 12 21 14 23 12 C25 9 23 6 20 5 C20 5 27 9 25 15 C28 13 29 15 27 19 C26 21 20 23 20 25Z" fill="rgba(212,175,55,0.1)"/>
+            <path d="M20 23 C20 21 18 19 19 17 C20 16 21 17 22 16 C23 14 22 12 20 11" stroke-width="0.9" stroke-opacity="0.55"/>
+          </svg>
+        </div>
+        <span class="step-num block mb-3">03</span>
+        <div style="width:28px;height:2px;background:#D4AF37;margin-bottom:1rem;"></div>
+        <h3 class="font-serif font-bold text-maroon mb-3" style="font-size:1.15rem;">Vedic Execution</h3>
+        <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.75;">
+          An immersive, scholar-led ceremony in your home. Every mantra recited with meticulous phonetic precision, every offering made with complete ceremonial awareness and reverence.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="text-center mt-14" data-aos="fade-up" data-aos-delay="400">
+      <a href="https://wa.me/919667039964?text=I'm%20ready%20to%20begin%20my%20Muhurta%20consultation."
+         target="_blank" class="btn-primary" data-testid="process-book-btn">
+        Begin Your Muhurta Consultation
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================
+     FAQ
+========================================= -->
+<section id="faq" class="py-24" style="background:#F5EFE0;">
+  <div class="max-w-3xl mx-auto px-6 md:px-12">
+    <div class="text-center mb-14" data-aos="fade-up">
+      <p class="section-label mb-4">Frequently Asked</p>
+      <h2 class="font-serif font-bold text-maroon mb-4" style="font-size:clamp(2rem,4vw,3rem);letter-spacing:-0.02em;">Questions &amp; Clarity</h2>
+      <div class="gold-divider mx-auto"></div>
+    </div>
+    <div data-aos="fade-up" data-aos-delay="80">
+      <div class="faq-item" data-testid="faq-item-1">
+        <button class="faq-question" onclick="toggleFAQ(this)" aria-expanded="false" data-testid="faq-q1">
+          <span>What guarantees the phonetic accuracy of your mantras?</span><span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer"><p class="faq-answer-text">Our scholars completed a minimum 20-year residential Gurukul program under Shastra-certified Gurus, trained in Vedic phonetics (Shiksha) — where pitch, duration, nasalisation, and syllabic accent are taught orally over decades. Unlike certificate-course priests, our scholars have internalized the Veda through unbroken oral repetition. This is the only method the Vedic tradition recognizes as authentic.</p></div>
+      </div>
+      <div class="faq-item" data-testid="faq-item-2">
+        <button class="faq-question" onclick="toggleFAQ(this)" aria-expanded="false" data-testid="faq-q2">
+          <span>What is included in the stated service price?</span><span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer"><p class="faq-answer-text">All prices include scholar travel (within service area), all Himalayan Samagri, Havan Kund setup and dismantling, post-ritual prasad, and a 15-minute pre-ritual consultation. Optional add-ons are disclosed upfront. No hidden fees.</p></div>
+      </div>
+      <div class="faq-item" data-testid="faq-item-3">
+        <button class="faq-question" onclick="toggleFAQ(this)" aria-expanded="false" data-testid="faq-q3">
+          <span>What makes Himalayan Samagri different from market alternatives?</span><span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer"><p class="faq-answer-text">Commercial Samagri is often adulterated with synthetic fragrances or incorrect plant substitutes. Our Samagri is sourced directly from Himalayan tribal gatherers and Gurukul herb gardens, verified by our scholars against Ayurvedic and Vedic botanical texts. We never use pre-packaged kits.</p></div>
+      </div>
+      <div class="faq-item" data-testid="faq-item-4">
+        <button class="faq-question" onclick="toggleFAQ(this)" aria-expanded="false" data-testid="faq-q4">
+          <span>How do I book and what is the typical lead time?</span><span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer"><p class="faq-answer-text">All bookings begin with a WhatsApp consultation. Our scholar will understand your Sankalpa and recommend the appropriate ceremony. Bookings require 5–7 days for Muhurta selection and Samagri sourcing. A nominal advance confirms your slot; balance on the day of service.</p></div>
+      </div>
+      <div class="faq-item" data-testid="faq-item-5">
+        <button class="faq-question" onclick="toggleFAQ(this)" aria-expanded="false" data-testid="faq-q5">
+          <span>Which cities do you currently serve?</span><span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer"><p class="faq-answer-text">Delhi NCR (Delhi, Gurugram, Noida, Faridabad, Ghaziabad), Jaipur, and Lucknow. Expanding to Mumbai and Bengaluru. For other locations, we offer remote Sankalpa ceremonies or can arrange scholar travel for premium bookings.</p></div>
+      </div>
+      <div class="faq-item" data-testid="faq-item-6">
+        <button class="faq-question" onclick="toggleFAQ(this)" aria-expanded="false" data-testid="faq-q6">
+          <span>Can ceremonies be customized for specific intentions?</span><span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer"><p class="faq-answer-text">Yes. Every ceremony begins with a Sankalpa — a formal declaration of intent — uniquely tailored to your family and purpose. Our scholars can adapt the Ahuti sequence and mantra selection for Griha Pravesh, business commencement, health recovery, or Pitru Tarpan — all within Vedic Shastra.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================
+     FOOTER
+========================================= -->
+<footer id="footer" data-testid="footer">
+  <div class="max-w-7xl mx-auto px-6 md:px-12 py-16">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+      <div>
+        <p class="font-cinzel font-bold" style="font-size:1.65rem;color:#D4AF37;">HOMEPUJAN</p>
+        <p style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.18em;color:rgba(255,255,255,0.3);margin:0.5rem 0 1.25rem;">Preserving Tradition. Serving Modernity.</p>
+        <div style="width:40px;height:1px;background:rgba(212,175,55,0.35);margin-bottom:1.25rem;"></div>
+        <p style="font-size:0.85rem;color:rgba(255,255,255,0.35);line-height:1.7;">A collective of lifelong Gurukul scholars bringing uncompromised Vedic precision to your home.</p>
+      </div>
+      <div>
+        <p style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.18em;color:rgba(212,175,55,0.55);font-weight:600;margin-bottom:1.25rem;">Navigate</p>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:0.75rem;">
+          <li><a href="#lineage" class="footer-link" data-testid="footer-lineage-link">The Parampara</a></li>
+          <li><a href="#find-path" class="footer-link" data-testid="footer-path-link">Find Your Path</a></li>
+          <li><a href="#services" class="footer-link" data-testid="footer-services-link">Sacred Ceremonies</a></li>
+          <li><a href="#process" class="footer-link" data-testid="footer-process-link">The Sacred Process</a></li>
+          <li><a href="#faq" class="footer-link" data-testid="footer-faq-link">Questions &amp; Clarity</a></li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.18em;color:rgba(212,175,55,0.55);font-weight:600;margin-bottom:1.25rem;">Connect with a Scholar</p>
+        <p style="font-size:0.85rem;color:rgba(255,255,255,0.35);line-height:1.7;margin-bottom:1.25rem;">Ready to begin? Consult directly with a Gurukul scholar to find your Vedic path.</p>
+        <a href="https://wa.me/919667039964?text=I'm%20interested%20in%20finding%20my%20Vedic%20path."
+           target="_blank" rel="noopener noreferrer"
+           style="display:inline-flex;align-items:center;gap:0.6rem;padding:0.75rem 1.5rem;font-size:0.78rem;font-weight:500;text-transform:uppercase;letter-spacing:0.1em;color:#D4AF37;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.25);text-decoration:none;transition:all 0.25s;"
+           onmouseover="this.style.background='rgba(212,175,55,0.16)';this.style.borderColor='rgba(212,175,55,0.5)'"
+           onmouseout="this.style.background='rgba(212,175,55,0.08)';this.style.borderColor='rgba(212,175,55,0.25)'"
+           data-testid="footer-whatsapp-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652c1.746.943 3.71 1.444 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.48-8.45z"/></svg>
+          WhatsApp a Scholar
+        </a>
+        <p style="margin-top:1rem;font-size:0.82rem;color:rgba(255,255,255,0.28);">+91 96670 39964</p>
+      </div>
+    </div>
+    <div style="margin-top:3rem;padding-top:2rem;border-top:1px solid rgba(212,175,55,0.1);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.5rem;text-align:center;">
+      <p style="font-size:0.72rem;color:rgba(255,255,255,0.18);">&copy; 2025 HomePujan. All rights reserved.</p>
+      <p style="font-size:0.62rem;text-transform:uppercase;letter-spacing:0.18em;color:rgba(212,175,55,0.2);">Preserving Tradition. Serving Modernity.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- =========================================
+     MODALS
+========================================= -->
+
+<!-- MODAL: Vastu Shanti -->
+<div id="modal-vastu" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Vastu Shanti Havan details" data-testid="modal-vastu">
+  <div class="modal-drop">
+    <div class="modal-paper">
+      <button class="modal-close" onclick="closeModal('vastu')" data-testid="modal-vastu-close" aria-label="Close">&times;</button>
+      <div class="modal-inner">
+        <div style="margin-bottom:0.25rem;">
+          <span class="modal-tag">New Beginnings</span>
+          <span class="modal-tag">Home</span>
+          <span class="modal-tag">Office</span>
+        </div>
+        <h2 class="font-serif font-bold text-maroon" style="font-size:1.6rem;margin-top:0.75rem;margin-bottom:0.25rem;">Vastu Shanti Havan</h2>
+        <p style="font-size:1.1rem;color:#D4AF37;font-weight:500;margin-bottom:1rem;">Space Harmonization &amp; Corrective Vedic Protocol</p>
+        <div class="gold-divider mb-4" style="width:40px;"></div>
+        <p style="font-size:0.9rem;color:#5A4A4A;line-height:1.75;margin-bottom:1.5rem;">
+          The Vastu Shanti Havan addresses accumulated energetic imbalances in your living or workspace. Through targeted mantra sequences and elemental offerings, our scholars recalibrate the panchabhuta (five elements) to their natural alignment — restoring harmony, peace, and positive flow to every corner of your home.
+        </p>
+        <div style="background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);padding:1.25rem;margin-bottom:1.5rem;">
+          <div class="modal-detail-row"><span class="modal-detail-label">Duration</span><span class="modal-detail-val">3–4 Hours</span></div>
+          <div class="modal-detail-row"><span class="modal-detail-label">Scholars</span><span class="modal-detail-val">2 Gurukul-trained Scholars</span></div>
+          <div class="modal-detail-row"><span class="modal-detail-label">Samagri</span><span class="modal-detail-val">Himalayan herbs, pure Desi ghee, sacred Peepal wood, Saptamrit</span></div>
+          <div class="modal-detail-row" style="margin-bottom:0;"><span class="modal-detail-label">Investment</span><span class="modal-detail-val font-serif font-bold text-maroon" style="font-size:1.2rem;">From ₹15,000</span></div>
+        </div>
+        <a href="https://wa.me/919667039964?text=I'm%20interested%20in%20Vastu%20Shanti%20Havan.%20Please%20guide%20me."
+           target="_blank" class="btn-discuss" data-testid="modal-vastu-discuss-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652c1.746.943 3.71 1.444 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.48-8.45z"/></svg>
+          Discuss with Jaynendra
         </a>
       </div>
-
     </div>
-  </section>
+  </div>
+</div>
 
-  <!-- =========================================
-       FAQ
-  ========================================= -->
-  <section id="faq" class="py-24" style="background:#F5EFE0;">
-    <div class="max-w-3xl mx-auto px-6 md:px-12">
-
-      <!-- Header -->
-      <div class="text-center mb-14" data-aos="fade-up">
-        <p class="section-label mb-4">Frequently Asked</p>
-        <h2 class="font-serif font-bold text-maroon mb-4" style="font-size:clamp(2rem,4vw,3rem); letter-spacing:-0.02em;">Questions &amp; Clarity</h2>
-        <div class="gold-divider mx-auto"></div>
-      </div>
-
-      <!-- Accordion -->
-      <div data-aos="fade-up" data-aos-delay="80">
-
-        <div class="faq-item" data-testid="faq-item-1">
-          <button class="faq-question" onclick="toggleFAQ(this)" aria-expanded="false" data-testid="faq-question-1">
-            <span>What guarantees the phonetic accuracy of your mantras?</span>
-            <span class="faq-icon" aria-hidden="true">+</span>
-          </button>
-          <div class="faq-answer">
-            <p class="faq-answer-text">Our scholars completed a minimum 20-year residential Gurukul program under Shastra-certified Gurus, specifically trained in Vedic phonetics (Shiksha) — where pitch, duration, nasalisation, and syllabic accent are taught orally over decades. Unlike app-based or certificate-course priests, our scholars have internalized the Veda through years of oral repetition. This is the only method the Vedic tradition recognizes as authentic.</p>
-          </div>
+<!-- MODAL: Lakshmi-Kuber -->
+<div id="modal-lakshmi" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Lakshmi-Kuber Havan details" data-testid="modal-lakshmi">
+  <div class="modal-drop">
+    <div class="modal-paper">
+      <button class="modal-close" onclick="closeModal('lakshmi')" data-testid="modal-lakshmi-close" aria-label="Close">&times;</button>
+      <div class="modal-inner">
+        <div style="margin-bottom:0.25rem;">
+          <span class="modal-tag">Success &amp; Growth</span>
+          <span class="modal-tag">Business</span>
+          <span class="modal-tag">Career</span>
         </div>
-
-        <div class="faq-item" data-testid="faq-item-2">
-          <button class="faq-question" onclick="toggleFAQ(this)" aria-expanded="false" data-testid="faq-question-2">
-            <span>What is included in the stated service price?</span>
-            <span class="faq-icon" aria-hidden="true">+</span>
-          </button>
-          <div class="faq-answer">
-            <p class="faq-answer-text">All prices include: scholar travel within the designated service area, all Himalayan Samagri (ritual ingredients), Havan Kund setup and dismantling, post-ritual prasad distribution, and a 15-minute pre-ritual consultation. Optional add-ons — extended Ahutis, additional scholars, or rare ingredients — are disclosed upfront. There are no hidden fees.</p>
-          </div>
+        <h2 class="font-serif font-bold text-maroon" style="font-size:1.6rem;margin-top:0.75rem;margin-bottom:0.25rem;">Lakshmi-Kuber Havan</h2>
+        <p style="font-size:1.1rem;color:#D4AF37;font-weight:500;margin-bottom:1rem;">Invoking Prosperity &amp; Removing Professional Blockages</p>
+        <div class="gold-divider mb-4" style="width:40px;"></div>
+        <p style="font-size:0.9rem;color:#5A4A4A;line-height:1.75;margin-bottom:1.5rem;">
+          A precise dual invocation of Goddess Lakshmi (Goddess of abundance) and Lord Kubera (God of wealth). This Havan creates Vedic pathways for material and spiritual prosperity, specifically addressing blockages in income flow, business momentum, and career advancement. Every Ahuti is made with ingredients specifically prescribed in the Lakshmi Tantra.
+        </p>
+        <div style="background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);padding:1.25rem;margin-bottom:1.5rem;">
+          <div class="modal-detail-row"><span class="modal-detail-label">Duration</span><span class="modal-detail-val">3–4 Hours</span></div>
+          <div class="modal-detail-row"><span class="modal-detail-label">Scholars</span><span class="modal-detail-val">2 Gurukul-trained Scholars</span></div>
+          <div class="modal-detail-row"><span class="modal-detail-label">Samagri</span><span class="modal-detail-val">Himalayan lotus seeds, kumkum, ashtagandha, saffron, pure ghee</span></div>
+          <div class="modal-detail-row" style="margin-bottom:0;"><span class="modal-detail-label">Investment</span><span class="modal-detail-val font-serif font-bold text-maroon" style="font-size:1.2rem;">From ₹11,000</span></div>
         </div>
-
-        <div class="faq-item" data-testid="faq-item-3">
-          <button class="faq-question" onclick="toggleFAQ(this)" aria-expanded="false" data-testid="faq-question-3">
-            <span>What makes Himalayan Samagri different from market alternatives?</span>
-            <span class="faq-icon" aria-hidden="true">+</span>
-          </button>
-          <div class="faq-answer">
-            <p class="faq-answer-text">Vedic texts specify precise botanical ingredients — the correct species, growth region, and preparation method matter for a ritual's efficacy. Commercial Samagri is often adulterated with synthetic fragrances or incorrect substitutes. Our Samagri is sourced directly from Himalayan tribal gatherers and Gurukul herb gardens, verified by our scholars against Ayurvedic and Vedic botanical texts. We never use pre-packaged kits.</p>
-          </div>
-        </div>
-
-        <div class="faq-item" data-testid="faq-item-4">
-          <button class="faq-question" onclick="toggleFAQ(this)" aria-expanded="false" data-testid="faq-question-4">
-            <span>How do I book and what is the typical lead time?</span>
-            <span class="faq-icon" aria-hidden="true">+</span>
-          </button>
-          <div class="faq-answer">
-            <p class="faq-answer-text">All bookings begin with a WhatsApp consultation with a scholar, who will understand your Sankalpa (intent) and recommend the appropriate ritual. Bookings typically require 5–7 days to allow for Muhurta selection and Samagri sourcing. A nominal advance payment confirms the slot, with the balance collected on the day of service. Expedited services are occasionally available.</p>
-          </div>
-        </div>
-
-        <div class="faq-item" data-testid="faq-item-5">
-          <button class="faq-question" onclick="toggleFAQ(this)" aria-expanded="false" data-testid="faq-question-5">
-            <span>Which cities do you currently serve?</span>
-            <span class="faq-icon" aria-hidden="true">+</span>
-          </button>
-          <div class="faq-answer">
-            <p class="faq-answer-text">We currently serve Delhi NCR (Delhi, Gurugram, Noida, Faridabad, Ghaziabad), as well as Jaipur and Lucknow. We are expanding to Mumbai and Bengaluru. For locations outside our service area, we offer curated remote Sankalpa ceremonies, or can arrange scholar travel for premium full-service bookings.</p>
-          </div>
-        </div>
-
-        <div class="faq-item" data-testid="faq-item-6">
-          <button class="faq-question" onclick="toggleFAQ(this)" aria-expanded="false" data-testid="faq-question-6">
-            <span>Can rituals be customized for specific occasions or intentions?</span>
-            <span class="faq-icon" aria-hidden="true">+</span>
-          </button>
-          <div class="faq-answer">
-            <p class="faq-answer-text">Yes. Every ritual begins with a Sankalpa — a formal declaration of intent — uniquely tailored to you, your family name, and your specific purpose. Within Vedic scripture, our scholars can adapt the Ahuti sequence, mantra selection, and ceremony duration for Griha Pravesh, business commencement, health recovery, or Pitru Tarpan. All customization remains within the bounds of Vedic Shastra.</p>
-          </div>
-        </div>
-
+        <a href="https://wa.me/919667039964?text=I'm%20interested%20in%20Lakshmi-Kuber%20Havan.%20Please%20guide%20me."
+           target="_blank" class="btn-discuss" data-testid="modal-lakshmi-discuss-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652c1.746.943 3.71 1.444 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.48-8.45z"/></svg>
+          Discuss with Jaynendra
+        </a>
       </div>
     </div>
-  </section>
+  </div>
+</div>
 
-  <!-- =========================================
-       FOOTER
-  ========================================= -->
-  <footer id="footer" data-testid="footer" style="background:#150505; border-top:2px solid #D4AF37; position:relative; overflow:hidden;">
-    <!-- Noise texture overlay -->
-    <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;z-index:0;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='fn'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23fn)' opacity='0.07'/%3E%3C/svg%3E&quot;);opacity:0.55;"></div>
-    <div class="max-w-7xl mx-auto px-6 md:px-12 py-16" style="position:relative;z-index:1;">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-
-        <!-- Brand -->
-        <div>
-          <p class="font-serif font-bold" style="font-size:1.8rem; color:#D4AF37;">HomePujan</p>
-          <p style="font-size:0.68rem; text-transform:uppercase; letter-spacing:0.18em; color:rgba(253,251,247,0.35); margin:0.5rem 0 1.25rem;">Preserving Tradition. Serving Modernity.</p>
-          <div style="width:40px; height:1px; background:rgba(212,175,55,0.35); margin-bottom:1.25rem;"></div>
-          <p style="font-size:0.85rem; color:rgba(253,251,247,0.38); line-height:1.7;">
-            A collective of lifelong Gurukul scholars bringing uncompromised Vedic precision to your home.
-          </p>
+<!-- MODAL: Maha Mrityunjaya -->
+<div id="modal-maha" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Maha Mrityunjaya Havan details" data-testid="modal-maha">
+  <div class="modal-drop">
+    <div class="modal-paper">
+      <button class="modal-close" onclick="closeModal('maha')" data-testid="modal-maha-close" aria-label="Close">&times;</button>
+      <div class="modal-inner">
+        <div style="margin-bottom:0.25rem;">
+          <span class="modal-tag">Health &amp; Protection</span>
+          <span class="modal-tag">Wellness</span>
+          <span class="modal-tag">Longevity</span>
         </div>
-
-        <!-- Links -->
-        <div>
-          <p style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.18em; color:rgba(212,175,55,0.55); font-weight:600; margin-bottom:1.25rem;">Navigate</p>
-          <ul style="list-style:none; display:flex; flex-direction:column; gap:0.75rem;">
-            <li><a href="#lineage" class="footer-link" data-testid="footer-lineage-link">Our Lineage</a></li>
-            <li><a href="#services" class="footer-link" data-testid="footer-services-link">Services</a></li>
-            <li><a href="#process" class="footer-link" data-testid="footer-process-link">Process</a></li>
-            <li><a href="#faq" class="footer-link" data-testid="footer-faq-link">FAQ</a></li>
-          </ul>
+        <h2 class="font-serif font-bold text-maroon" style="font-size:1.6rem;margin-top:0.75rem;margin-bottom:0.25rem;">Maha Mrityunjaya Havan</h2>
+        <p style="font-size:1.1rem;color:#D4AF37;font-weight:500;margin-bottom:1rem;">Supreme Vitality &amp; Protecting Life Force</p>
+        <div class="gold-divider mb-4" style="width:40px;"></div>
+        <p style="font-size:0.9rem;color:#5A4A4A;line-height:1.75;margin-bottom:1.5rem;">
+          The most potent Vedic invocation for health, vitality, and the protection of life force. The Maha Mrityunjaya mantra is recited 108 times with meticulous phonetic precision, each Ahuti (offering) made with specific Himalayan medicinal herbs known in Ayurveda for their life-sustaining properties. Performed for health recovery, chronic illness, and the preservation of vitality.
+        </p>
+        <div style="background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);padding:1.25rem;margin-bottom:1.5rem;">
+          <div class="modal-detail-row"><span class="modal-detail-label">Duration</span><span class="modal-detail-val">4–5 Hours</span></div>
+          <div class="modal-detail-row"><span class="modal-detail-label">Scholars</span><span class="modal-detail-val">3 Gurukul-trained Scholars</span></div>
+          <div class="modal-detail-row"><span class="modal-detail-label">Samagri</span><span class="modal-detail-val">108 Himalayan medicinal herbs, Bilva leaves, white sesame, pure ghee, Badri wood</span></div>
+          <div class="modal-detail-row" style="margin-bottom:0;"><span class="modal-detail-label">Investment</span><span class="modal-detail-val font-serif font-bold text-maroon" style="font-size:1.2rem;">From ₹21,000</span></div>
         </div>
-
-        <!-- Contact -->
-        <div>
-          <p style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.18em; color:rgba(212,175,55,0.55); font-weight:600; margin-bottom:1.25rem;">Connect with a Scholar</p>
-          <p style="font-size:0.85rem; color:rgba(253,251,247,0.38); line-height:1.7; margin-bottom:1.25rem;">
-            Ready to begin? Consult directly with a Gurukul scholar to choose the right ritual for your home.
-          </p>
-          <a href="https://wa.me/919667039964?text=I'm%20interested%20in%20booking%20a%20Vedic%20service."
-             target="_blank" rel="noopener noreferrer"
-             style="display:inline-flex; align-items:center; gap:0.6rem; padding:0.75rem 1.5rem; font-size:0.78rem; font-weight:500; text-transform:uppercase; letter-spacing:0.1em; color:#D4AF37; background:rgba(212,175,55,0.08); border:1px solid rgba(212,175,55,0.25); text-decoration:none; transition:background 0.25s, border-color 0.25s;"
-             onmouseover="this.style.background='rgba(212,175,55,0.15)'; this.style.borderColor='rgba(212,175,55,0.45)';"
-             onmouseout="this.style.background='rgba(212,175,55,0.08)'; this.style.borderColor='rgba(212,175,55,0.25)';"
-             data-testid="footer-whatsapp-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652c1.746.943 3.71 1.444 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.48-8.45zM12.045 21.785h-.006c-1.773 0-3.513-.474-5.031-1.37l-.361-.213-3.741.977 1.004-3.648-.235-.374a9.716 9.716 0 0 1-1.502-5.163c.002-5.374 4.406-9.744 9.83-9.744 2.626 0 5.092 1.018 6.948 2.865a9.716 9.716 0 0 1 2.883 6.894c-.002 5.374-4.406 9.776-9.789 9.776zm5.362-7.316c-.293-.146-1.736-.852-2.004-.949-.27-.098-.466-.146-.663.146-.196.293-.76.949-.93 1.145-.17.195-.342.22-.636.073-.293-.146-1.24-.455-2.362-1.45-.872-.775-1.462-1.733-1.634-2.027-.17-.293-.018-.452.129-.597.13-.13.293-.342.44-.512.146-.17.195-.293.293-.488.097-.196.049-.367-.024-.513-.073-.146-.663-1.587-.907-2.175-.239-.57-.483-.494-.664-.502-.17-.007-.367-.009-.563-.009s-.513.073-.782.366c-.27.293-1.026.998-1.026 2.43 0 1.432 1.05 2.815 1.196 3.01.146.195 2.063 3.137 5 4.4.699.3 1.245.48 1.67.614.7.224 1.338.193 1.842.117.562-.083 1.73-.704 1.975-1.386.244-.68.244-1.263.17-1.386-.073-.122-.268-.195-.562-.341z"/>
-            </svg>
-            WhatsApp a Scholar
-          </a>
-          <p style="margin-top:1rem; font-size:0.82rem; color:rgba(253,251,247,0.3);">+91 96670 39964</p>
-        </div>
-
-      </div>
-
-      <!-- Bottom bar -->
-      <div style="margin-top:3rem; padding-top:2rem; border-top:1px solid rgba(212,175,55,0.08); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.5rem; text-align:center;">
-        <p style="font-size:0.72rem; color:rgba(253,251,247,0.22);">&copy; 2025 HomePujan. All rights reserved.</p>
-        <p style="font-size:0.65rem; text-transform:uppercase; letter-spacing:0.18em; color:rgba(212,175,55,0.22);">Preserving Tradition. Serving Modernity.</p>
+        <a href="https://wa.me/919667039964?text=I'm%20interested%20in%20Maha%20Mrityunjaya%20Havan.%20Please%20guide%20me."
+           target="_blank" class="btn-discuss" data-testid="modal-maha-discuss-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652c1.746.943 3.71 1.444 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.48-8.45z"/></svg>
+          Discuss with Jaynendra
+        </a>
       </div>
     </div>
-  </footer>
+  </div>
+</div>
 
-  <!-- AOS Library -->
-  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<!-- AOS -->
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init({ duration: 720, easing: 'ease-out-cubic', once: true, offset: 55 });
 
-  <script>
-    // ─── AOS Init ────────────────────────────────
-    AOS.init({
-      duration: 720,
-      easing: 'ease-out-cubic',
-      once: true,
-      offset: 55,
-    });
+  // ── NAVBAR ──
+  const navbar = document.getElementById('navbar');
+  const lotus  = document.getElementById('gold-lotus');
+  window.addEventListener('scroll', () => {
+    const s = window.scrollY > 24;
+    navbar.classList.toggle('scrolled', s);
+    lotus.classList.toggle('visible', window.scrollY > 350);
+  }, { passive: true });
 
-    // ─── Navbar scroll shadow ─────────────────────
-    const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-      navbar.classList.toggle('scrolled', window.scrollY > 24);
-    }, { passive: true });
+  // ── LOTUS SCROLL TO TOP ──
+  lotus.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-    // ─── Mobile menu ──────────────────────────────
-    const menuBtn = document.getElementById('menu-btn');
-    const mobMenu = document.getElementById('mob-menu');
-    let menuOpen = false;
+  // ── MOBILE MENU ──
+  const menuBtn = document.getElementById('menu-btn');
+  const mobMenu = document.getElementById('mob-menu');
+  menuBtn.addEventListener('click', () => mobMenu.classList.toggle('open'));
+  function closeMob() { mobMenu.classList.remove('open'); }
+  document.addEventListener('click', e => { if (!navbar.contains(e.target)) closeMob(); });
 
-    menuBtn.addEventListener('click', () => {
-      menuOpen = !menuOpen;
-      mobMenu.classList.toggle('open', menuOpen);
-    });
+  // ── FAQ ACCORDION ──
+  function toggleFAQ(btn) {
+    const ans  = btn.nextElementSibling;
+    const icon = btn.querySelector('.faq-icon');
+    const open = ans.classList.contains('open');
+    document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
+    document.querySelectorAll('.faq-icon').forEach(i => { i.textContent = '+'; i.classList.remove('rotated'); });
+    document.querySelectorAll('.faq-question').forEach(q => q.setAttribute('aria-expanded', 'false'));
+    if (!open) { ans.classList.add('open'); icon.textContent = '+'; icon.classList.add('rotated'); btn.setAttribute('aria-expanded', 'true'); }
+  }
 
-    function closeMob() {
-      menuOpen = false;
-      mobMenu.classList.remove('open');
+  // ── FILTER SYSTEM (400ms opacity fade) ──
+  let activeFilter = null;
+  function filterServices(category) {
+    const tiles = document.querySelectorAll('[data-filter]');
+    const cards = document.querySelectorAll('[data-category]');
+    const label = document.getElementById('filter-label');
+    const labels = {
+      beginnings: 'Showing ceremonies for <strong>New Beginnings</strong> — home, office &amp; space harmonization.',
+      success:    'Showing ceremonies for <strong>Success &amp; Growth</strong> — prosperity, business &amp; career.',
+      health:     'Showing ceremonies for <strong>Health &amp; Protection</strong> — vitality, wellness &amp; longevity.'
+    };
+    if (activeFilter === category) {
+      activeFilter = null;
+      tiles.forEach(t => t.classList.remove('active'));
+      cards.forEach(c => { c.style.opacity = '1'; c.style.transform = ''; c.style.pointerEvents = 'auto'; c.classList.remove('filtered-out','filtered-in'); });
+      label.innerHTML = 'Each ceremony is meticulously designed following Vedic scripture, performed with unadulterated Himalayan materials.';
+      return;
     }
-
-    document.addEventListener('click', (e) => {
-      if (!navbar.contains(e.target)) closeMob();
-    });
-
-    // ─── FAQ Accordion ────────────────────────────
-    function toggleFAQ(btn) {
-      const answer = btn.nextElementSibling;
-      const icon   = btn.querySelector('.faq-icon');
-      const isOpen = answer.classList.contains('open');
-
-      // Close all
-      document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
-      document.querySelectorAll('.faq-icon').forEach(i => { i.textContent = '+'; i.classList.remove('rotated'); });
-      document.querySelectorAll('.faq-question').forEach(q => q.setAttribute('aria-expanded', 'false'));
-
-      // Open if was closed
-      if (!isOpen) {
-        answer.classList.add('open');
-        icon.textContent = '+';
-        icon.classList.add('rotated');
-        btn.setAttribute('aria-expanded', 'true');
+    activeFilter = category;
+    tiles.forEach(t => t.classList.toggle('active', t.dataset.filter === category));
+    cards.forEach(c => {
+      if (c.dataset.category === category) {
+        c.style.opacity = '1'; c.style.transform = 'scale(1)'; c.style.pointerEvents = 'auto';
+        c.classList.remove('filtered-out'); c.classList.add('filtered-in');
+      } else {
+        c.style.opacity = '0.15'; c.style.transform = 'scale(0.97)'; c.style.pointerEvents = 'none';
+        c.classList.remove('filtered-in'); c.classList.add('filtered-out');
       }
-    }
-  </script>
+    });
+    label.innerHTML = labels[category] || '';
+    setTimeout(() => document.getElementById('services').scrollIntoView({ behavior: 'smooth', block: 'start' }), 120);
+  }
+
+  // ── KEYBOARD ACCESSIBILITY FOR TILES ──
+  document.querySelectorAll('[data-filter]').forEach(tile => {
+    tile.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); filterServices(tile.dataset.filter); } });
+  });
+
+  // ── MODAL SYSTEM ──
+  function openModal(id) {
+    const m = document.getElementById('modal-' + id);
+    if (!m) return;
+    m.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => requestAnimationFrame(() => m.classList.add('visible')));
+  }
+  function closeModal(id) {
+    const m = document.getElementById('modal-' + id);
+    if (!m) return;
+    m.classList.remove('visible');
+    setTimeout(() => { m.style.display = 'none'; document.body.style.overflow = ''; }, 320);
+  }
+  // Close on backdrop click
+  document.querySelectorAll('.modal-overlay').forEach(m => {
+    m.addEventListener('click', e => { if (e.target === m) closeModal(m.id.replace('modal-', '')); });
+  });
+  // Close on Escape
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.visible').forEach(m => closeModal(m.id.replace('modal-', '')));
+  });
+</script>
 
 </body>
 </html>
