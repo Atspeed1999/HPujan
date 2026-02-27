@@ -650,9 +650,42 @@
     <div class="pedigree-line-top"></div>
     <div class="pedigree-line-bottom"></div>
 
-    <!-- Manuscript texture overlay -->
-    <div class="absolute inset-0"
-         style="background-image:url('https://images.unsplash.com/photo-1702071012187-4b7174ae4aca?crop=entropy&cs=srgb&fm=jpg&q=40&w=1400'); background-size:cover; background-position:center; opacity:0.04; pointer-events:none;"></div>
+    <!-- Mandala watermark -->
+    <div class="absolute inset-0" style="display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0.05;overflow:hidden;">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="-20 -20 440 440" width="680" height="680" fill="none" stroke="white" stroke-width="0.9" overflow="visible">
+        <g transform="translate(200,200)">
+          <circle r="185"/><circle r="135"/><circle r="80"/><circle r="32"/><circle r="7" fill="white" stroke="none"/>
+          <line x1="0" y1="-185" x2="0" y2="185"/>
+          <line x1="0" y1="-185" x2="0" y2="185" transform="rotate(45)"/>
+          <line x1="0" y1="-185" x2="0" y2="185" transform="rotate(90)"/>
+          <line x1="0" y1="-185" x2="0" y2="185" transform="rotate(135)"/>
+          <ellipse rx="26" ry="52" transform="translate(0,-160)"/>
+          <ellipse rx="26" ry="52" transform="rotate(45) translate(0,-160)"/>
+          <ellipse rx="26" ry="52" transform="rotate(90) translate(0,-160)"/>
+          <ellipse rx="26" ry="52" transform="rotate(135) translate(0,-160)"/>
+          <ellipse rx="26" ry="52" transform="rotate(180) translate(0,-160)"/>
+          <ellipse rx="26" ry="52" transform="rotate(225) translate(0,-160)"/>
+          <ellipse rx="26" ry="52" transform="rotate(270) translate(0,-160)"/>
+          <ellipse rx="26" ry="52" transform="rotate(315) translate(0,-160)"/>
+          <ellipse rx="14" ry="30" transform="translate(0,-107)"/>
+          <ellipse rx="14" ry="30" transform="rotate(45) translate(0,-107)"/>
+          <ellipse rx="14" ry="30" transform="rotate(90) translate(0,-107)"/>
+          <ellipse rx="14" ry="30" transform="rotate(135) translate(0,-107)"/>
+          <ellipse rx="14" ry="30" transform="rotate(180) translate(0,-107)"/>
+          <ellipse rx="14" ry="30" transform="rotate(225) translate(0,-107)"/>
+          <ellipse rx="14" ry="30" transform="rotate(270) translate(0,-107)"/>
+          <ellipse rx="14" ry="30" transform="rotate(315) translate(0,-107)"/>
+          <polygon points="0,-57 9,-47 0,-37 -9,-47"/>
+          <polygon points="0,-57 9,-47 0,-37 -9,-47" transform="rotate(45)"/>
+          <polygon points="0,-57 9,-47 0,-37 -9,-47" transform="rotate(90)"/>
+          <polygon points="0,-57 9,-47 0,-37 -9,-47" transform="rotate(135)"/>
+          <polygon points="0,-57 9,-47 0,-37 -9,-47" transform="rotate(180)"/>
+          <polygon points="0,-57 9,-47 0,-37 -9,-47" transform="rotate(225)"/>
+          <polygon points="0,-57 9,-47 0,-37 -9,-47" transform="rotate(270)"/>
+          <polygon points="0,-57 9,-47 0,-37 -9,-47" transform="rotate(315)"/>
+        </g>
+      </svg>
+    </div>
 
     <div class="max-w-4xl mx-auto px-6 md:px-12 relative text-center" style="z-index:1;">
 
