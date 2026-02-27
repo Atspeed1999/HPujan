@@ -288,7 +288,17 @@
         <!-- Desktop Nav Links -->
         <div class="hidden md:flex items-center gap-10">
           <a href="#lineage" class="nav-link" data-testid="nav-lineage">Our Lineage</a>
-          <a href="#services" class="nav-link" data-testid="nav-services">Services</a>
+          <div class="nav-dropdown" data-testid="nav-services-dropdown">
+            <a href="#services" class="nav-link" style="display:inline-flex;align-items:center;gap:3px;" data-testid="nav-services">
+              Services
+              <svg class="nav-chevron" xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </a>
+            <div class="nav-dropdown-menu">
+              <a href="#find-path" class="nav-dropdown-item" data-testid="nav-dropdown-occasion">Shop by Occasion</a>
+              <div style="height:1px;background:rgba(212,175,55,0.18);margin:0.2rem 0;"></div>
+              <a href="#services" class="nav-dropdown-item" data-testid="nav-dropdown-resolution">Shop by Resolution</a>
+            </div>
+          </div>
           <a href="#process" class="nav-link" data-testid="nav-process">Process</a>
           <a href="#faq" class="nav-link" data-testid="nav-faq">FAQ</a>
         </div>
