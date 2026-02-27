@@ -257,6 +257,84 @@
     /* Footer link hover */
     .footer-link { color: rgba(253,251,247,0.45); text-decoration: none; font-size: 0.875rem; transition: color 0.2s ease; }
     .footer-link:hover { color: #D4AF37; }
+
+    /* ── NAV DROPDOWN ── */
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 50%;
+      transform: translateX(-50%);
+      min-width: 210px;
+      background: rgba(253,251,247,0.97);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(212,175,55,0.25);
+      box-shadow: 0 12px 40px rgba(74,14,14,0.1);
+      z-index: 200;
+      padding: 0.4rem 0;
+    }
+    .nav-dropdown:hover .nav-dropdown-menu { display: block; }
+    .nav-dropdown-item {
+      display: block;
+      padding: 0.75rem 1.25rem;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      color: #5A4A4A;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+    .nav-dropdown-item:hover { color: #4A0E0E; background: rgba(212,175,55,0.07); }
+    .nav-chevron {
+      display: inline-block;
+      transition: transform 0.25s ease;
+      vertical-align: middle;
+      flex-shrink: 0;
+    }
+    .nav-dropdown:hover .nav-chevron { transform: rotate(180deg); }
+
+    /* ── PATH TILES ── */
+    .path-tile {
+      display: flex; flex-direction: column;
+      background: #fff;
+      border: 1px solid #E5DED0;
+      padding: 2rem 2rem 1.75rem;
+      text-decoration: none;
+      transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+    }
+    .path-tile:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 50px rgba(74,14,14,0.1);
+      border-color: #D4AF37;
+    }
+    .path-tile-icon {
+      width: 64px; height: 64px;
+      border: 1px solid rgba(212,175,55,0.3);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.5rem;
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+    .path-tile:hover .path-tile-icon {
+      background: rgba(212,175,55,0.06);
+      border-color: rgba(212,175,55,0.6);
+    }
+    .path-tile-cta {
+      margin-top: auto;
+      padding-top: 1.25rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #D4AF37;
+      transition: color 0.2s ease;
+    }
+    .path-tile:hover .path-tile-cta { color: #4A0E0E; }
+
+    /* ── PROCESS ICON ── */
+    .process-icon { margin-bottom: 1.25rem; }
   </style>
 </head>
 
