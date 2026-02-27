@@ -22,44 +22,36 @@ Build a high-end, single-page landing page for **HomePujan.com** — a brand tha
 - Educated, affluent, spiritually inclined but discerning
 - Seeking authentic, no-compromise Vedic rituals for their home
 
-## What's Been Implemented (Feb 2026)
+## What's Been Implemented (Feb 2026) — Final Version
 
 ### Sections
-1. **Glassmorphism Navigation** — Logo (Playfair Display), smooth-scroll nav links (Our Lineage, Services, Process, FAQ), WhatsApp Scholar button, mobile hamburger menu
-2. **Hero Section** — Full viewport split: Playfair Display headline ("20 Years in a Gurukul. One Sacred Space: Yours."), real havan fire macro photography, floating badge, dual CTAs, gold divider
-3. **Trust Bar** — 3-column authority layer: 20+ Years Vedic Study | 10,000+ Shlokas | 100% Himalayan Samagri with gold separators
-4. **Service Matrix (3 Premium Cards)** — Vastu Shanti Havan (₹15,000), Lakshmi-Kuber Havan (₹11,000), Maha Mrityunjaya (₹21,000) — each with card image, hover-lift, pricing, WhatsApp Inquire CTA
-5. **Pedigree Section** — Deep maroon background, gold headline, scholar credentials (Gurukul trained Rishikesh, Rigveda/Atharvaveda, Sanskrit Phonetics)
-6. **Process (3 Steps)** — 01 Muhurta Consultation | 02 Scholarly Preparation | 03 Vedic Execution
-7. **FAQ Accordion** — 6 questions covering phonetic authenticity, pricing, Himalayan Samagri, booking process, service areas, customization
-8. **Footer** — Dark (#150505), HomePujan in gold, tagline, navigation, WhatsApp CTA, phone number
-9. **Floating WhatsApp Button** — Persistent bottom-right, pulse ring animation, links to wa.me/919667039964
+1. **Glassmorphism Navigation** — Cinzel logo, smooth-scroll nav links (Lineage, Services dropdown, Process, FAQ), WhatsApp Scholar button, mobile hamburger menu with auto-close
+2. **Hero Section** — Full viewport split: Cinzel headline ("Ancient Precision. Modern Peace. 20 Years of Scholarly Mastery."), double-stroke antique gold frame on havan fire image, floating badge, dual CTAs ("Vedic Exchange" + "The Scholar's Lineage")
+3. **Trust Bar** — 3-column authority layer: 20+ Years Vedic Study | 10,000+ Shlokas | 100% Himalayan Samagri
+4. **Find Your Path (Diagnostic Funnel)** — 3 clickable tiles (New Beginnings/Home, Success & Growth/Business, Health & Protection/Wellness) with gold SVG icons, hover-lift, active state, WhatsApp footer link
+5. **Vedic Services Filtered Grid** — 3 service cards with 400ms opacity-fade filter system; no "Shop/Buy" language — uses "Explore" and "Vedic Exchange"
+6. **Parchment Modals (4-Section Structure)** — Each modal has deckle/rough paper edges (clip-path polygon), subtle grain overlay, and 4 scholarly sections:
+   - **The Invocation**: Sanskrit name (Cinzel font) + Scholarly subtitle (Playfair italic)
+   - **The Vedic Intent**: Spiritual problem the ceremony solves
+   - **The Scholarly Edge**: Why 20-year mastery is specifically required (maroon left-border italic block)
+   - **The Elements**: Duration, Scholar count, Samagri sourcing, Dakshina Estimate
+   - "Discuss with Jaynendra" WhatsApp CTA button
+7. **Scholarly Parampara (Lineage)** — Deep Maroon (#4A0E0E) background, 5% opacity Mandala watermark (concentric circles + lotus petals), "The Scholarly Parampara: A 20-Year Lineage" copy
+8. **Sacred Process (3 Steps)** — Hand-drawn gold SVG icons: Sundial (Muhurta), Sacred Herbs (Preparation), Havan Kund Flame (Execution)
+9. **FAQ Accordion** — 6 questions, one-at-a-time behavior, max-height transition
+10. **Footer (Tactile Finish)** — Charcoal (#2D2D2D) with grainy SVG texture + gold top border
+11. **Gold Lotus** — Floating scroll-to-top icon (bottom-left), appears after 350px scroll
+12. **Floating WhatsApp** — Persistent bottom-right, pulse ring animation, wa.me/919667039964
 
 ### Technical Features
-- Paper grain CSS texture overlay (via SVG filter)
-- AOS (Animate On Scroll) with staggered fade-up entrances
-- Smooth scrolling (CSS scroll-behavior)
-- Navbar scroll shadow state
-- Service card hover-lift with image zoom
-- FAQ accordion (one-at-a-time, max-height transition)
+- CSS noise texture overlay (SVG fractalNoise, body::after)
+- AOS 2.3.4 (scroll-triggered fade-up animations, staggered delays)
+- Modal scrollable content (max-height: 92vh, overflow-y: auto with thin scrollbar)
+- 400ms filter system: data-filter (tiles) / data-category (cards) attribute mapping
+- Keyboard accessibility: Enter/Space on path tiles, Escape on modals
 - Mobile-first responsive at 375px+
 - All interactive elements have `data-testid` attributes
-
-## WhatsApp Integration
-All CTAs link to: `https://wa.me/919667039964?text=I'm%20interested%20in%20booking%20a%20Vedic%20service.`
-Phone: +91 96670 39964
-
-## Visual & UX Refinements — Round 2 (Feb 2026)
-
-### All 8 Changes Applied
-1. **Header Glassmorphism** — `backdrop-filter: blur(12px)` + `box-shadow: 0 4px 30px rgba(0,0,0,0.1)` on scroll
-2. **Hero Headline** — Updated to "Ancient Precision. Modern Peace. 20 Years of Scholarly Mastery."
-3. **Find Your Path section** — 3 clickable tiles (New Beginnings/Home, Success & Growth/Business, Health & Protection/Wellness) each with gold-line SVG icon, Playfair title, gold subtitle, hover-lift — inserted between Trust Bar and Services
-4. **Service Card Subtitles** — Upgraded to `font-size:1.25rem; font-weight:500` for equal readability with Sanskrit titles
-5. **Pedigree Section** — Credential updated to "Schooled in Traditional Gurukuls for 20 Years" + inline SVG mandala watermark at 5% opacity (concentric circles, lotus petals, geometric diamonds)
-6. **Process Step Icons** — 3 minimalist gold SVG icons: Sundial/Clock (Step 1), Sacred Herbs Bundle (Step 2), Havan Kund Flame (Step 3)
-7. **Footer** — `border-top: 2px solid #D4AF37` + SVG noise texture overlay via positioned `::after`-style div
-8. **Services Nav Dropdown** — Hover dropdown with chevron: "Shop by Occasion" → #find-path, "Shop by Resolution" → #services
+- Consultative language throughout: "Dakshina Estimate" (not "Investment/Pricing"), "Vedic Exchange" (not "Shop/Buy")
 
 ## Backlog / Potential Enhancements
 - P1: Testimonials / client review section
