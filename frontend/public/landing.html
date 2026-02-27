@@ -63,14 +63,14 @@
       top: 0; left: 0; right: 0;
       z-index: 100;
       background: rgba(253, 251, 247, 0.82);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid rgba(212, 175, 55, 0.18);
       transition: background 0.3s ease, box-shadow 0.3s ease;
     }
     #navbar.scrolled {
       background: rgba(253, 251, 247, 0.96);
-      box-shadow: 0 4px 40px rgba(74, 14, 14, 0.06);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     }
     .nav-link {
       color: #5A4A4A;
@@ -349,9 +349,9 @@
           <h1 class="font-serif font-bold text-maroon leading-tight mb-6"
               style="font-size: clamp(2.4rem, 5vw, 4rem); letter-spacing:-0.02em;"
               data-aos="fade-up" data-aos-delay="80" data-aos-duration="750">
-            20 Years in a Gurukul.<br>
-            One Sacred Space:<br>
-            <span style="color:#D4AF37;">Yours.</span>
+            Ancient Precision.<br>
+            Modern Peace.<br>
+            <span style="color:#D4AF37;">20 Years of Scholarly Mastery.</span>
           </h1>
 
           <!-- Gold rule -->
@@ -594,7 +594,7 @@
       <div class="flex flex-wrap justify-center gap-x-10 gap-y-4" data-aos="fade-up" data-aos-delay="340">
         <div class="flex items-center gap-2" style="font-size:0.8rem; color:rgba(212,175,55,0.65); letter-spacing:0.08em;">
           <span style="display:inline-block;width:16px;height:1px;background:rgba(212,175,55,0.4);"></span>
-          Gurukul Trained — Rishikesh
+          Schooled in Traditional Gurukuls for 20 Years
         </div>
         <div class="flex items-center gap-2" style="font-size:0.8rem; color:rgba(212,175,55,0.65); letter-spacing:0.08em;">
           <span style="display:inline-block;width:16px;height:1px;background:rgba(212,175,55,0.4);"></span>
@@ -769,8 +769,10 @@
   <!-- =========================================
        FOOTER
   ========================================= -->
-  <footer id="footer" data-testid="footer" style="background:#150505; border-top:1px solid rgba(212,175,55,0.12);">
-    <div class="max-w-7xl mx-auto px-6 md:px-12 py-16">
+  <footer id="footer" data-testid="footer" style="background:#150505; border-top:2px solid #D4AF37; position:relative; overflow:hidden;">
+    <!-- Noise texture overlay -->
+    <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;z-index:0;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='fn'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23fn)' opacity='0.07'/%3E%3C/svg%3E&quot;);opacity:0.55;"></div>
+    <div class="max-w-7xl mx-auto px-6 md:px-12 py-16" style="position:relative;z-index:1;">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
 
         <!-- Brand -->
