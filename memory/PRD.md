@@ -49,9 +49,17 @@ Build a high-end, single-page landing page for **HomePujan.com** — a brand tha
 All CTAs link to: `https://wa.me/919667039964?text=I'm%20interested%20in%20booking%20a%20Vedic%20service.`
 Phone: +91 96670 39964
 
-## Test Results (Feb 2026)
-- Frontend: 100% — All 14 test cases passed
-- No broken images, no console errors
+## Visual & UX Refinements — Round 2 (Feb 2026)
+
+### All 8 Changes Applied
+1. **Header Glassmorphism** — `backdrop-filter: blur(12px)` + `box-shadow: 0 4px 30px rgba(0,0,0,0.1)` on scroll
+2. **Hero Headline** — Updated to "Ancient Precision. Modern Peace. 20 Years of Scholarly Mastery."
+3. **Find Your Path section** — 3 clickable tiles (New Beginnings/Home, Success & Growth/Business, Health & Protection/Wellness) each with gold-line SVG icon, Playfair title, gold subtitle, hover-lift — inserted between Trust Bar and Services
+4. **Service Card Subtitles** — Upgraded to `font-size:1.25rem; font-weight:500` for equal readability with Sanskrit titles
+5. **Pedigree Section** — Credential updated to "Schooled in Traditional Gurukuls for 20 Years" + inline SVG mandala watermark at 5% opacity (concentric circles, lotus petals, geometric diamonds)
+6. **Process Step Icons** — 3 minimalist gold SVG icons: Sundial/Clock (Step 1), Sacred Herbs Bundle (Step 2), Havan Kund Flame (Step 3)
+7. **Footer** — `border-top: 2px solid #D4AF37` + SVG noise texture overlay via positioned `::after`-style div
+8. **Services Nav Dropdown** — Hover dropdown with chevron: "Shop by Occasion" → #find-path, "Shop by Resolution" → #services
 
 ## Backlog / Potential Enhancements
 - P1: Testimonials / client review section
