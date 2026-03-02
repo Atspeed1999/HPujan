@@ -1305,7 +1305,10 @@ section[id] { scroll-margin-top: 80px; }
   document.querySelectorAll('.modal-overlay').forEach(m => {
     m.addEventListener('click', e => { if (e.target === m) closeModal(m.id.replace('modal-', '')); });
   });
-  // ── CONSULTATION MODAL ──
+  // Close on Escape
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.visible').forEach(m => closeModal(m.id.replace('modal-', '')));
+  });
   function openConsultModal(service) {
     const sel = document.getElementById('consult-purpose');
     if (service) {
