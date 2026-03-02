@@ -305,6 +305,25 @@ body::after {
 .footer-link { color: rgba(255,255,255,0.48); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; }
 .footer-link:hover { color: #D4AF37; }
 
+/* ── CONSULTATION FORM ── */
+.consult-input {
+  width: 100%; border: 1px solid #E5DED0; padding: 0.72rem 0.9rem;
+  font-size: 0.88rem; background: #FFFEFB; color: #2D2D2D; outline: none;
+  font-family: 'Inter', sans-serif; transition: border-color 0.25s, box-shadow 0.25s;
+  appearance: none; -webkit-appearance: none;
+}
+.consult-input:focus { border-color: rgba(212,175,55,0.65); box-shadow: 0 0 0 3px rgba(212,175,55,0.08); }
+.consult-label {
+  display: block; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.2em;
+  text-transform: uppercase; color: #5A4A4A; margin-bottom: 0.45rem;
+}
+.consult-field { margin-bottom: 1rem; position: relative; }
+.consult-select-wrap { position: relative; }
+.consult-select-wrap::after {
+  content: ''; position: absolute; right: 0.9rem; top: 50%; transform: translateY(-50%);
+  border: 4px solid transparent; border-top-color: #D4AF37; pointer-events: none;
+}
+
 /* ── MOBILE MENU ── */
 #mob-menu { display: none; }
 #mob-menu.open { display: block; }
