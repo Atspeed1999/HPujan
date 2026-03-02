@@ -162,10 +162,11 @@
       letter-spacing: 0.06em;
     }
     @media (max-width: 767px) {
-      .filter-bar { padding: 0.65rem 1rem; top: 72px; }
+      .filter-bar { padding: 0.65rem 1rem; top: 72px; overflow: hidden; }
       .filter-count-label { display: none; }
-      .filter-pills { gap: 0.35rem; }
-      .filter-pill { padding: 0.38rem 0.85rem; font-size: 0.62rem; }
+      .filter-pills { gap: 0.35rem; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 2px; scrollbar-width: none; }
+      .filter-pills::-webkit-scrollbar { display: none; }
+      .filter-pill { padding: 0.38rem 0.85rem; font-size: 0.62rem; flex-shrink: 0; }
     }
 
     /* ── SERVICE GRID ── */
