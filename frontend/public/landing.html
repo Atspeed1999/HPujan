@@ -1309,6 +1309,33 @@ section[id] { scroll-margin-top: 80px; }
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.visible').forEach(m => closeModal(m.id.replace('modal-', '')));
   });
+
+  // ── CONSULTATION / ALIGNMENT CALL MODAL ──
+  function openConsultModal(service) {
+    const sel = document.getElementById('consult-purpose');
+    if (service) {
+      for (let i = 0; i < sel.options.length; i++) {
+        if (sel.options[i].value.toLowerCase().includes(service.toLowerCase())) {
+          sel.selectedIndex = i; break;
+        }
+      }
+    }
+    openModal('consult');
+    setTimeout(() => { const n = document.getElementById('consult-name'); if (n) n.focus(); }, 380);
+  }
+
+  function submitConsultForm(e) {
+    e.preventDefault();
+    const name    = document.getElementById('consult-name').value.trim();
+    const purpose = document.getElementById('consult-purpose').value;
+    const nameStr = name ? ` My name is ${name}.` : '';
+    const msg     = encodeURIComponent(
+      `Pranam.${nameStr} I would like to request a Vedic Alignment Call regarding ${purpose}. Please let me know a suitable time for the scholar.`
+    );
+    window.open(`https://wa.me/919667039964?text=${msg}`, '_blank', 'noopener,noreferrer');
+    closeModal('consult');
+    document.getElementById('consult-form').reset();
+  }
   function openConsultModal(service) {
     const sel = document.getElementById('consult-purpose');
     if (service) {
