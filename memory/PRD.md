@@ -53,7 +53,22 @@ Build a high-end, single-page landing page for **HomePujan.com** — a brand tha
 - All interactive elements have `data-testid` attributes
 - Consultative language throughout: "Dakshina Estimate" (not "Investment/Pricing"), "Vedic Exchange" (not "Shop/Buy")
 
-## Backlog / Potential Enhancements
+## Feb 2026 — Vedic Library (services.html) Built
+
+### New Page: The Vedic Library (/services.html)
+- **Page Hero**: Cinzel heading "The Vedic Library", breadcrumb HOMEPUJAN / THE VEDIC LIBRARY, gold divider, 16 ceremony count
+- **Sticky Filter Bar**: top: 72px (below navbar), 5 pills (All, Home, Business, Personal, Milestones), horizontal scroll on mobile, live count "X of 16 ceremonies"
+- **16 Service Cards** in 3-col (desktop) / 2-col (tablet) / 1-col (mobile) grid:
+  - Home (4): Gaṇeśa Pūjā ₹5k, Gṛha Praveśa ₹8k, Vāstu Śānti ₹15k, Nava Graha Śānti ₹12k
+  - Business (4): Lakṣmī-Kubera ₹11k, Śrī Sarasvatī ₹6k, Vyāpāra Vṛddhi ₹9k, Kubera Yantra ₹8k
+  - Personal (4): Mahā Mṛtyuñjaya ₹21k, Rudrābhiṣeka ₹13k, Satyanarayaṇa ₹7.5k, Sundarakāṇḍa ₹6k
+  - Milestones (4): Nāmakaraṇa ₹6k, Annaprāśana ₹5k, Muṇḍana ₹7k, Pitṛ Tarpaṇa ₹15k
+- Each card: Sanskrit name (Cinzel), English benefit (Playfair italic gold), description (2-line clamp), Dakshina amount, paper grain overlay, "Consult for Alignment" button
+- **Consultation Banner**: "Not sure which ceremony is right?" → modal
+- **Consultation Modal**: same Parchment Modal with 18-option dropdown, pre-fills based on clicked card, WhatsApp message with "Pranam" + "Vedic Alignment Call"
+- **Deep Maroon Footer**: consistent with landing.html, filter shortcuts in footer
+- **Floating Elements**: Gold Lotus + WhatsApp (pulse ring)
+- **Landing.html Nav Updated**: Dropdown now shows "The Vedic Library — All 16" → services.html + mobile nav link added
 - P1: Testimonials / client review section
 - P1: Gallery of past ceremonies
 - P2: Booking confirmation email (via Resend/SendGrid)
