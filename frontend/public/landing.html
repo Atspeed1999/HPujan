@@ -989,6 +989,57 @@ section[id] { scroll-margin-top: 80px; }
      MODALS
 ========================================= -->
 
+<!-- CONSULTATION / ALIGNMENT CALL MODAL -->
+<div id="modal-consult" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Request a Vedic Alignment Call" data-testid="modal-consult">
+  <div class="modal-drop">
+    <div class="modal-paper">
+      <button class="modal-close" onclick="closeModal('consult')" data-testid="modal-consult-close" aria-label="Close">&times;</button>
+      <div class="modal-inner">
+
+        <div class="modal-section">
+          <p class="modal-section-lbl">Scholar's Desk</p>
+          <p class="modal-invoc-title">Vedic Alignment Call</p>
+          <p class="modal-invoc-sub">A 10-minute scholarly consultation — no sales, only guidance</p>
+        </div>
+        <div class="gold-divider mb-4" style="width:36px;"></div>
+
+        <p style="font-size:0.875rem;color:#5A4A4A;line-height:1.75;margin-bottom:1.5rem;">
+          In the Gurukul tradition, every ceremony begins with a conversation — a Sankalpa consultation where the scholar understands your intention before prescribing a ritual. Share your details below, and a scholar will connect within 24 hours.
+        </p>
+
+        <form id="consult-form" onsubmit="submitConsultForm(event)">
+          <div class="consult-field">
+            <label for="consult-name" class="consult-label">Your Name</label>
+            <input type="text" id="consult-name" class="consult-input" placeholder="As you wish to be addressed" required autocomplete="name"/>
+          </div>
+          <div class="consult-field">
+            <label for="consult-purpose" class="consult-label">Your Intention</label>
+            <div class="consult-select-wrap">
+              <select id="consult-purpose" class="consult-input" required>
+                <option value="" disabled selected>Select your path...</option>
+                <option value="Vastu Shanti — Space Harmonization">Vastu Shanti — Space Harmonization</option>
+                <option value="Lakshmi-Kuber Havan — Prosperity Invocation">Lakshmi-Kuber Havan — Prosperity Invocation</option>
+                <option value="Maha Mrityunjaya Havan — Health &amp; Protection">Maha Mrityunjaya Havan — Health &amp; Protection</option>
+                <option value="Muhurta Consultation — Auspicious Timing">Muhurta Consultation — Auspicious Timing</option>
+                <option value="Custom Vedic Ceremony">Custom Vedic Ceremony</option>
+                <option value="a ceremony — I need guidance to identify my path">I need guidance to identify my path</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn-discuss" style="margin-top:0.5rem;" data-testid="consult-connect-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652c1.746.943 3.71 1.444 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.48-8.45z"/></svg>
+            Connect with the Scholar's Desk
+          </button>
+        </form>
+
+        <p style="font-size:0.72rem;color:#9A8A8A;text-align:center;margin-top:1rem;line-height:1.6;">
+          This will open WhatsApp with your Sankalpa message pre-filled. The scholar will respond within 24 hours.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL: Vastu Shanti -->
 <div id="modal-vastu" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Vastu Shanti Havan details" data-testid="modal-vastu">
   <div class="modal-drop">
