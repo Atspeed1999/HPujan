@@ -56,7 +56,7 @@ Build a high-end, single-page landing page for **HomePujan.com** — a brand tha
 ## Backlog / Potential Enhancements
 - P1: Testimonials / client review section
 - P1: Gallery of past ceremonies
-- P2: Booking form / inquiry form (replace WhatsApp with embedded form + WhatsApp notification)
+- P2: Booking confirmation email (via Resend/SendGrid)
 - P2: Service detail pages (individual Havan deep-dive pages)
 - P3: SEO optimization (meta tags, schema markup for local business)
 - P3: Multi-language support (Hindi)
