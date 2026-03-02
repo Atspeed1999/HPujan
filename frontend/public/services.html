@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Vedic Library — HomePujan.com</title>
+  <meta name="description" content="Sixteen traditional Vedic ceremonies performed by Gurukul-trained scholars. Browse by intention — Home, Business, Personal, or Milestones."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet"/>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            maroon: '#4A0E0E', gold: '#D4AF37', parchment: '#FDFBF7', charcoal: '#2D2D2D',
+          },
+          fontFamily: {
+            cinzel: ['Cinzel', 'Georgia', 'serif'],
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ── BASE ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: #FDFBF7; color: #2D2D2D;
+      font-family: 'Inter', system-ui, sans-serif;
+      min-height: 100vh; position: relative;
+    }
+    /* CSS Noise Texture (Bhojpatra feel) */
+    body::after {
+      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='b'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.68' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23b)' opacity='0.042'/%3E%3C/svg%3E");
+    }
+    body > * { position: relative; z-index: 1; }
+
+    /* ── COLOUR & TYPE TOKENS ── */
+    .text-maroon { color: #4A0E0E; }
+    .text-gold   { color: #D4AF37; }
+    .bg-maroon   { background-color: #4A0E0E; }
+    .font-cinzel { font-family: 'Cinzel', Georgia, serif; }
+    .font-serif  { font-family: 'Playfair Display', Georgia, serif; }
+
+    /* ── NAVBAR ── */
+    #navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      background: rgba(253,251,247,0.82);
+      border-bottom: 1px solid rgba(212,175,55,0.28);
+      transition: box-shadow 0.3s;
+    }
+    #navbar.scrolled { box-shadow: 0 4px 24px rgba(74,14,14,0.09); }
+    .nav-inner {
+      max-width: 1280px; margin: 0 auto; padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between; height: 72px;
+    }
+    .nav-logo {
+      font-family: 'Cinzel', serif; font-size: 1.15rem; font-weight: 700;
+      color: #4A0E0E; letter-spacing: 0.08em; text-decoration: none;
+    }
+    .nav-logo span { color: #D4AF37; }
+    .nav-links { display: flex; align-items: center; gap: 2.25rem; }
+    .nav-link {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+      color: #4A0E0E; text-decoration: none; transition: color 0.2s; position: relative;
+    }
+    .nav-link:hover { color: #D4AF37; }
+    .nav-link.active-page { color: #D4AF37; }
+    .nav-link.active-page::after {
+      content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+      height: 1px; background: #D4AF37;
+    }
+    .btn-consult {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      border: 1px solid #4A0E0E; color: #4A0E0E;
+      padding: 0.6rem 1.25rem; font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      font-family: 'Inter', sans-serif; cursor: pointer;
+      background: transparent; text-decoration: none;
+      transition: background 0.25s, color 0.25s, border-color 0.25s;
+    }
+    .btn-consult:hover { background: #4A0E0E; color: #D4AF37; }
+
+    /* Mobile menu */
+    .mob-menu {
+      display: none; flex-direction: column; gap: 0.75rem;
+      position: absolute; top: 72px; left: 0; right: 0;
+      background: rgba(253,251,247,0.98);
+      backdrop-filter: blur(20px); padding: 1.5rem 2rem;
+      border-bottom: 1px solid rgba(212,175,55,0.22);
+    }
+    .mob-menu.open { display: flex; }
+    .mob-link {
+      font-size: 0.8rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+      color: #4A0E0E; text-decoration: none; padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(212,175,55,0.1);
+    }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+    .hamburger span { display: block; width: 22px; height: 1.5px; background: #4A0E0E; transition: all 0.3s; }
+    @media (max-width: 767px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+    }
+
+    /* ── PAGE HERO ── */
+    .page-hero {
+      padding: 9rem 2rem 4rem;
+      text-align: center;
+      border-bottom: 1px solid rgba(212,175,55,0.15);
+    }
+    .breadcrumb {
+      font-size: 0.62rem; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase;
+      color: #D4AF37; margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    }
+    .breadcrumb a { color: #D4AF37; text-decoration: none; opacity: 0.7; transition: opacity 0.2s; }
+    .breadcrumb a:hover { opacity: 1; }
+    .page-hero h1 {
+      font-family: 'Cinzel', serif; font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 700; color: #4A0E0E; line-height: 1.1; margin-bottom: 1rem;
+    }
+    .page-hero p {
+      font-size: 1rem; color: #5A4A4A; max-width: 580px; margin: 0 auto; line-height: 1.75;
+    }
+    .hero-count {
+      display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1.25rem;
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
+      color: #7A6A6A;
+    }
+    .hero-count::before, .hero-count::after { content: '—'; color: rgba(212,175,55,0.5); }
+
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      position: sticky; top: 72px; z-index: 100;
+      background: rgba(253,251,247,0.96);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(212,175,55,0.2);
+      padding: 0.75rem 2rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    }
+    .filter-pills { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .filter-pill {
+      border: 1px solid rgba(212,175,55,0.3); background: transparent;
+      color: #5A4A4A; padding: 0.45rem 1.1rem; font-size: 0.67rem; font-weight: 600;
+      letter-spacing: 0.14em; text-transform: uppercase; font-family: 'Inter', sans-serif;
+      cursor: pointer; transition: background 0.25s, color 0.25s, border-color 0.25s;
+      white-space: nowrap;
+    }
+    .filter-pill:hover { background: rgba(74,14,14,0.06); border-color: #4A0E0E; color: #4A0E0E; }
+    .filter-pill.active { background: #4A0E0E; color: #D4AF37; border-color: #4A0E0E; }
+    .filter-count-label {
+      font-size: 0.67rem; font-weight: 500; color: #9A8A8A; white-space: nowrap;
+      letter-spacing: 0.06em;
+    }
+    @media (max-width: 767px) {
+      .filter-bar { padding: 0.65rem 1rem; top: 72px; }
+      .filter-count-label { display: none; }
+      .filter-pills { gap: 0.35rem; }
+      .filter-pill { padding: 0.38rem 0.85rem; font-size: 0.62rem; }
+    }
+
+    /* ── SERVICE GRID ── */
+    .service-grid {
+      max-width: 1280px; margin: 0 auto; padding: 3rem 2rem 5rem;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.75rem;
+    }
+    @media (max-width: 1100px) { .service-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) {
+      .service-grid { grid-template-columns: 1fr; padding: 2rem 1rem 4rem; gap: 1.25rem; }
+    }
+
+    /* ── LIBRARY CARD ── */
+    .lib-card {
+      background: #fff; border: 1px solid #E5DED0; position: relative;
+      overflow: hidden; cursor: pointer;
+      transition: transform 0.5s ease-in-out, box-shadow 0.5s ease-in-out, border-color 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    }
+    .lib-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(74,14,14,0.11); border-color: #D4AF37; }
+    .lib-card.filtered-out { opacity: 0.12; transform: scale(0.97); pointer-events: none; }
+    /* Paper grain */
+    .lib-card::after {
+      content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 3;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23c)' opacity='0.1'/%3E%3C/svg%3E");
+      opacity: 0.65;
+    }
+    .lib-card-img {
+      position: relative; height: 195px; overflow: hidden;
+    }
+    .lib-card-img img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+    .lib-card:hover .lib-card-img img { transform: scale(1.06); }
+    .lib-card-img::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(74,14,14,0.5) 0%, transparent 60%);
+      pointer-events: none; z-index: 1;
+    }
+    .lib-cat-badge {
+      position: absolute; top: 12px; left: 12px; z-index: 2;
+      font-size: 0.6rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+      color: #D4AF37; background: rgba(74,14,14,0.85); padding: 4px 10px;
+      backdrop-filter: blur(4px);
+    }
+    .lib-card-body { padding: 1.3rem 1.45rem 1.5rem; }
+    .lib-card-sanskrit {
+      font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 700;
+      color: #4A0E0E; line-height: 1.2; margin-bottom: 0.2rem;
+    }
+    .lib-card-benefit {
+      font-family: 'Playfair Display', serif; font-size: 0.9rem;
+      color: #D4AF37; font-style: italic; margin-bottom: 0.6rem; line-height: 1.3;
+    }
+    .lib-card-desc {
+      font-size: 0.8rem; color: #6A5A5A; line-height: 1.65; margin-bottom: 0.9rem;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .lib-card-dakshina {
+      font-size: 0.67rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+      color: #7A6A6A; margin-bottom: 0.85rem; border-top: 1px solid rgba(212,175,55,0.15);
+      padding-top: 0.75rem;
+    }
+    .lib-card-dakshina-amount {
+      font-family: 'Cinzel', serif; font-size: 1.05rem; font-weight: 700;
+      color: #4A0E0E; letter-spacing: 0.03em;
+    }
+    .btn-align {
+      display: block; width: 100%; text-align: center;
+      border: 1px solid #4A0E0E; color: #4A0E0E;
+      padding: 0.625rem 1rem; font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      font-family: 'Inter', sans-serif; cursor: pointer;
+      background: transparent; transition: background 0.25s, color 0.25s;
+      position: relative; z-index: 4;
+    }
+    .btn-align:hover { background: #4A0E0E; color: #D4AF37; }
+
+    /* ── GOLD DIVIDER ── */
+    .gold-divider { width: 40px; height: 2px; background: #D4AF37; margin: 0 auto; }
+
+    /* ── MODAL SYSTEM (same as landing.html) ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 800;
+      background: rgba(20,5,5,0.72); backdrop-filter: blur(6px);
+      align-items: center; justify-content: center; padding: 1rem;
+      overflow-y: auto;
+    }
+    .modal-overlay.visible { display: flex; }
+    .modal-drop { filter: drop-shadow(0 24px 50px rgba(74,14,14,0.3)); max-width: 620px; width: 100%; max-height: 92vh; display: flex; flex-direction: column; }
+    .modal-paper {
+      background: #FDFBF7;
+      clip-path: polygon(0% 2%, 2.5% 0.4%, 5% 1.6%, 7.5% 0%, 10% 1.8%, 12.5% 0.3%, 15% 1.5%, 17.5% 0%, 20% 1.8%, 22.5% 0.4%, 25% 1.6%, 27.5% 0%, 30% 1.8%, 32.5% 0.4%, 35% 1.5%, 37.5% 0%, 40% 1.8%, 42.5% 0.3%, 45% 1.6%, 47.5% 0%, 50% 1.8%, 52.5% 0.4%, 55% 1.5%, 57.5% 0%, 60% 1.8%, 62.5% 0.3%, 65% 1.6%, 67.5% 0%, 70% 1.8%, 72.5% 0.4%, 75% 1.5%, 77.5% 0%, 80% 1.8%, 82.5% 0.3%, 85% 1.6%, 87.5% 0%, 90% 1.8%, 92.5% 0.4%, 95% 1.5%, 97.5% 0%, 100% 1.5%, 100% 98.5%, 97.5% 100%, 95% 98.4%, 92.5% 99.8%, 90% 98.2%, 87.5% 100%, 85% 98.5%, 82.5% 99.7%, 80% 98.2%, 77.5% 100%, 75% 98.5%, 72.5% 99.6%, 70% 98.2%, 67.5% 100%, 65% 98.4%, 62.5% 99.7%, 60% 98.2%, 57.5% 100%, 55% 98.5%, 52.5% 99.6%, 50% 98.2%, 47.5% 100%, 45% 98.4%, 42.5% 99.7%, 40% 98.2%, 37.5% 100%, 35% 98.5%, 32.5% 99.6%, 30% 98.2%, 27.5% 100%, 25% 98.4%, 22.5% 99.7%, 20% 98.2%, 17.5% 100%, 15% 98.5%, 12.5% 99.6%, 10% 98.2%, 7.5% 100%, 5% 98.4%, 2.5% 99.7%, 0% 98%);
+      position: relative; overflow: hidden;
+      transform: translateY(24px); transition: transform 0.35s cubic-bezier(0.34,1.3,0.64,1);
+      flex: 1; display: flex; flex-direction: column; min-height: 0;
+    }
+    .modal-overlay.visible .modal-paper { transform: translateY(0); }
+    .modal-inner { padding: 2.25rem 2.5rem 2.5rem; overflow-y: auto; flex: 1; scrollbar-width: thin; scrollbar-color: rgba(212,175,55,0.3) transparent; }
+    .modal-inner::-webkit-scrollbar { width: 4px; }
+    .modal-inner::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.35); border-radius: 2px; }
+    .modal-close {
+      position: absolute; top: 1.25rem; right: 1.5rem; z-index: 10;
+      background: none; border: none; font-size: 1.6rem; color: #4A0E0E;
+      cursor: pointer; line-height: 1; opacity: 0.6; transition: opacity 0.2s;
+    }
+    .modal-close:hover { opacity: 1; }
+    .modal-section { margin-bottom: 1.15rem; }
+    .modal-section-lbl {
+      font-size: 0.6rem; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase;
+      color: #D4AF37; margin-bottom: 0.45rem; display: flex; align-items: center; gap: 0.55rem;
+    }
+    .modal-section-lbl::after { content: ''; flex: 1; height: 1px; background: rgba(212,175,55,0.2); }
+    .modal-section-body { font-size: 0.875rem; color: #5A4A4A; line-height: 1.78; }
+    .modal-invoc-title { font-family: 'Cinzel', serif; font-size: 1.45rem; font-weight: 700; color: #4A0E0E; line-height: 1.1; }
+    .modal-invoc-sub { font-family: 'Playfair Display', serif; font-size: 0.98rem; color: #D4AF37; font-weight: 500; font-style: italic; margin-top: 0.3rem; }
+    .modal-tag { display: inline-block; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; background: rgba(212,175,55,0.12); color: #4A0E0E; padding: 3px 10px; margin-right: 6px; margin-bottom: 4px; }
+    .btn-discuss {
+      display: flex; align-items: center; justify-content: center; gap: 0.6rem; width: 100%;
+      background: #4A0E0E; color: #D4AF37; padding: 1rem 1.5rem;
+      font-size: 0.8rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+      font-family: 'Inter', sans-serif; border: none; cursor: pointer; text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-discuss:hover { background: #6A1E1E; }
+
+    /* Consultation form */
+    .consult-input {
+      width: 100%; border: 1px solid #E5DED0; padding: 0.72rem 0.9rem;
+      font-size: 0.88rem; background: #FFFEFB; color: #2D2D2D; outline: none;
+      font-family: 'Inter', sans-serif; transition: border-color 0.25s, box-shadow 0.25s;
+      appearance: none; -webkit-appearance: none;
+    }
+    .consult-input:focus { border-color: rgba(212,175,55,0.65); box-shadow: 0 0 0 3px rgba(212,175,55,0.08); }
+    .consult-label { display: block; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #5A4A4A; margin-bottom: 0.45rem; }
+    .consult-field { margin-bottom: 1rem; position: relative; }
+    .consult-select-wrap { position: relative; }
+    .consult-select-wrap::after { content: ''; position: absolute; right: 0.9rem; top: 50%; transform: translateY(-50%); border: 4px solid transparent; border-top-color: #D4AF37; pointer-events: none; }
+    @media (max-width: 767px) {
+      .modal-inner { padding: 1.5rem 1.25rem 1.75rem; }
+    }
+
+    /* ── FOOTER (Deep Maroon — consistent with landing.html) ── */
+    #footer {
+      background: #4A0E0E; position: relative; overflow: hidden;
+      border-top: 2px solid #D4AF37;
+    }
+    #footer::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='fn'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23fn)' opacity='0.07'/%3E%3C/svg%3E");
+      opacity: 0.45;
+    }
+    #footer > div { position: relative; z-index: 1; }
+    .footer-link { color: rgba(255,255,255,0.48); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; }
+    .footer-link:hover { color: #D4AF37; }
+
+    /* ── FLOATING ELEMENTS ── */
+    #lotus-btn {
+      position: fixed; bottom: 2rem; left: 2rem; z-index: 600;
+      width: 48px; height: 48px; border-radius: 50%;
+      background: rgba(253,251,247,0.95);
+      border: 1.5px solid rgba(212,175,55,0.5);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.4s, transform 0.4s, background 0.2s, border-color 0.2s;
+      box-shadow: 0 4px 20px rgba(74,14,14,0.14);
+    }
+    #lotus-btn.visible { opacity: 1; transform: translateY(0); }
+    #lotus-btn:hover { background: #4A0E0E; border-color: #D4AF37; }
+    #lotus-btn:hover svg path { fill: #D4AF37; }
+    #wa-float {
+      position: fixed; bottom: 2rem; right: 2rem; z-index: 600;
+      width: 56px; height: 56px; border-radius: 50%; background: #25D366;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 6px 24px rgba(37,211,102,0.35);
+      text-decoration: none; transition: transform 0.2s;
+    }
+    #wa-float:hover { transform: scale(1.08); }
+    .wa-pulse {
+      position: absolute; inset: -4px; border-radius: 50%;
+      border: 2px solid rgba(37,211,102,0.5);
+      animation: pulse 2.5s ease-out infinite;
+    }
+    @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 70% { opacity: 0; transform: scale(1.45); } }
+
+    /* ── EMPTY STATE (when filter returns 0) ── */
+    #empty-state { display: none; text-align: center; padding: 4rem 2rem; grid-column: 1/-1; }
+  </style>
+</head>
+<body>
+
+<!-- ===================== NAVBAR ===================== -->
+<nav id="navbar" role="navigation" aria-label="Main navigation" data-testid="navbar">
+  <div class="nav-inner">
+    <a href="landing.html" class="nav-logo" data-testid="nav-logo">
+      Home<span>Pujan</span>
+    </a>
+    <div class="nav-links">
+      <a href="landing.html#lineage" class="nav-link" data-testid="nav-lineage">Lineage</a>
+      <a href="services.html" class="nav-link active-page" data-testid="nav-services-link">Vedic Library</a>
+      <a href="landing.html#process" class="nav-link" data-testid="nav-process">Process</a>
+      <a href="landing.html#faq" class="nav-link" data-testid="nav-faq">FAQ</a>
+      <button onclick="openConsultModal('')" class="btn-consult" data-testid="nav-consult-btn">
+        Request a Vedic Alignment Call
+      </button>
+    </div>
+    <button class="hamburger" id="hamburger" onclick="toggleMob()" aria-label="Toggle menu" data-testid="hamburger-btn">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mob-menu" id="mob-menu" data-testid="mob-menu">
+    <a href="landing.html#lineage" class="mob-link" data-testid="mob-lineage">Lineage</a>
+    <a href="services.html" class="mob-link" style="color:#D4AF37;" data-testid="mob-services">Vedic Library</a>
+    <a href="landing.html#process" class="mob-link" data-testid="mob-process">Process</a>
+    <a href="landing.html#faq" class="mob-link" data-testid="mob-faq">FAQ</a>
+    <div style="border-top:1px solid rgba(212,175,55,0.18);padding-top:1rem;">
+      <button onclick="openConsultModal('');closeMob();" class="btn-consult" style="justify-content:center;width:100%;" data-testid="mob-consult">
+        Request a Vedic Alignment Call
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ===================== PAGE HERO ===================== -->
+<section class="page-hero" data-testid="page-hero">
+  <div>
+    <div class="breadcrumb">
+      <a href="landing.html">HomePujan</a>
+      <span>/</span>
+      <span>The Vedic Library</span>
+    </div>
+    <h1>The Vedic Library</h1>
+    <div class="gold-divider" style="margin:1rem auto;"></div>
+    <p>
+      Sixteen traditional Vedic ceremonies, each curated and performed by Gurukul-trained scholars.
+      Browse by intention, or consult with the Scholar's Desk for a personalised recommendation.
+    </p>
+    <div class="hero-count" data-testid="hero-count">16 Vedic Ceremonies</div>
+  </div>
+</section>
+
+<!-- ===================== STICKY FILTER BAR ===================== -->
+<div class="filter-bar" id="filter-bar" data-testid="filter-bar">
+  <div class="filter-pills" role="group" aria-label="Filter by category">
+    <button class="filter-pill active" data-filter="all" onclick="filterLib('all')" data-testid="filter-all">All</button>
+    <button class="filter-pill" data-filter="home" onclick="filterLib('home')" data-testid="filter-home">Home</button>
+    <button class="filter-pill" data-filter="business" onclick="filterLib('business')" data-testid="filter-business">Business</button>
+    <button class="filter-pill" data-filter="personal" onclick="filterLib('personal')" data-testid="filter-personal">Personal</button>
+    <button class="filter-pill" data-filter="milestones" onclick="filterLib('milestones')" data-testid="filter-milestones">Milestones</button>
+  </div>
+  <p class="filter-count-label" id="filter-count" data-testid="filter-count">16 of 16 ceremonies</p>
+</div>
+
+<!-- ===================== SERVICE GRID ===================== -->
+<main class="service-grid" id="service-grid" data-testid="service-grid">
+
+  <!-- ── HOME ── -->
+
+  <!-- 1. Ganesh Puja -->
+  <div class="lib-card" data-category="home" data-testid="card-ganesh" data-aos="fade-up" data-aos-delay="0">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1636101943361-4d8998149205?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Ganesh Puja — marigold flowers offering" loading="lazy"/>
+      <span class="lib-cat-badge">Home</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Gaṇeśa Pūjā</p>
+      <p class="lib-card-benefit">Obstacle Removal & Auspicious Beginnings</p>
+      <p class="lib-card-desc">The foundational Vedic invocation. Performed before any new venture, move, or ceremony to clear energetic obstructions and invite divine grace.</p>
+      <div class="lib-card-dakshina">
+        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹5,000</span>
+      </div>
+      <button class="btn-align" onclick="openConsultModal('Gaṇeśa Pūjā — Obstacle Removal')" data-testid="card-ganesh-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- 2. Griha Pravesh -->
+  <div class="lib-card" data-category="home" data-testid="card-griha" data-aos="fade-up" data-aos-delay="60">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1659669631986-984af011e09e?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Griha Pravesh — white flower offering" loading="lazy"/>
+      <span class="lib-cat-badge">Home</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Gṛha Praveśa Pūjā</p>
+      <p class="lib-card-benefit">Sacred New Home Consecration</p>
+      <p class="lib-card-desc">Performed at the threshold of a new home to sanctify the space, invoke divine protection, and establish Vastu alignment from the very first moment of habitation.</p>
+      <div class="lib-card-dakshina">
+        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹8,000</span>
+      </div>
+      <button class="btn-align" onclick="openConsultModal('Gṛha Praveśa Pūjā — New Home Consecration')" data-testid="card-griha-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- 3. Vastu Shanti -->
+  <div class="lib-card" data-category="home" data-testid="card-vastu" data-aos="fade-up" data-aos-delay="120">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1625072290979-cac544181be8?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Vastu Shanti Havan — ritual hands with sacred fire" loading="lazy"/>
+      <span class="lib-cat-badge">Home</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Vāstu Śānti Homa</p>
+      <p class="lib-card-benefit">Space Harmonization & Energy Recalibration</p>
+      <p class="lib-card-desc">Addresses panchabhuta imbalance in your living space. Maps directional Vedic energy fields and recalibrates them through precise mantra sequences.</p>
+      <div class="lib-card-dakshina">
+        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹15,000</span>
+      </div>
+      <button class="btn-align" onclick="openConsultModal('Vāstu Śānti Homa — Space Harmonization')" data-testid="card-vastu-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- 4. Navagraha Shanti -->
+  <div class="lib-card" data-category="home" data-testid="card-navagraha" data-aos="fade-up" data-aos-delay="0">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1426244434402-9d59aceabbf3?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Navagraha Shanti — incense smoke" loading="lazy"/>
+      <span class="lib-cat-badge">Home</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Nava Graha Śānti</p>
+      <p class="lib-card-benefit">Planetary Harmony & Dosha Removal</p>
+      <p class="lib-card-desc">Nine-planet propitiation ceremony that addresses unfavorable planetary positions in your natal chart. Prescribed during Sade Sati, Rahu/Ketu transits, or chronic unexplained obstacles.</p>
+      <div class="lib-card-dakshina">
+        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹12,000</span>
+      </div>
+      <button class="btn-align" onclick="openConsultModal('Nava Graha Śānti — Planetary Harmony')" data-testid="card-navagraha-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- ── BUSINESS ── -->
+
+  <!-- 5. Lakshmi-Kuber -->
+  <div class="lib-card" data-category="business" data-testid="card-lakshmi" data-aos="fade-up" data-aos-delay="60">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1661760625983-298c7f97fa9b?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Lakshmi-Kuber Havan — golden marigolds dark" loading="lazy"/>
+      <span class="lib-cat-badge">Business</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Śrī Lakṣmī-Kubera Homa</p>
+      <p class="lib-card-benefit">Dual Invocation of Material Abundance</p>
+      <p class="lib-card-desc">Addresses dual layers of material blockage — incoming prosperity (Lakshmi) and wealth retention (Kubera). Prescribed when financial growth has inexplicably stalled.</p>
+      <div class="lib-card-dakshina">
+        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹11,000</span>
+      </div>
+      <button class="btn-align" onclick="openConsultModal('Śrī Lakṣmī-Kubera Homa — Prosperity Invocation')" data-testid="card-lakshmi-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- 6. Saraswati Puja -->
+  <div class="lib-card" data-category="business" data-testid="card-saraswati" data-aos="fade-up" data-aos-delay="120">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1426244400376-c77a7f9ea9a5?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Saraswati Puja — incense sticks wisdom" loading="lazy"/>
+      <span class="lib-cat-badge">Business</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Śrī Sarasvatī Pūjā</p>
+      <p class="lib-card-benefit">Wisdom, Clarity & Career Excellence</p>
+      <p class="lib-card-desc">Invokes the Goddess of knowledge and creative intelligence. Performed by students before examinations, professionals at career inflection points, and creatives seeking clarity.</p>
+      <div class="lib-card-dakshina">
+        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹6,000</span>
+      </div>
+      <button class="btn-align" onclick="openConsultModal('Śrī Sarasvatī Pūjā — Wisdom & Career Excellence')" data-testid="card-saraswati-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- 7. Vyapaar Vridhi -->
+  <div class="lib-card" data-category="business" data-testid="card-vyapaar" data-aos="fade-up" data-aos-delay="0">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1536153635972-1fc2e818f642?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Vyapaar Vridhi Puja — grain abundance" loading="lazy"/>
+      <span class="lib-cat-badge">Business</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Vyāpāra Vṛddhi Pūjā</p>
+      <p class="lib-card-benefit">Business Growth & Market Expansion</p>
+      <p class="lib-card-desc">A targeted Vedic ceremony for entrepreneurs and business owners. Addresses structural karmic blockages in trade, clears competitive obstacles, and invites divine momentum into commercial endeavours.</p>
+      <div class="lib-card-dakshina">
+        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹9,000</span>
+      </div>
+      <button class="btn-align" onclick="openConsultModal('Vyāpāra Vṛddhi Pūjā — Business Growth')" data-testid="card-vyapaar-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- 8. Kubera Yantra Pratishtha -->
+  <div class="lib-card" data-category="business" data-testid="card-yantra" data-aos="fade-up" data-aos-delay="60">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1713635750060-f8b2196d1720?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Kubera Yantra Pratishtha — sacred fire energy" loading="lazy"/>
+      <span class="lib-cat-badge">Business</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Kubera Yantra Pratiṣṭhā</p>
+      <p class="lib-card-benefit">Activating the Sacred Wealth Matrix</p>
+      <p class="lib-card-desc">Consecration of a Kubera Yantra using Vedic phonetic protocols. The Yantra becomes a permanent energetic anchor for wealth consciousness in your business premises.</p>
+      <div class="lib-card-dakshina">
+        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹8,000</span>
+      </div>
+      <button class="btn-align" onclick="openConsultModal('Kubera Yantra Pratiṣṭhā — Wealth Matrix Activation')" data-testid="card-yantra-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- ── PERSONAL ── -->
+
+  <!-- 9. Maha Mrityunjaya -->
+  <div class="lib-card" data-category="personal" data-testid="card-maha" data-aos="fade-up" data-aos-delay="120">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1723880000363-f548f36ce475?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Maha Mrityunjaya — diya lamp sacred flame" loading="lazy"/>
+      <span class="lib-cat-badge">Personal</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Mahā Mṛtyuñjaya Homa</p>
+      <p class="lib-card-benefit">Supreme Vitality & Life Force Protection</p>
+      <p class="lib-card-desc">The Rigveda's most powerful health invocation. 32 Sanskrit syllables requiring precise phonetic mastery. Prescribed for chronic illness, unfavorable astrological periods, and ancestral karmic debt.</p>
+      <div class="lib-card-dakshina">
+        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹21,000</span>
+      </div>
+      <button class="btn-align" onclick="openConsultModal('Mahā Mṛtyuñjaya Homa — Supreme Vitality')" data-testid="card-maha-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- 10. Rudrabhishek -->
+  <div class="lib-card" data-category="personal" data-testid="card-rudra" data-aos="fade-up" data-aos-delay="0">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1592429827131-703375157829?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Rudrabhishek — sacred water abhishek" loading="lazy"/>
+      <span class="lib-cat-badge">Personal</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Rudrābhiṣeka</p>
+      <p class="lib-card-benefit">Divine Purification & Shiva's Grace</p>
+      <p class="lib-card-desc">Sacred ritual bathing of the Shivalinga with Panchamrit, sacred Gangajal, and Himalayan herbs while reciting the Sri Rudram — 11 chapters of the Yajurveda's most potent hymn.</p>
+      <div class="lib-card-dakshina">
+        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹13,000</span>
+      </div>
+      <button class="btn-align" onclick="openConsultModal('Rudrābhiṣeka — Divine Purification')" data-testid="card-rudra-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- 11. Satyanarayan Katha -->
+  <div class="lib-card" data-category="personal" data-testid="card-satya" data-aos="fade-up" data-aos-delay="60">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1584205831932-4f8618ce66c1?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Satyanarayan Katha — sacred fire devotion" loading="lazy"/>
+      <span class="lib-cat-badge">Personal</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Satyanarayaṇa Kathā</p>
+      <p class="lib-card-benefit">Fulfillment of Intentions & Devotional Gratitude</p>
+      <p class="lib-card-desc">A complete narrative recitation of the Skandha Purana's Satyanarayan story, accompanied by Vedic offerings. Performed in gratitude for fulfilled wishes or before undertaking a major life commitment.</p>
+      <div class="lib-card-dakshina">
+        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹7,500</span>
+      </div>
+      <button class="btn-align" onclick="openConsultModal('Satyanarayaṇa Kathā — Fulfillment & Gratitude')" data-testid="card-satya-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- 12. Sundarkand Path -->
+  <div class="lib-card" data-category="personal" data-testid="card-sundar" data-aos="fade-up" data-aos-delay="120">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1461712535593-a91ba9d206e3?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Sundarkand Path — sacred flame in dark" loading="lazy"/>
+      <span class="lib-cat-badge">Personal</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Sundarakāṇḍa Pāṭha</p>
+      <p class="lib-card-benefit">Hanuman's Blessing & Divine Protection</p>
+      <p class="lib-card-desc">The complete recitation of the fifth chapter of the Ramayana — Hanuman's journey. Considered among the most powerful protective rituals in the Vaishnava tradition.</p>
+      <div class="lib-card-dakshina">
+        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹6,000</span>
+      </div>
+      <button class="btn-align" onclick="openConsultModal('Sundarakāṇḍa Pāṭha — Divine Protection')" data-testid="card-sundar-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- ── MILESTONES ── -->
+
+  <!-- 13. Namkaran -->
+  <div class="lib-card" data-category="milestones" data-testid="card-namkaran" data-aos="fade-up" data-aos-delay="0">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1697328412207-84bee39ae9ae?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Namkaran — marigolds new life offering" loading="lazy"/>
+      <span class="lib-cat-badge">Milestones</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Nāmakaraṇa Saṃskāra</p>
+      <p class="lib-card-benefit">Baby Naming & First Astrological Alignment</p>
+      <p class="lib-card-desc">The second of sixteen Vedic rites of passage. The child's name is selected based on their Janma Nakshatra and whispered by the scholar in the sacred Vedic naming protocol.</p>
+      <div class="lib-card-dakshina">
+        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹6,000</span>
+      </div>
+      <button class="btn-align" onclick="openConsultModal('Nāmakaraṇa Saṃskāra — Baby Naming Ceremony')" data-testid="card-namkaran-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- 14. Annaprashan -->
+  <div class="lib-card" data-category="milestones" data-testid="card-anna" data-aos="fade-up" data-aos-delay="60">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1645694413160-fddc7f0feb5d?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Annaprashan — marigold celebration" loading="lazy"/>
+      <span class="lib-cat-badge">Milestones</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Annaprāśana Saṃskāra</p>
+      <p class="lib-card-benefit">Sacred First Rice Feeding & Life-Force Blessing</p>
+      <p class="lib-card-desc">The Vedic ceremony for a child's first intake of solid food — a major karmic threshold. The scholar recites specific Annaprashan mantras to bless the child's nourishment for life.</p>
+      <div class="lib-card-dakshina">
+        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹5,000</span>
+      </div>
+      <button class="btn-align" onclick="openConsultModal('Annaprāśana Saṃskāra — First Rice Feeding')" data-testid="card-anna-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- 15. Mundan -->
+  <div class="lib-card" data-category="milestones" data-testid="card-mundan" data-aos="fade-up" data-aos-delay="120">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1720413828596-5ec9b4311048?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Mundan Ceremony — sacred purification flame" loading="lazy"/>
+      <span class="lib-cat-badge">Milestones</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Muṇḍana Saṃskāra</p>
+      <p class="lib-card-benefit">First Haircut & Karmic Purification</p>
+      <p class="lib-card-desc">The ritual removal of a child's birth hair — believed to carry accumulated karmic energy from the womb — and its sacred offering to the divine. Typically performed in the first or third year.</p>
+      <div class="lib-card-dakshina">
+        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹7,000</span>
+      </div>
+      <button class="btn-align" onclick="openConsultModal('Muṇḍana Saṃskāra — First Haircut & Purification')" data-testid="card-mundan-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- 16. Pitru Tarpan -->
+  <div class="lib-card" data-category="milestones" data-testid="card-pitru" data-aos="fade-up" data-aos-delay="0">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1566687952853-480633286169?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Pitru Tarpan — water offering ancestral" loading="lazy"/>
+      <span class="lib-cat-badge">Milestones</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Pitṛ Tarpaṇa</p>
+      <p class="lib-card-benefit">Ancestral Peace & Karmic Liberation</p>
+      <p class="lib-card-desc">The sacred offering of water, black sesame, and Kusha grass to three generations of ancestors. Releases karmic bonds between the living and departed, addressing unexplained recurring obstacles.</p>
+      <div class="lib-card-dakshina">
+        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹15,000</span>
+      </div>
+      <button class="btn-align" onclick="openConsultModal('Pitṛ Tarpaṇa — Ancestral Peace & Karmic Liberation')" data-testid="card-pitru-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div id="empty-state" data-testid="empty-state">
+    <p class="font-cinzel text-maroon" style="font-size:1.15rem;margin-bottom:0.5rem;">No ceremonies match this filter.</p>
+    <p style="font-size:0.875rem;color:#7A6A6A;">Try selecting a different category or <button onclick="filterLib('all')" style="background:none;border:none;cursor:pointer;color:#D4AF37;text-decoration:underline;font-size:0.875rem;">view all</button>.</p>
+  </div>
+
+</main>
+
+<!-- ===================== CONSULTATION BANNER ===================== -->
+<section style="background:rgba(74,14,14,0.04);border-top:1px solid rgba(212,175,55,0.15);border-bottom:1px solid rgba(212,175,55,0.15);" data-testid="consult-banner">
+  <div style="max-width:700px;margin:0 auto;padding:4rem 2rem;text-align:center;">
+    <p style="font-size:0.62rem;font-weight:700;letter-spacing:0.24em;text-transform:uppercase;color:#D4AF37;margin-bottom:0.75rem;">The Scholar's Desk</p>
+    <h2 class="font-cinzel text-maroon" style="font-size:1.85rem;font-weight:700;margin-bottom:1rem;line-height:1.15;">Not sure which ceremony is right for you?</h2>
+    <p style="font-size:0.9rem;color:#5A4A4A;line-height:1.75;margin-bottom:2rem;">In the Gurukul tradition, the scholar selects the ceremony — not the patron. A 10-minute Vedic Alignment Call with Jaynendra will identify the most appropriate ritual for your specific intention and timing.</p>
+    <button onclick="openConsultModal('')" class="btn-consult" style="margin:0 auto;" data-testid="banner-consult-btn">
+      Request a Vedic Alignment Call
+    </button>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer id="footer" data-testid="footer">
+  <div style="max-width:1280px;margin:0 auto;padding:4rem 2rem 2.5rem;">
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem;margin-bottom:3rem;">
+      <div>
+        <a href="landing.html" class="nav-logo" style="font-size:1.4rem;display:block;margin-bottom:0.75rem;">Home<span style="color:#D4AF37;">Pujan</span></a>
+        <p style="font-size:0.825rem;color:rgba(255,255,255,0.6);line-height:1.75;max-width:280px;">Ancient Vedic ceremonies performed by Gurukul-trained scholars. 20 years of unbroken scholarly lineage.</p>
+        <a href="https://wa.me/919667039964" target="_blank" style="display:inline-flex;align-items:center;gap:0.5rem;margin-top:1.25rem;font-size:0.75rem;color:#D4AF37;font-weight:600;letter-spacing:0.08em;text-decoration:none;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#D4AF37"><path d="M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652c1.746.943 3.71 1.444 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.48-8.45z"/></svg>
+          +91 96670 39964
+        </a>
+      </div>
+      <div>
+        <p style="font-size:0.65rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:1rem;">Ceremonies</p>
+        <div style="display:flex;flex-direction:column;gap:0.55rem;">
+          <button onclick="filterLib('home')" class="footer-link" style="background:none;border:none;cursor:pointer;text-align:left;padding:0;">Home Rituals</button>
+          <button onclick="filterLib('business')" class="footer-link" style="background:none;border:none;cursor:pointer;text-align:left;padding:0;">Business Rituals</button>
+          <button onclick="filterLib('personal')" class="footer-link" style="background:none;border:none;cursor:pointer;text-align:left;padding:0;">Personal Rituals</button>
+          <button onclick="filterLib('milestones')" class="footer-link" style="background:none;border:none;cursor:pointer;text-align:left;padding:0;">Life Milestones</button>
+        </div>
+      </div>
+      <div>
+        <p style="font-size:0.65rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:1rem;">Navigate</p>
+        <div style="display:flex;flex-direction:column;gap:0.55rem;">
+          <a href="landing.html" class="footer-link">Home</a>
+          <a href="landing.html#lineage" class="footer-link">The Lineage</a>
+          <a href="landing.html#process" class="footer-link">The Process</a>
+          <a href="landing.html#faq" class="footer-link">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(212,175,55,0.18);padding-top:1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+      <p style="font-size:0.72rem;color:rgba(255,255,255,0.28);">© 2025 HomePujan.com · All ceremonies performed by Gurukul-trained scholars.</p>
+      <button onclick="openConsultModal('')" class="btn-consult" style="border-color:rgba(212,175,55,0.4);color:rgba(255,255,255,0.65);" data-testid="footer-consult-btn">Request a Vedic Alignment Call</button>
+    </div>
+  </div>
+</footer>
+
+<!-- ===================== FLOATING ELEMENTS ===================== -->
+<button id="lotus-btn" onclick="scrollToTop()" aria-label="Scroll to top" data-testid="lotus-btn">
+  <svg width="22" height="22" viewBox="0 0 40 40" fill="none">
+    <path d="M20 36 C20 36 8 28 8 18 C8 12 13 8 20 8 C27 8 32 12 32 18 C32 28 20 36 20 36Z" fill="#D4AF37" stroke="#D4AF37" stroke-width="1"/>
+    <path d="M20 36 C20 36 14 22 14 16 C14 12 17 10 20 10 C23 10 26 12 26 16 C26 22 20 36 20 36Z" fill="#FDFBF7"/>
+    <path d="M20 36 C20 36 20 20 20 10" stroke="#D4AF37" stroke-width="1.5"/>
+    <path d="M20 14 C18 10 12 10 8 14 C12 14 16 14 20 14Z" fill="#D4AF37"/>
+    <path d="M20 14 C22 10 28 10 32 14 C28 14 24 14 20 14Z" fill="#D4AF37"/>
+    <path d="M20 18 C16 14 10 16 8 20 C12 20 16 20 20 18Z" fill="#D4AF37" opacity="0.7"/>
+    <path d="M20 18 C24 14 30 16 32 20 C28 20 24 20 20 18Z" fill="#D4AF37" opacity="0.7"/>
+  </svg>
+</button>
+
+<a id="wa-float" href="https://wa.me/919667039964?text=I'm%20interested%20in%20finding%20my%20Vedic%20path." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" data-testid="wa-float-btn">
+  <div class="wa-pulse"></div>
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
+    <path d="M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652c1.746.943 3.71 1.444 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.48-8.45z"/>
+  </svg>
+</a>
+
+<!-- ===================== CONSULTATION MODAL ===================== -->
+<div id="modal-consult" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Request a Vedic Alignment Call" data-testid="modal-consult">
+  <div class="modal-drop">
+    <div class="modal-paper">
+      <button class="modal-close" onclick="closeModal('consult')" data-testid="modal-consult-close" aria-label="Close">&times;</button>
+      <div class="modal-inner">
+        <div class="modal-section">
+          <p class="modal-section-lbl">Scholar's Desk</p>
+          <p class="modal-invoc-title">Vedic Alignment Call</p>
+          <p class="modal-invoc-sub">A 10-minute scholarly consultation — no sales, only guidance</p>
+        </div>
+        <div style="width:36px;height:2px;background:#D4AF37;margin-bottom:1.25rem;"></div>
+        <p style="font-size:0.875rem;color:#5A4A4A;line-height:1.75;margin-bottom:1.5rem;">
+          In the Gurukul tradition, every ceremony begins with a Sankalpa consultation. Share your details below and a scholar will connect within 24 hours to recommend the appropriate ceremony for your intention.
+        </p>
+        <form id="consult-form" onsubmit="submitConsultForm(event)">
+          <div class="consult-field">
+            <label for="consult-name" class="consult-label">Your Name</label>
+            <input type="text" id="consult-name" class="consult-input" placeholder="As you wish to be addressed" required autocomplete="name"/>
+          </div>
+          <div class="consult-field">
+            <label for="consult-purpose" class="consult-label">Your Intention</label>
+            <div class="consult-select-wrap">
+              <select id="consult-purpose" class="consult-input" required>
+                <option value="" disabled selected>Select your path...</option>
+                <option value="Gaṇeśa Pūjā — Obstacle Removal">Gaṇeśa Pūjā — Obstacle Removal</option>
+                <option value="Gṛha Praveśa Pūjā — New Home Consecration">Gṛha Praveśa Pūjā — New Home Consecration</option>
+                <option value="Vāstu Śānti Homa — Space Harmonization">Vāstu Śānti Homa — Space Harmonization</option>
+                <option value="Nava Graha Śānti — Planetary Harmony">Nava Graha Śānti — Planetary Harmony</option>
+                <option value="Śrī Lakṣmī-Kubera Homa — Prosperity Invocation">Śrī Lakṣmī-Kubera Homa — Prosperity Invocation</option>
+                <option value="Śrī Sarasvatī Pūjā — Wisdom & Career">Śrī Sarasvatī Pūjā — Wisdom & Career</option>
+                <option value="Vyāpāra Vṛddhi Pūjā — Business Growth">Vyāpāra Vṛddhi Pūjā — Business Growth</option>
+                <option value="Kubera Yantra Pratiṣṭhā — Wealth Matrix">Kubera Yantra Pratiṣṭhā — Wealth Matrix</option>
+                <option value="Mahā Mṛtyuñjaya Homa — Supreme Vitality">Mahā Mṛtyuñjaya Homa — Supreme Vitality</option>
+                <option value="Rudrābhiṣeka — Divine Purification">Rudrābhiṣeka — Divine Purification</option>
+                <option value="Satyanarayaṇa Kathā — Fulfillment & Gratitude">Satyanarayaṇa Kathā — Fulfillment & Gratitude</option>
+                <option value="Sundarakāṇḍa Pāṭha — Divine Protection">Sundarakāṇḍa Pāṭha — Divine Protection</option>
+                <option value="Nāmakaraṇa Saṃskāra — Baby Naming">Nāmakaraṇa Saṃskāra — Baby Naming</option>
+                <option value="Annaprāśana Saṃskāra — First Rice Feeding">Annaprāśana Saṃskāra — First Rice Feeding</option>
+                <option value="Muṇḍana Saṃskāra — First Haircut">Muṇḍana Saṃskāra — First Haircut</option>
+                <option value="Pitṛ Tarpaṇa — Ancestral Peace">Pitṛ Tarpaṇa — Ancestral Peace</option>
+                <option value="a ceremony — I need guidance to identify my path">I need guidance — help me identify my path</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn-discuss" style="margin-top:0.5rem;" data-testid="consult-connect-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652c1.746.943 3.71 1.444 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.48-8.45z"/></svg>
+            Connect with the Scholar's Desk
+          </button>
+        </form>
+        <p style="font-size:0.72rem;color:#9A8A8A;text-align:center;margin-top:1rem;line-height:1.6;">
+          This will open WhatsApp with your Sankalpa message pre-filled. The scholar will respond within 24 hours.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SCRIPTS ===================== -->
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init({ duration: 640, easing: 'ease-out-cubic', once: true, offset: 60 });
+
+  // ── NAVBAR SCROLL ──
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 20);
+    // Lotus
+    const l = document.getElementById('lotus-btn');
+    if (window.scrollY > 350) l.classList.add('visible'); else l.classList.remove('visible');
+  }, { passive: true });
+
+  // ── MOBILE MENU ──
+  function toggleMob() {
+    document.getElementById('mob-menu').classList.toggle('open');
+  }
+  function closeMob() {
+    document.getElementById('mob-menu').classList.remove('open');
+  }
+
+  // ── SCROLL TO TOP ──
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── FILTER SYSTEM ──
+  function filterLib(category) {
+    // Update pills
+    document.querySelectorAll('.filter-pill').forEach(p => {
+      p.classList.toggle('active', p.dataset.filter === category);
+    });
+    // Filter cards
+    const cards = document.querySelectorAll('.lib-card[data-category]');
+    let visible = 0;
+    cards.forEach(card => {
+      const matches = category === 'all' || card.dataset.category === category;
+      card.classList.toggle('filtered-out', !matches);
+      if (matches) visible++;
+    });
+    // Update count
+    document.getElementById('filter-count').textContent = visible + ' of ' + cards.length + ' ceremonies';
+    // Empty state
+    document.getElementById('empty-state').style.display = visible === 0 ? 'block' : 'none';
+    // Scroll filter bar into view on mobile
+    if (window.innerWidth < 768) {
+      document.getElementById('filter-bar').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
+
+  // ── MODAL SYSTEM ──
+  function openModal(id) {
+    const m = document.getElementById('modal-' + id);
+    if (!m) return;
+    m.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => requestAnimationFrame(() => m.classList.add('visible')));
+  }
+  function closeModal(id) {
+    const m = document.getElementById('modal-' + id);
+    if (!m) return;
+    m.classList.remove('visible');
+    setTimeout(() => { m.style.display = 'none'; document.body.style.overflow = ''; }, 320);
+  }
+  // Backdrop click
+  document.querySelectorAll('.modal-overlay').forEach(m => {
+    m.addEventListener('click', e => { if (e.target === m) closeModal(m.id.replace('modal-', '')); });
+  });
+  // Escape key
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.visible').forEach(m => closeModal(m.id.replace('modal-', '')));
+  });
+
+  // ── CONSULTATION MODAL ──
+  function openConsultModal(service) {
+    const sel = document.getElementById('consult-purpose');
+    if (service) {
+      for (let i = 0; i < sel.options.length; i++) {
+        if (sel.options[i].value.toLowerCase().includes(service.toLowerCase().substring(0, 10))) {
+          sel.selectedIndex = i; break;
+        }
+      }
+    }
+    openModal('consult');
+    setTimeout(() => { const n = document.getElementById('consult-name'); if (n) n.focus(); }, 380);
+  }
+
+  function submitConsultForm(e) {
+    e.preventDefault();
+    const name    = document.getElementById('consult-name').value.trim();
+    const purpose = document.getElementById('consult-purpose').value;
+    const nameStr = name ? ` My name is ${name}.` : '';
+    const msg     = encodeURIComponent(
+      `Pranam.${nameStr} I would like to request a Vedic Alignment Call regarding ${purpose}. Please let me know a suitable time for the scholar.`
+    );
+    window.open(`https://wa.me/919667039964?text=${msg}`, '_blank', 'noopener,noreferrer');
+    closeModal('consult');
+    document.getElementById('consult-form').reset();
+  }
+</script>
+</body>
+</html>
