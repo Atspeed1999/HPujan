@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>The Vedic Library — HomePujan.com</title>
-  <meta name="description" content="Sixteen traditional Vedic ceremonies performed by Gurukul-trained scholars. Browse by intention — Home, Business, Personal, or Milestones."/>
+  <meta name="description" content="27 traditional Vedic ceremonies performed by Gurukul-trained scholars. Browse by intention — Home, Business, Personal, or Milestones."/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
@@ -37,14 +37,12 @@
       font-family: 'Inter', system-ui, sans-serif;
       min-height: 100vh; position: relative;
     }
-    /* CSS Noise Texture (Bhojpatra feel) */
     body::after {
       content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='b'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.68' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23b)' opacity='0.042'/%3E%3C/svg%3E");
     }
     body > * { position: relative; z-index: 1; }
 
-    /* ── COLOUR & TYPE TOKENS ── */
     .text-maroon { color: #4A0E0E; }
     .text-gold   { color: #D4AF37; }
     .bg-maroon   { background-color: #4A0E0E; }
@@ -91,7 +89,6 @@
     }
     .btn-consult:hover { background: #4A0E0E; color: #D4AF37; }
 
-    /* Mobile menu */
     .mob-menu {
       display: none; flex-direction: column; gap: 0.75rem;
       position: absolute; top: 72px; left: 0; right: 0;
@@ -189,7 +186,6 @@
     }
     .lib-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(74,14,14,0.11); border-color: #D4AF37; }
     .lib-card.filtered-out { opacity: 0.12; transform: scale(0.97); pointer-events: none; }
-    /* Paper grain */
     .lib-card::after {
       content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 3;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23c)' opacity='0.1'/%3E%3C/svg%3E");
@@ -247,10 +243,9 @@
     }
     .btn-align:hover { background: #4A0E0E; color: #D4AF37; }
 
-    /* ── GOLD DIVIDER ── */
     .gold-divider { width: 40px; height: 2px; background: #D4AF37; margin: 0 auto; }
 
-    /* ── MODAL SYSTEM (same as landing.html) ── */
+    /* ── MODAL SYSTEM ── */
     .modal-overlay {
       display: none; position: fixed; inset: 0; z-index: 800;
       background: rgba(20,5,5,0.72); backdrop-filter: blur(6px);
@@ -286,6 +281,14 @@
     .modal-invoc-title { font-family: 'Cinzel', serif; font-size: 1.45rem; font-weight: 700; color: #4A0E0E; line-height: 1.1; }
     .modal-invoc-sub { font-family: 'Playfair Display', serif; font-size: 0.98rem; color: #D4AF37; font-weight: 500; font-style: italic; margin-top: 0.3rem; }
     .modal-tag { display: inline-block; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; background: rgba(212,175,55,0.12); color: #4A0E0E; padding: 3px 10px; margin-right: 6px; margin-bottom: 4px; }
+    .modal-edge-block {
+      font-size: 0.865rem; color: #4A0E0E; line-height: 1.78;
+      background: rgba(74,14,14,0.04); border-left: 2px solid rgba(212,175,55,0.5);
+      padding: 0.8rem 1rem; font-style: italic;
+    }
+    .modal-detail-row { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.6rem; }
+    .modal-detail-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #5A4A4A; min-width: 90px; padding-top: 2px; }
+    .modal-detail-val { font-size: 0.88rem; color: #2D2D2D; line-height: 1.5; }
     .btn-discuss {
       display: flex; align-items: center; justify-content: center; gap: 0.6rem; width: 100%;
       background: #4A0E0E; color: #D4AF37; padding: 1rem 1.5rem;
@@ -295,7 +298,6 @@
     }
     .btn-discuss:hover { background: #6A1E1E; }
 
-    /* Consultation form */
     .consult-input {
       width: 100%; border: 1px solid #E5DED0; padding: 0.72rem 0.9rem;
       font-size: 0.88rem; background: #FFFEFB; color: #2D2D2D; outline: none;
@@ -309,9 +311,11 @@
     .consult-select-wrap::after { content: ''; position: absolute; right: 0.9rem; top: 50%; transform: translateY(-50%); border: 4px solid transparent; border-top-color: #D4AF37; pointer-events: none; }
     @media (max-width: 767px) {
       .modal-inner { padding: 1.5rem 1.25rem 1.75rem; }
+      .modal-detail-row { flex-direction: column; gap: 0.25rem; }
+      .modal-detail-label { min-width: auto; }
     }
 
-    /* ── FOOTER (Deep Maroon — consistent with landing.html) ── */
+    /* ── FOOTER ── */
     #footer {
       background: #4A0E0E; position: relative; overflow: hidden;
       border-top: 2px solid #D4AF37;
@@ -355,7 +359,23 @@
     }
     @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 70% { opacity: 0; transform: scale(1.45); } }
 
-    /* ── EMPTY STATE (when filter returns 0) ── */
+    /* ── LIVE CHAT BUTTON ── */
+    .live-chat-btn {
+      position: fixed; bottom: 2rem; right: 6rem; z-index: 600;
+      height: 44px; background: #4A0E0E; border-radius: 22px;
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0 1.25rem 0 0.875rem;
+      box-shadow: 0 8px 32px rgba(74,14,14,0.35); text-decoration: none;
+      transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+      cursor: pointer; border: 1.5px solid #D4AF37;
+    }
+    .live-chat-btn:hover { transform: scale(1.05); box-shadow: 0 12px 44px rgba(74,14,14,0.45); background: #6A1E1E; }
+    .live-chat-btn span {
+      color: #D4AF37; font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      font-family: 'Inter', sans-serif;
+    }
+
     #empty-state { display: none; text-align: center; padding: 4rem 2rem; grid-column: 1/-1; }
   </style>
 </head>
@@ -404,10 +424,10 @@
     <h1>The Vedic Library</h1>
     <div class="gold-divider" style="margin:1rem auto;"></div>
     <p>
-      Sixteen traditional Vedic ceremonies, each curated and performed by Gurukul-trained scholars.
+      27 traditional Vedic ceremonies, each curated and performed by Gurukul-trained scholars.
       Browse by intention, or consult with the Scholar's Desk for a personalised recommendation.
     </p>
-    <div class="hero-count" data-testid="hero-count">16 Vedic Ceremonies</div>
+    <div class="hero-count" data-testid="hero-count">27 Vedic Ceremonies</div>
   </div>
 </section>
 
@@ -415,294 +435,489 @@
 <div class="filter-bar" id="filter-bar" data-testid="filter-bar">
   <div class="filter-pills" role="group" aria-label="Filter by category">
     <button class="filter-pill active" data-filter="all" onclick="filterLib('all')" data-testid="filter-all">All</button>
-    <button class="filter-pill" data-filter="home" onclick="filterLib('home')" data-testid="filter-home">Home</button>
-    <button class="filter-pill" data-filter="business" onclick="filterLib('business')" data-testid="filter-business">Business</button>
+    <button class="filter-pill" data-filter="home" onclick="filterLib('home')" data-testid="filter-home">Home & Shanti</button>
+    <button class="filter-pill" data-filter="business" onclick="filterLib('business')" data-testid="filter-business">Prosperity</button>
     <button class="filter-pill" data-filter="personal" onclick="filterLib('personal')" data-testid="filter-personal">Personal</button>
-    <button class="filter-pill" data-filter="milestones" onclick="filterLib('milestones')" data-testid="filter-milestones">Milestones</button>
+    <button class="filter-pill" data-filter="milestones" onclick="filterLib('milestones')" data-testid="filter-milestones">Life Events</button>
   </div>
-  <p class="filter-count-label" id="filter-count" data-testid="filter-count">16 of 16 ceremonies</p>
+  <p class="filter-count-label" id="filter-count" data-testid="filter-count">27 of 27 ceremonies</p>
 </div>
 
 <!-- ===================== SERVICE GRID ===================== -->
 <main class="service-grid" id="service-grid" data-testid="service-grid">
 
-  <!-- ── HOME ── -->
+  <!-- ══════════════════════════════════════════════════════════════════
+       HOME & SHANTI CATEGORY
+  ══════════════════════════════════════════════════════════════════ -->
 
-  <!-- 1. Ganesh Puja -->
-  <div class="lib-card" data-category="home" data-testid="card-ganesh" data-aos="fade-up" data-aos-delay="0">
+  <!-- 1. Satya Narayan Katha -->
+  <div class="lib-card" data-category="home" data-testid="card-satyanarayan" data-aos="fade-up" onclick="openServiceModal('satyanarayan')">
     <div class="lib-card-img">
-      <img src="https://images.unsplash.com/photo-1636101943361-4d8998149205?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Ganesh Puja — marigold flowers offering" loading="lazy"/>
-      <span class="lib-cat-badge">Home</span>
+      <img src="https://images.unsplash.com/photo-1584205831932-4f8618ce66c1?w=600" alt="Satya Narayan Katha" loading="lazy"/>
+      <span class="lib-cat-badge">Home & Shanti</span>
     </div>
     <div class="lib-card-body">
-      <p class="lib-card-sanskrit">Gaṇeśa Pūjā</p>
-      <p class="lib-card-benefit">Obstacle Removal & Auspicious Beginnings</p>
-      <p class="lib-card-desc">The foundational Vedic invocation. Performed before any new venture, move, or ceremony to clear energetic obstructions and invite divine grace.</p>
+      <p class="lib-card-sanskrit">Satya Narayan Katha</p>
+      <p class="lib-card-benefit">Sukh Sampatti & Sukh Shanti</p>
+      <p class="lib-card-desc">A sacred narrative recitation invoking Lord Vishnu's blessings for peace, prosperity, and fulfillment of intentions in the household.</p>
       <div class="lib-card-dakshina">
-        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹5,000</span>
+        Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹2,100</span>
       </div>
-      <button class="btn-align" onclick="openConsultModal('Gaṇeśa Pūjā — Obstacle Removal')" data-testid="card-ganesh-consult">Consult for Alignment</button>
+      <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Satya Narayan Katha')" data-testid="card-satyanarayan-consult">Consult for Alignment</button>
     </div>
   </div>
 
-  <!-- 2. Griha Pravesh -->
-  <div class="lib-card" data-category="home" data-testid="card-griha" data-aos="fade-up" data-aos-delay="60">
+  <!-- 2. Gayatri Jaap -->
+  <div class="lib-card" data-category="home" data-testid="card-gayatri" data-aos="fade-up" onclick="openServiceModal('gayatri')">
     <div class="lib-card-img">
-      <img src="https://images.unsplash.com/photo-1659669631986-984af011e09e?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Griha Pravesh — white flower offering" loading="lazy"/>
-      <span class="lib-cat-badge">Home</span>
+      <img src="https://images.unsplash.com/photo-1609619385076-36a873425636?w=600" alt="Gayatri Jaap" loading="lazy"/>
+      <span class="lib-cat-badge">Home & Shanti</span>
     </div>
     <div class="lib-card-body">
-      <p class="lib-card-sanskrit">Gṛha Praveśa Pūjā</p>
-      <p class="lib-card-benefit">Sacred New Home Consecration</p>
-      <p class="lib-card-desc">Performed at the threshold of a new home to sanctify the space, invoke divine protection, and establish Vastu alignment from the very first moment of habitation.</p>
+      <p class="lib-card-sanskrit">Gayatri Jaap</p>
+      <p class="lib-card-benefit">Sukh Shanti & Spiritual Clarity</p>
+      <p class="lib-card-desc">The most sacred Vedic mantra recited in precise repetitions to invoke divine illumination, peace of mind, and spiritual protection.</p>
       <div class="lib-card-dakshina">
-        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹8,000</span>
+        Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹2,100</span>
       </div>
-      <button class="btn-align" onclick="openConsultModal('Gṛha Praveśa Pūjā — New Home Consecration')" data-testid="card-griha-consult">Consult for Alignment</button>
+      <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Gayatri Jaap')" data-testid="card-gayatri-consult">Consult for Alignment</button>
     </div>
   </div>
 
-  <!-- 3. Vastu Shanti -->
-  <div class="lib-card" data-category="home" data-testid="card-vastu" data-aos="fade-up" data-aos-delay="120">
+  <!-- 3. Shaanti Hawan -->
+  <div class="lib-card" data-category="home" data-testid="card-shaanti" data-aos="fade-up" onclick="openServiceModal('shaanti')">
     <div class="lib-card-img">
-      <img src="https://images.unsplash.com/photo-1625072290979-cac544181be8?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Vastu Shanti Havan — ritual hands with sacred fire" loading="lazy"/>
-      <span class="lib-cat-badge">Home</span>
+      <img src="https://images.unsplash.com/photo-1630764883473-e8c2056f0589?w=600" alt="Shaanti Hawan" loading="lazy"/>
+      <span class="lib-cat-badge">Home & Shanti</span>
     </div>
     <div class="lib-card-body">
-      <p class="lib-card-sanskrit">Vāstu Śānti Homa</p>
-      <p class="lib-card-benefit">Space Harmonization & Energy Recalibration</p>
-      <p class="lib-card-desc">Addresses panchabhuta imbalance in your living space. Maps directional Vedic energy fields and recalibrates them through precise mantra sequences.</p>
+      <p class="lib-card-sanskrit">Shaanti Hawan</p>
+      <p class="lib-card-benefit">Peace & Harmony in the Home</p>
+      <p class="lib-card-desc">A purifying fire ceremony designed to restore balance and tranquility to the household, removing negative energies and establishing calm.</p>
       <div class="lib-card-dakshina">
-        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹15,000</span>
+        Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹5,100</span>
       </div>
-      <button class="btn-align" onclick="openConsultModal('Vāstu Śānti Homa — Space Harmonization')" data-testid="card-vastu-consult">Consult for Alignment</button>
+      <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Shaanti Hawan')" data-testid="card-shaanti-consult">Consult for Alignment</button>
     </div>
   </div>
 
-  <!-- 4. Navagraha Shanti -->
-  <div class="lib-card" data-category="home" data-testid="card-navagraha" data-aos="fade-up" data-aos-delay="0">
+  <!-- 4. Vastu Dosh Nivaran -->
+  <div class="lib-card" data-category="home" data-testid="card-vastu" data-aos="fade-up" onclick="openServiceModal('vastu')">
     <div class="lib-card-img">
-      <img src="https://images.unsplash.com/photo-1426244434402-9d59aceabbf3?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Navagraha Shanti — incense smoke" loading="lazy"/>
-      <span class="lib-cat-badge">Home</span>
+      <img src="https://images.unsplash.com/photo-1625072290979-cac544181be8?w=600" alt="Vastu Dosh Nivaran" loading="lazy"/>
+      <span class="lib-cat-badge">Home & Shanti</span>
     </div>
     <div class="lib-card-body">
-      <p class="lib-card-sanskrit">Nava Graha Śānti</p>
-      <p class="lib-card-benefit">Planetary Harmony & Dosha Removal</p>
-      <p class="lib-card-desc">Nine-planet propitiation ceremony that addresses unfavorable planetary positions in your natal chart. Prescribed during Sade Sati, Rahu/Ketu transits, or chronic unexplained obstacles.</p>
+      <p class="lib-card-sanskrit">Vastu Dosh Nivaran</p>
+      <p class="lib-card-benefit">Space Harmonization & Correction</p>
+      <p class="lib-card-desc">Addresses directional and elemental imbalances in your home or office through targeted Vedic protocols and mantra sequences.</p>
       <div class="lib-card-dakshina">
-        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹12,000</span>
+        Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹10,000</span>
       </div>
-      <button class="btn-align" onclick="openConsultModal('Nava Graha Śānti — Planetary Harmony')" data-testid="card-navagraha-consult">Consult for Alignment</button>
+      <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Vastu Dosh Nivaran')" data-testid="card-vastu-consult">Consult for Alignment</button>
     </div>
   </div>
 
-  <!-- ── BUSINESS ── -->
-
-  <!-- 5. Lakshmi-Kuber -->
-  <div class="lib-card" data-category="business" data-testid="card-lakshmi" data-aos="fade-up" data-aos-delay="60">
+  <!-- 5. Kaal Sarp Puja -->
+  <div class="lib-card" data-category="home" data-testid="card-kaalsarp" data-aos="fade-up" onclick="openServiceModal('kaalsarp')">
     <div class="lib-card-img">
-      <img src="https://images.unsplash.com/photo-1661760625983-298c7f97fa9b?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Lakshmi-Kuber Havan — golden marigolds dark" loading="lazy"/>
-      <span class="lib-cat-badge">Business</span>
+      <img src="https://images.unsplash.com/photo-1426244434402-9d59aceabbf3?w=600" alt="Kaal Sarp Puja" loading="lazy"/>
+      <span class="lib-cat-badge">Home & Shanti</span>
     </div>
     <div class="lib-card-body">
-      <p class="lib-card-sanskrit">Śrī Lakṣmī-Kubera Homa</p>
-      <p class="lib-card-benefit">Dual Invocation of Material Abundance</p>
-      <p class="lib-card-desc">Addresses dual layers of material blockage — incoming prosperity (Lakshmi) and wealth retention (Kubera). Prescribed when financial growth has inexplicably stalled.</p>
+      <p class="lib-card-sanskrit">Kaal Sarp Puja</p>
+      <p class="lib-card-benefit">Grah Dosh & Karmic Resolution</p>
+      <p class="lib-card-desc">A powerful ceremony to neutralize the effects of Kaal Sarp Dosh in your horoscope, removing obstacles and unlocking blocked potential.</p>
       <div class="lib-card-dakshina">
-        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹11,000</span>
+        Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹1,100</span>
       </div>
-      <button class="btn-align" onclick="openConsultModal('Śrī Lakṣmī-Kubera Homa — Prosperity Invocation')" data-testid="card-lakshmi-consult">Consult for Alignment</button>
+      <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Kaal Sarp Puja')" data-testid="card-kaalsarp-consult">Consult for Alignment</button>
     </div>
   </div>
 
-  <!-- 6. Saraswati Puja -->
-  <div class="lib-card" data-category="business" data-testid="card-saraswati" data-aos="fade-up" data-aos-delay="120">
+  <!-- 6. Rudraabhishek -->
+  <div class="lib-card" data-category="home" data-testid="card-rudra" data-aos="fade-up" onclick="openServiceModal('rudra')">
     <div class="lib-card-img">
-      <img src="https://images.unsplash.com/photo-1426244400376-c77a7f9ea9a5?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Saraswati Puja — incense sticks wisdom" loading="lazy"/>
-      <span class="lib-cat-badge">Business</span>
+      <img src="https://images.unsplash.com/photo-1592429827131-703375157829?w=600" alt="Rudraabhishek" loading="lazy"/>
+      <span class="lib-cat-badge">Home & Shanti</span>
     </div>
     <div class="lib-card-body">
-      <p class="lib-card-sanskrit">Śrī Sarasvatī Pūjā</p>
-      <p class="lib-card-benefit">Wisdom, Clarity & Career Excellence</p>
-      <p class="lib-card-desc">Invokes the Goddess of knowledge and creative intelligence. Performed by students before examinations, professionals at career inflection points, and creatives seeking clarity.</p>
-      <div class="lib-card-dakshina">
-        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹6,000</span>
-      </div>
-      <button class="btn-align" onclick="openConsultModal('Śrī Sarasvatī Pūjā — Wisdom & Career Excellence')" data-testid="card-saraswati-consult">Consult for Alignment</button>
-    </div>
-  </div>
-
-  <!-- 7. Vyapaar Vridhi -->
-  <div class="lib-card" data-category="business" data-testid="card-vyapaar" data-aos="fade-up" data-aos-delay="0">
-    <div class="lib-card-img">
-      <img src="https://images.unsplash.com/photo-1536153635972-1fc2e818f642?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Vyapaar Vridhi Puja — grain abundance" loading="lazy"/>
-      <span class="lib-cat-badge">Business</span>
-    </div>
-    <div class="lib-card-body">
-      <p class="lib-card-sanskrit">Vyāpāra Vṛddhi Pūjā</p>
-      <p class="lib-card-benefit">Business Growth & Market Expansion</p>
-      <p class="lib-card-desc">A targeted Vedic ceremony for entrepreneurs and business owners. Addresses structural karmic blockages in trade, clears competitive obstacles, and invites divine momentum into commercial endeavours.</p>
-      <div class="lib-card-dakshina">
-        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹9,000</span>
-      </div>
-      <button class="btn-align" onclick="openConsultModal('Vyāpāra Vṛddhi Pūjā — Business Growth')" data-testid="card-vyapaar-consult">Consult for Alignment</button>
-    </div>
-  </div>
-
-  <!-- 8. Kubera Yantra Pratishtha -->
-  <div class="lib-card" data-category="business" data-testid="card-yantra" data-aos="fade-up" data-aos-delay="60">
-    <div class="lib-card-img">
-      <img src="https://images.unsplash.com/photo-1713635750060-f8b2196d1720?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Kubera Yantra Pratishtha — sacred fire energy" loading="lazy"/>
-      <span class="lib-cat-badge">Business</span>
-    </div>
-    <div class="lib-card-body">
-      <p class="lib-card-sanskrit">Kubera Yantra Pratiṣṭhā</p>
-      <p class="lib-card-benefit">Activating the Sacred Wealth Matrix</p>
-      <p class="lib-card-desc">Consecration of a Kubera Yantra using Vedic phonetic protocols. The Yantra becomes a permanent energetic anchor for wealth consciousness in your business premises.</p>
-      <div class="lib-card-dakshina">
-        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹8,000</span>
-      </div>
-      <button class="btn-align" onclick="openConsultModal('Kubera Yantra Pratiṣṭhā — Wealth Matrix Activation')" data-testid="card-yantra-consult">Consult for Alignment</button>
-    </div>
-  </div>
-
-  <!-- ── PERSONAL ── -->
-
-  <!-- 9. Maha Mrityunjaya -->
-  <div class="lib-card" data-category="personal" data-testid="card-maha" data-aos="fade-up" data-aos-delay="120">
-    <div class="lib-card-img">
-      <img src="https://images.unsplash.com/photo-1723880000363-f548f36ce475?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Maha Mrityunjaya — diya lamp sacred flame" loading="lazy"/>
-      <span class="lib-cat-badge">Personal</span>
-    </div>
-    <div class="lib-card-body">
-      <p class="lib-card-sanskrit">Mahā Mṛtyuñjaya Homa</p>
-      <p class="lib-card-benefit">Supreme Vitality & Life Force Protection</p>
-      <p class="lib-card-desc">The Rigveda's most powerful health invocation. 32 Sanskrit syllables requiring precise phonetic mastery. Prescribed for chronic illness, unfavorable astrological periods, and ancestral karmic debt.</p>
-      <div class="lib-card-dakshina">
-        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹21,000</span>
-      </div>
-      <button class="btn-align" onclick="openConsultModal('Mahā Mṛtyuñjaya Homa — Supreme Vitality')" data-testid="card-maha-consult">Consult for Alignment</button>
-    </div>
-  </div>
-
-  <!-- 10. Rudrabhishek -->
-  <div class="lib-card" data-category="personal" data-testid="card-rudra" data-aos="fade-up" data-aos-delay="0">
-    <div class="lib-card-img">
-      <img src="https://images.unsplash.com/photo-1592429827131-703375157829?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Rudrabhishek — sacred water abhishek" loading="lazy"/>
-      <span class="lib-cat-badge">Personal</span>
-    </div>
-    <div class="lib-card-body">
-      <p class="lib-card-sanskrit">Rudrābhiṣeka</p>
+      <p class="lib-card-sanskrit">Rudraabhishek</p>
       <p class="lib-card-benefit">Divine Purification & Shiva's Grace</p>
-      <p class="lib-card-desc">Sacred ritual bathing of the Shivalinga with Panchamrit, sacred Gangajal, and Himalayan herbs while reciting the Sri Rudram — 11 chapters of the Yajurveda's most potent hymn.</p>
+      <p class="lib-card-desc">Sacred abhishekam of the Shivalinga with Panchamrit while reciting Sri Rudram — invoking Lord Shiva's blessings for protection and spiritual advancement.</p>
       <div class="lib-card-dakshina">
-        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹13,000</span>
+        Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹11,000</span>
       </div>
-      <button class="btn-align" onclick="openConsultModal('Rudrābhiṣeka — Divine Purification')" data-testid="card-rudra-consult">Consult for Alignment</button>
+      <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Rudraabhishek')" data-testid="card-rudra-consult">Consult for Alignment</button>
     </div>
   </div>
 
-  <!-- 11. Satyanarayan Katha -->
-  <div class="lib-card" data-category="personal" data-testid="card-satya" data-aos="fade-up" data-aos-delay="60">
+  <!-- ══════════════════════════════════════════════════════════════════
+       PROSPERITY / BUSINESS CATEGORY
+  ══════════════════════════════════════════════════════════════════ -->
+
+  <!-- 7. Sri Laxmi Pujan -->
+  <div class="lib-card" data-category="business" data-testid="card-laxmi" data-aos="fade-up" onclick="openServiceModal('laxmi')">
     <div class="lib-card-img">
-      <img src="https://images.unsplash.com/photo-1584205831932-4f8618ce66c1?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Satyanarayan Katha — sacred fire devotion" loading="lazy"/>
-      <span class="lib-cat-badge">Personal</span>
+      <img src="https://images.unsplash.com/photo-1661760625983-298c7f97fa9b?w=600" alt="Sri Laxmi Pujan" loading="lazy"/>
+      <span class="lib-cat-badge">Prosperity</span>
     </div>
     <div class="lib-card-body">
-      <p class="lib-card-sanskrit">Satyanarayaṇa Kathā</p>
-      <p class="lib-card-benefit">Fulfillment of Intentions & Devotional Gratitude</p>
-      <p class="lib-card-desc">A complete narrative recitation of the Skandha Purana's Satyanarayan story, accompanied by Vedic offerings. Performed in gratitude for fulfilled wishes or before undertaking a major life commitment.</p>
+      <p class="lib-card-sanskrit">Sri Laxmi Pujan</p>
+      <p class="lib-card-benefit">Dhan Samriddhi & Wealth Invocation</p>
+      <p class="lib-card-desc">Invocation of Goddess Lakshmi to attract material abundance, remove financial blockages, and establish lasting prosperity in the household.</p>
       <div class="lib-card-dakshina">
-        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹7,500</span>
+        Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹10,000</span>
       </div>
-      <button class="btn-align" onclick="openConsultModal('Satyanarayaṇa Kathā — Fulfillment & Gratitude')" data-testid="card-satya-consult">Consult for Alignment</button>
+      <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Sri Laxmi Pujan')" data-testid="card-laxmi-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- 8. Ganesh Puja -->
+  <div class="lib-card" data-category="business" data-testid="card-ganesh" data-aos="fade-up" onclick="openServiceModal('ganesh')">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1636101943361-4d8998149205?w=600" alt="Ganesh Puja" loading="lazy"/>
+      <span class="lib-cat-badge">Prosperity</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Ganesh Puja</p>
+      <p class="lib-card-benefit">Obstacle Removal & Auspicious Beginnings</p>
+      <p class="lib-card-desc">The foundational Vedic invocation performed before any new venture to clear obstacles and invite divine grace for success.</p>
+      <div class="lib-card-dakshina">
+        Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹11,000</span>
+      </div>
+      <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Ganesh Puja')" data-testid="card-ganesh-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- 9. Vyapar Samriddhi Puja -->
+  <div class="lib-card" data-category="business" data-testid="card-vyapar" data-aos="fade-up" onclick="openServiceModal('vyapar')">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1536153635972-1fc2e818f642?w=600" alt="Vyapar Samriddhi Puja" loading="lazy"/>
+      <span class="lib-cat-badge">Prosperity</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Vyapar Samriddhi Puja</p>
+      <p class="lib-card-benefit">Business Growth & Trade Success</p>
+      <p class="lib-card-desc">Targeted Vedic ceremony for business owners and entrepreneurs to remove trade obstacles and invite momentum into commercial endeavors.</p>
+      <div class="lib-card-dakshina">
+        Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹2,100</span>
+      </div>
+      <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Vyapar Samriddhi Puja')" data-testid="card-vyapar-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- 10. Karya Vikas Pujan -->
+  <div class="lib-card" data-category="business" data-testid="card-karyavikas" data-aos="fade-up" onclick="openServiceModal('karyavikas')">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1713635750060-f8b2196d1720?w=600" alt="Karya Vikas Pujan" loading="lazy"/>
+      <span class="lib-cat-badge">Prosperity</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Karya Vikas Pujan</p>
+      <p class="lib-card-benefit">Career Advancement & Professional Growth</p>
+      <p class="lib-card-desc">A specialized ceremony for professionals seeking career progression, job stability, and success in professional endeavors.</p>
+      <div class="lib-card-dakshina">
+        Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹10,000</span>
+      </div>
+      <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Karya Vikas Pujan')" data-testid="card-karyavikas-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- 11. Dhan Kuber Lakshmi Aradhana -->
+  <div class="lib-card" data-category="business" data-testid="card-kuberlakshmi" data-aos="fade-up" onclick="openServiceModal('kuberlakshmi')">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1633158829875-e5316a358c6f?w=600" alt="Dhan Kuber Lakshmi Aradhana" loading="lazy"/>
+      <span class="lib-cat-badge">Prosperity</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Dhan Kuber Lakshmi Aradhana</p>
+      <p class="lib-card-benefit">Dual Wealth Invocation</p>
+      <p class="lib-card-desc">Combined invocation of Goddess Lakshmi and Lord Kubera addressing both wealth attraction and retention for lasting financial stability.</p>
+      <div class="lib-card-dakshina">
+        Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹501</span>
+      </div>
+      <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Dhan Kuber Lakshmi Aradhana')" data-testid="card-kuberlakshmi-consult">Consult for Alignment</button>
     </div>
   </div>
 
   <!-- 12. Sundarkand Path -->
-  <div class="lib-card" data-category="personal" data-testid="card-sundar" data-aos="fade-up" data-aos-delay="120">
+  <div class="lib-card" data-category="business" data-testid="card-sundarkand" data-aos="fade-up" onclick="openServiceModal('sundarkand')">
     <div class="lib-card-img">
-      <img src="https://images.unsplash.com/photo-1461712535593-a91ba9d206e3?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Sundarkand Path — sacred flame in dark" loading="lazy"/>
+      <img src="https://images.unsplash.com/photo-1461712535593-a91ba9d206e3?w=600" alt="Sundarkand Path" loading="lazy"/>
+      <span class="lib-cat-badge">Prosperity</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Sundarkand Path</p>
+      <p class="lib-card-benefit">Hanuman's Blessing & Success</p>
+      <p class="lib-card-desc">Complete recitation of the fifth chapter of Ramayana — Hanuman's journey — considered powerful for removing obstacles in money and business matters.</p>
+      <div class="lib-card-dakshina">
+        Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹10,000</span>
+      </div>
+      <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Sundarkand Path')" data-testid="card-sundarkand-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       PERSONAL CATEGORY
+  ══════════════════════════════════════════════════════════════════ -->
+
+  <!-- 13. Maha Mrityunjay Jaap -->
+  <div class="lib-card" data-category="personal" data-testid="card-mrityunjay" data-aos="fade-up" onclick="openServiceModal('mrityunjay')">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1723880000363-f548f36ce475?w=600" alt="Maha Mrityunjay Jaap" loading="lazy"/>
       <span class="lib-cat-badge">Personal</span>
     </div>
     <div class="lib-card-body">
-      <p class="lib-card-sanskrit">Sundarakāṇḍa Pāṭha</p>
-      <p class="lib-card-benefit">Hanuman's Blessing & Divine Protection</p>
-      <p class="lib-card-desc">The complete recitation of the fifth chapter of the Ramayana — Hanuman's journey. Considered among the most powerful protective rituals in the Vaishnava tradition.</p>
+      <p class="lib-card-sanskrit">Maha Mrityunjay Jaap</p>
+      <p class="lib-card-benefit">Death & Life Resolutions</p>
+      <p class="lib-card-desc">The Rigveda's most powerful health invocation — 32 Sanskrit syllables requiring precise phonetic mastery for vitality and longevity.</p>
       <div class="lib-card-dakshina">
-        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹6,000</span>
+        Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹2,100</span>
       </div>
-      <button class="btn-align" onclick="openConsultModal('Sundarakāṇḍa Pāṭha — Divine Protection')" data-testid="card-sundar-consult">Consult for Alignment</button>
+      <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Maha Mrityunjay Jaap')" data-testid="card-mrityunjay-consult">Consult for Alignment</button>
     </div>
   </div>
 
-  <!-- ── MILESTONES ── -->
-
-  <!-- 13. Namkaran -->
-  <div class="lib-card" data-category="milestones" data-testid="card-namkaran" data-aos="fade-up" data-aos-delay="0">
+  <!-- 14. Karna Ved Sanskaar -->
+  <div class="lib-card" data-category="personal" data-testid="card-karnavedh" data-aos="fade-up" onclick="openServiceModal('karnavedh')">
     <div class="lib-card-img">
-      <img src="https://images.unsplash.com/photo-1697328412207-84bee39ae9ae?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Namkaran — marigolds new life offering" loading="lazy"/>
-      <span class="lib-cat-badge">Milestones</span>
+      <img src="https://images.unsplash.com/photo-1604881991720-f91add269bed?w=600" alt="Karna Ved Sanskaar" loading="lazy"/>
+      <span class="lib-cat-badge">Personal</span>
     </div>
     <div class="lib-card-body">
-      <p class="lib-card-sanskrit">Nāmakaraṇa Saṃskāra</p>
-      <p class="lib-card-benefit">Baby Naming & First Astrological Alignment</p>
-      <p class="lib-card-desc">The second of sixteen Vedic rites of passage. The child's name is selected based on their Janma Nakshatra and whispered by the scholar in the sacred Vedic naming protocol.</p>
+      <p class="lib-card-sanskrit">Karna Ved Sanskaar</p>
+      <p class="lib-card-benefit">Body Related Purification</p>
+      <p class="lib-card-desc">Sacred ear-piercing ceremony performed according to Vedic traditions, believed to activate specific energy points for health and spiritual development.</p>
       <div class="lib-card-dakshina">
-        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹6,000</span>
+        Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹5,100</span>
       </div>
-      <button class="btn-align" onclick="openConsultModal('Nāmakaraṇa Saṃskāra — Baby Naming Ceremony')" data-testid="card-namkaran-consult">Consult for Alignment</button>
+      <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Karna Ved Sanskaar')" data-testid="card-karnavedh-consult">Consult for Alignment</button>
     </div>
   </div>
 
-  <!-- 14. Annaprashan -->
-  <div class="lib-card" data-category="milestones" data-testid="card-anna" data-aos="fade-up" data-aos-delay="60">
+  <!-- 15. Agnihotra -->
+  <div class="lib-card" data-category="personal" data-testid="card-agnihotra" data-aos="fade-up" onclick="openServiceModal('agnihotra')">
     <div class="lib-card-img">
-      <img src="https://images.unsplash.com/photo-1645694413160-fddc7f0feb5d?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Annaprashan — marigold celebration" loading="lazy"/>
-      <span class="lib-cat-badge">Milestones</span>
+      <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600" alt="Agnihotra" loading="lazy"/>
+      <span class="lib-cat-badge">Personal</span>
     </div>
     <div class="lib-card-body">
-      <p class="lib-card-sanskrit">Annaprāśana Saṃskāra</p>
-      <p class="lib-card-benefit">Sacred First Rice Feeding & Life-Force Blessing</p>
-      <p class="lib-card-desc">The Vedic ceremony for a child's first intake of solid food — a major karmic threshold. The scholar recites specific Annaprashan mantras to bless the child's nourishment for life.</p>
+      <p class="lib-card-sanskrit">Agnihotra</p>
+      <p class="lib-card-benefit">Daily Life Purification</p>
+      <p class="lib-card-desc">An ancient Vedic fire ritual performed at sunrise and sunset, purifying the atmosphere and establishing a daily spiritual discipline.</p>
       <div class="lib-card-dakshina">
-        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹5,000</span>
+        Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹11,000</span>
       </div>
-      <button class="btn-align" onclick="openConsultModal('Annaprāśana Saṃskāra — First Rice Feeding')" data-testid="card-anna-consult">Consult for Alignment</button>
+      <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Agnihotra')" data-testid="card-agnihotra-consult">Consult for Alignment</button>
     </div>
   </div>
 
-  <!-- 15. Mundan -->
-  <div class="lib-card" data-category="milestones" data-testid="card-mundan" data-aos="fade-up" data-aos-delay="120">
+  <!-- 16. Brahmayajj -->
+  <div class="lib-card" data-category="personal" data-testid="card-brahmayajj" data-aos="fade-up" onclick="openServiceModal('brahmayajj')">
     <div class="lib-card-img">
-      <img src="https://images.unsplash.com/photo-1720413828596-5ec9b4311048?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Mundan Ceremony — sacred purification flame" loading="lazy"/>
-      <span class="lib-cat-badge">Milestones</span>
+      <img src="https://images.unsplash.com/photo-1528715471579-d1bcf0ba5e83?w=600" alt="Brahmayajj" loading="lazy"/>
+      <span class="lib-cat-badge">Personal</span>
     </div>
     <div class="lib-card-body">
-      <p class="lib-card-sanskrit">Muṇḍana Saṃskāra</p>
-      <p class="lib-card-benefit">First Haircut & Karmic Purification</p>
-      <p class="lib-card-desc">The ritual removal of a child's birth hair — believed to carry accumulated karmic energy from the womb — and its sacred offering to the divine. Typically performed in the first or third year.</p>
+      <p class="lib-card-sanskrit">Brahmayajj</p>
+      <p class="lib-card-benefit">Daily Life & Spiritual Practice</p>
+      <p class="lib-card-desc">One of the five great daily sacrifices prescribed in the Vedas — honoring the sages through study and recitation of sacred texts.</p>
       <div class="lib-card-dakshina">
-        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹7,000</span>
+        Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹10,000</span>
       </div>
-      <button class="btn-align" onclick="openConsultModal('Muṇḍana Saṃskāra — First Haircut & Purification')" data-testid="card-mundan-consult">Consult for Alignment</button>
+      <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Brahmayajj')" data-testid="card-brahmayajj-consult">Consult for Alignment</button>
     </div>
   </div>
 
-  <!-- 16. Pitru Tarpan -->
-  <div class="lib-card" data-category="milestones" data-testid="card-pitru" data-aos="fade-up" data-aos-delay="0">
+  <!-- 17. Gau Daan -->
+  <div class="lib-card" data-category="personal" data-testid="card-gaudaan" data-aos="fade-up" onclick="openServiceModal('gaudaan')">
     <div class="lib-card-img">
-      <img src="https://images.unsplash.com/photo-1566687952853-480633286169?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=600" alt="Pitru Tarpan — water offering ancestral" loading="lazy"/>
-      <span class="lib-cat-badge">Milestones</span>
+      <img src="https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?w=600" alt="Gau Daan" loading="lazy"/>
+      <span class="lib-cat-badge">Personal</span>
     </div>
     <div class="lib-card-body">
-      <p class="lib-card-sanskrit">Pitṛ Tarpaṇa</p>
-      <p class="lib-card-benefit">Ancestral Peace & Karmic Liberation</p>
-      <p class="lib-card-desc">The sacred offering of water, black sesame, and Kusha grass to three generations of ancestors. Releases karmic bonds between the living and departed, addressing unexplained recurring obstacles.</p>
+      <p class="lib-card-sanskrit">Gau Daan</p>
+      <p class="lib-card-benefit">Death & Life Resolutions</p>
+      <p class="lib-card-desc">Sacred cow donation ceremony considered highly meritorious for spiritual advancement and resolving ancestral karmic debts.</p>
       <div class="lib-card-dakshina">
-        Estimated Dakshina — <span class="lib-card-dakshina-amount">From ₹15,000</span>
+        Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹2,100</span>
       </div>
-      <button class="btn-align" onclick="openConsultModal('Pitṛ Tarpaṇa — Ancestral Peace & Karmic Liberation')" data-testid="card-pitru-consult">Consult for Alignment</button>
+      <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Gau Daan')" data-testid="card-gaudaan-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- 18. Chhapan Bhog -->
+  <div class="lib-card" data-category="personal" data-testid="card-chhapanbhog" data-aos="fade-up" onclick="openServiceModal('chhapanbhog')">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1596797038530-2c107229654b?w=600" alt="Chhapan Bhog" loading="lazy"/>
+      <span class="lib-cat-badge">Personal</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Chhapan Bhog</p>
+      <p class="lib-card-benefit">Happy Life & Ceremony</p>
+      <p class="lib-card-desc">Elaborate offering of 56 sacred food items to the deity — a grand devotional ceremony for celebrating life's blessings and special occasions.</p>
+      <div class="lib-card-dakshina">
+        Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹11,000</span>
+      </div>
+      <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Chhapan Bhog')" data-testid="card-chhapanbhog-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- 19. Janam Diwas Hawan -->
+  <div class="lib-card" data-category="personal" data-testid="card-janamdiwas" data-aos="fade-up" onclick="openServiceModal('janamdiwas')">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1514516870000-7c7b96c0b3e8?w=600" alt="Janam Diwas Hawan" loading="lazy"/>
+      <span class="lib-cat-badge">Personal</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Janam Diwas Hawan</p>
+      <p class="lib-card-benefit">Birthday & Life Blessing</p>
+      <p class="lib-card-desc">Sacred fire ceremony performed on birthdays to invoke divine blessings for the year ahead, aligning with one's Vedic birth chart.</p>
+      <div class="lib-card-dakshina">
+        Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹11,000</span>
+      </div>
+      <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Janam Diwas Hawan')" data-testid="card-janamdiwas-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       LIFE EVENTS / MILESTONES CATEGORY
+  ══════════════════════════════════════════════════════════════════ -->
+
+  <!-- 20. Naam Karan -->
+  <div class="lib-card" data-category="milestones" data-testid="card-namkaran" data-aos="fade-up" onclick="openServiceModal('namkaran')">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1697328412207-84bee39ae9ae?w=600" alt="Naam Karan" loading="lazy"/>
+      <span class="lib-cat-badge">Life Events</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Naam Karan</p>
+      <p class="lib-card-benefit">Baby Naming Ceremony</p>
+      <p class="lib-card-desc">The sacred naming ceremony where the child's name is selected based on their Janma Nakshatra and whispered in the Vedic naming protocol.</p>
+      <div class="lib-card-dakshina">
+        Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹3,100</span>
+      </div>
+      <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Naam Karan')" data-testid="card-namkaran-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- 21. Vivah Sanskaar -->
+  <div class="lib-card" data-category="milestones" data-testid="card-vivah" data-aos="fade-up" onclick="openServiceModal('vivah')">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=600" alt="Vivah Sanskaar" loading="lazy"/>
+      <span class="lib-cat-badge">Life Events</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Vivah Sanskaar</p>
+      <p class="lib-card-benefit">Sacred Marriage Ceremony</p>
+      <p class="lib-card-desc">Complete Vedic wedding ceremony performed with meticulous adherence to scriptural protocols, sanctifying the union of two souls.</p>
+      <div class="lib-card-dakshina">
+        Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹11,000</span>
+      </div>
+      <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Vivah Sanskaar')" data-testid="card-vivah-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- 22. Maanglik Dosh Nivaaran -->
+  <div class="lib-card" data-category="milestones" data-testid="card-maanglik" data-aos="fade-up" onclick="openServiceModal('maanglik')">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1522926193341-e9ffd686c60f?w=600" alt="Maanglik Dosh Nivaaran" loading="lazy"/>
+      <span class="lib-cat-badge">Life Events</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Maanglik Dosh Nivaaran</p>
+      <p class="lib-card-benefit">Marriage Obstacle Removal</p>
+      <p class="lib-card-desc">Specific Vedic ceremony to neutralize Mangal Dosh affecting marriage prospects, performed with precise astrological timing.</p>
+      <div class="lib-card-dakshina">
+        Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹5,100</span>
+      </div>
+      <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Maanglik Dosh Nivaaran')" data-testid="card-maanglik-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- 23. Putr Praapti Puja -->
+  <div class="lib-card" data-category="milestones" data-testid="card-putrpraapti" data-aos="fade-up" onclick="openServiceModal('putrpraapti')">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1544126592-807ade215a0b?w=600" alt="Putr Praapti Puja" loading="lazy"/>
+      <span class="lib-cat-badge">Life Events</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Putr Praapti Puja</p>
+      <p class="lib-card-benefit">Blessing for Progeny</p>
+      <p class="lib-card-desc">Sacred ceremony invoking divine blessings for couples seeking to be blessed with children, performed with Santan Gopal mantras.</p>
+      <div class="lib-card-dakshina">
+        Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹5,100</span>
+      </div>
+      <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Putr Praapti Puja')" data-testid="card-putrpraapti-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- 24. Lagan -->
+  <div class="lib-card" data-category="milestones" data-testid="card-lagan" data-aos="fade-up" onclick="openServiceModal('lagan')">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=600" alt="Lagan" loading="lazy"/>
+      <span class="lib-cat-badge">Life Events</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Lagan</p>
+      <p class="lib-card-benefit">Engagement Ceremony</p>
+      <p class="lib-card-desc">Traditional Vedic engagement ceremony establishing the formal commitment between families before the marriage ceremony.</p>
+      <div class="lib-card-dakshina">
+        Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹2,100</span>
+      </div>
+      <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Lagan')" data-testid="card-lagan-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- 25. Ved Aarambh -->
+  <div class="lib-card" data-category="milestones" data-testid="card-vedaarambh" data-aos="fade-up" onclick="openServiceModal('vedaarambh')">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600" alt="Ved Aarambh" loading="lazy"/>
+      <span class="lib-cat-badge">Life Events</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Ved Aarambh</p>
+      <p class="lib-card-benefit">Education & Life Initiation</p>
+      <p class="lib-card-desc">Sacred ceremony marking the beginning of formal Vedic education — the child's initiation into the world of sacred knowledge.</p>
+      <div class="lib-card-dakshina">
+        Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹11,000</span>
+      </div>
+      <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Ved Aarambh')" data-testid="card-vedaarambh-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- 26. Pitra Dosh / Pitra Pujan -->
+  <div class="lib-card" data-category="milestones" data-testid="card-pitrapujan" data-aos="fade-up" onclick="openServiceModal('pitrapujan')">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1566687952853-480633286169?w=600" alt="Pitra Dosh Pujan" loading="lazy"/>
+      <span class="lib-cat-badge">Life Events</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Pitra Dosh / Pitra Pujan</p>
+      <p class="lib-card-benefit">Ancestral Peace & Liberation</p>
+      <p class="lib-card-desc">Sacred offering to ancestors releasing karmic bonds between living and departed, addressing unexplained recurring obstacles in family lineage.</p>
+      <div class="lib-card-dakshina">
+        Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹5,100</span>
+      </div>
+      <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Pitra Dosh Pujan')" data-testid="card-pitrapujan-consult">Consult for Alignment</button>
+    </div>
+  </div>
+
+  <!-- 27. Antiyeshti -->
+  <div class="lib-card" data-category="milestones" data-testid="card-antiyeshti" data-aos="fade-up" onclick="openServiceModal('antiyeshti')">
+    <div class="lib-card-img">
+      <img src="https://images.unsplash.com/photo-1508672019048-805c876b67e2?w=600" alt="Antiyeshti" loading="lazy"/>
+      <span class="lib-cat-badge">Life Events</span>
+    </div>
+    <div class="lib-card-body">
+      <p class="lib-card-sanskrit">Antiyeshti</p>
+      <p class="lib-card-benefit">Final Rites & Soul's Journey</p>
+      <p class="lib-card-desc">The sacred final rites performed with complete Vedic protocols, ensuring the departed soul's peaceful transition and liberation.</p>
+      <div class="lib-card-dakshina">
+        Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹54</span>
+      </div>
+      <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Antiyeshti')" data-testid="card-antiyeshti-consult">Consult for Alignment</button>
     </div>
   </div>
 
@@ -741,10 +956,10 @@
       <div>
         <p style="font-size:0.65rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:1rem;">Ceremonies</p>
         <div style="display:flex;flex-direction:column;gap:0.55rem;">
-          <button onclick="filterLib('home')" class="footer-link" style="background:none;border:none;cursor:pointer;text-align:left;padding:0;">Home Rituals</button>
-          <button onclick="filterLib('business')" class="footer-link" style="background:none;border:none;cursor:pointer;text-align:left;padding:0;">Business Rituals</button>
+          <button onclick="filterLib('home')" class="footer-link" style="background:none;border:none;cursor:pointer;text-align:left;padding:0;">Home & Shanti</button>
+          <button onclick="filterLib('business')" class="footer-link" style="background:none;border:none;cursor:pointer;text-align:left;padding:0;">Prosperity Rituals</button>
           <button onclick="filterLib('personal')" class="footer-link" style="background:none;border:none;cursor:pointer;text-align:left;padding:0;">Personal Rituals</button>
-          <button onclick="filterLib('milestones')" class="footer-link" style="background:none;border:none;cursor:pointer;text-align:left;padding:0;">Life Milestones</button>
+          <button onclick="filterLib('milestones')" class="footer-link" style="background:none;border:none;cursor:pointer;text-align:left;padding:0;">Life Events</button>
         </div>
       </div>
       <div>
@@ -784,6 +999,14 @@
   </svg>
 </a>
 
+<!-- Live Chat Button -->
+<button onclick="openLiveChatModal()" class="live-chat-btn" data-testid="live-chat-btn" aria-label="Live Chat">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </svg>
+  <span>Leave a Message</span>
+</button>
+
 <!-- ===================== CONSULTATION MODAL ===================== -->
 <div id="modal-consult" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Request a Vedic Alignment Call" data-testid="modal-consult">
   <div class="modal-drop">
@@ -809,23 +1032,26 @@
             <div class="consult-select-wrap">
               <select id="consult-purpose" class="consult-input" required>
                 <option value="" disabled selected>Select your path...</option>
-                <option value="Gaṇeśa Pūjā — Obstacle Removal">Gaṇeśa Pūjā — Obstacle Removal</option>
-                <option value="Gṛha Praveśa Pūjā — New Home Consecration">Gṛha Praveśa Pūjā — New Home Consecration</option>
-                <option value="Vāstu Śānti Homa — Space Harmonization">Vāstu Śānti Homa — Space Harmonization</option>
-                <option value="Nava Graha Śānti — Planetary Harmony">Nava Graha Śānti — Planetary Harmony</option>
-                <option value="Śrī Lakṣmī-Kubera Homa — Prosperity Invocation">Śrī Lakṣmī-Kubera Homa — Prosperity Invocation</option>
-                <option value="Śrī Sarasvatī Pūjā — Wisdom & Career">Śrī Sarasvatī Pūjā — Wisdom & Career</option>
-                <option value="Vyāpāra Vṛddhi Pūjā — Business Growth">Vyāpāra Vṛddhi Pūjā — Business Growth</option>
-                <option value="Kubera Yantra Pratiṣṭhā — Wealth Matrix">Kubera Yantra Pratiṣṭhā — Wealth Matrix</option>
-                <option value="Mahā Mṛtyuñjaya Homa — Supreme Vitality">Mahā Mṛtyuñjaya Homa — Supreme Vitality</option>
-                <option value="Rudrābhiṣeka — Divine Purification">Rudrābhiṣeka — Divine Purification</option>
-                <option value="Satyanarayaṇa Kathā — Fulfillment & Gratitude">Satyanarayaṇa Kathā — Fulfillment & Gratitude</option>
-                <option value="Sundarakāṇḍa Pāṭha — Divine Protection">Sundarakāṇḍa Pāṭha — Divine Protection</option>
-                <option value="Nāmakaraṇa Saṃskāra — Baby Naming">Nāmakaraṇa Saṃskāra — Baby Naming</option>
-                <option value="Annaprāśana Saṃskāra — First Rice Feeding">Annaprāśana Saṃskāra — First Rice Feeding</option>
-                <option value="Muṇḍana Saṃskāra — First Haircut">Muṇḍana Saṃskāra — First Haircut</option>
-                <option value="Pitṛ Tarpaṇa — Ancestral Peace">Pitṛ Tarpaṇa — Ancestral Peace</option>
-                <option value="a ceremony — I need guidance to identify my path">I need guidance — help me identify my path</option>
+                <option value="Satya Narayan Katha">Satya Narayan Katha — Sukh Shanti</option>
+                <option value="Gayatri Jaap">Gayatri Jaap — Spiritual Clarity</option>
+                <option value="Shaanti Hawan">Shaanti Hawan — Peace & Harmony</option>
+                <option value="Vastu Dosh Nivaran">Vastu Dosh Nivaran — Space Harmonization</option>
+                <option value="Kaal Sarp Puja">Kaal Sarp Puja — Karmic Resolution</option>
+                <option value="Rudraabhishek">Rudraabhishek — Shiva's Grace</option>
+                <option value="Sri Laxmi Pujan">Sri Laxmi Pujan — Wealth Invocation</option>
+                <option value="Ganesh Puja">Ganesh Puja — Obstacle Removal</option>
+                <option value="Vyapar Samriddhi">Vyapar Samriddhi — Business Growth</option>
+                <option value="Karya Vikas Pujan">Karya Vikas Pujan — Career Advancement</option>
+                <option value="Dhan Kuber Lakshmi">Dhan Kuber Lakshmi — Dual Wealth</option>
+                <option value="Sundarkand Path">Sundarkand Path — Success</option>
+                <option value="Maha Mrityunjay Jaap">Maha Mrityunjay — Health & Vitality</option>
+                <option value="Agnihotra">Agnihotra — Daily Purification</option>
+                <option value="Janam Diwas Hawan">Janam Diwas — Birthday Blessing</option>
+                <option value="Naam Karan">Naam Karan — Baby Naming</option>
+                <option value="Vivah Sanskaar">Vivah Sanskaar — Marriage Ceremony</option>
+                <option value="Maanglik Dosh Nivaaran">Maanglik Dosh — Marriage Obstacle</option>
+                <option value="Pitra Pujan">Pitra Pujan — Ancestral Peace</option>
+                <option value="I need guidance">I need guidance — help me identify my path</option>
               </select>
             </div>
           </div>
@@ -842,40 +1068,334 @@
   </div>
 </div>
 
+<!-- ===================== LIVE CHAT MODAL ===================== -->
+<div id="modal-livechat" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Leave a Message" data-testid="modal-livechat">
+  <div class="modal-drop">
+    <div class="modal-paper">
+      <button class="modal-close" onclick="closeModal('livechat')" data-testid="modal-livechat-close" aria-label="Close">&times;</button>
+      <div class="modal-inner">
+        <div class="modal-section">
+          <p class="modal-section-lbl">Leave a Message</p>
+          <p class="modal-invoc-title">We'll Connect With You</p>
+          <p class="modal-invoc-sub">Share your details and Jaynendra will reach out personally</p>
+        </div>
+        <div style="width:36px;height:2px;background:#D4AF37;margin-bottom:1.25rem;"></div>
+        <p style="font-size:0.875rem;color:#5A4A4A;line-height:1.75;margin-bottom:1.5rem;">
+          Leave your contact details and a brief message. Our scholar Jaynendra will contact you via WhatsApp or phone call within 24 hours to discuss your Vedic requirements.
+        </p>
+        <form id="livechat-form" onsubmit="submitLiveChatForm(event)">
+          <div class="consult-field">
+            <label for="livechat-name" class="consult-label">Your Name *</label>
+            <input type="text" id="livechat-name" class="consult-input" placeholder="How should we address you?" required autocomplete="name" data-testid="livechat-name-input"/>
+          </div>
+          <div class="consult-field">
+            <label for="livechat-phone" class="consult-label">Phone Number *</label>
+            <input type="tel" id="livechat-phone" class="consult-input" placeholder="+91 98765 43210" required autocomplete="tel" data-testid="livechat-phone-input"/>
+          </div>
+          <div class="consult-field">
+            <label for="livechat-message" class="consult-label">Your Message</label>
+            <textarea id="livechat-message" class="consult-input" rows="3" placeholder="Tell us about your requirement or intention..." style="resize:vertical;min-height:80px;" data-testid="livechat-message-input"></textarea>
+          </div>
+          <button type="submit" class="btn-discuss" style="margin-top:0.5rem;" data-testid="livechat-submit-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+            Send Message via WhatsApp
+          </button>
+        </form>
+        <p style="font-size:0.72rem;color:#9A8A8A;text-align:center;margin-top:1rem;line-height:1.6;">
+          This will open WhatsApp with your message pre-filled. Jaynendra will respond within 24 hours.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SERVICE DETAIL MODAL (DYNAMIC) ===================== -->
+<div id="modal-service" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Service Details" data-testid="modal-service">
+  <div class="modal-drop">
+    <div class="modal-paper">
+      <button class="modal-close" onclick="closeModal('service')" data-testid="modal-service-close" aria-label="Close">&times;</button>
+      <div class="modal-inner" id="service-modal-content">
+        <!-- Content populated dynamically -->
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ===================== SCRIPTS ===================== -->
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 <script>
   AOS.init({ duration: 640, easing: 'ease-out-cubic', once: true, offset: 60 });
 
+  // Service Data for Modals
+  const serviceData = {
+    satyanarayan: {
+      name: 'Satya Narayan Katha',
+      subtitle: 'The Sacred Narrative of Divine Truth',
+      category: 'Sukh Sampatti, Sukh Shanti',
+      description: 'A complete narrative recitation invoking Lord Vishnu as Satyanarayan, bringing peace, prosperity, and fulfillment of intentions to the household. This ceremony is traditionally performed on Purnima (full moon) days.',
+      scholarly: 'This ceremony requires precise recitation of five chapters of the Katha with correct pronunciation and intonation. The scholar must maintain meditative focus throughout the 2-3 hour ceremony while guiding the family through participatory rituals.',
+      duration: '2-3 Hours',
+      dakshina: 'From ₹2,100'
+    },
+    gayatri: {
+      name: 'Gayatri Jaap',
+      subtitle: 'The Supreme Vedic Invocation',
+      category: 'Sukh Shanti',
+      description: 'The Gayatri Mantra is the most sacred verse in the Vedas. This jaap involves precise repetition of the 24-syllable mantra invoking divine illumination and spiritual protection.',
+      scholarly: 'The Gayatri requires exact phonetic delivery with proper Svarita (tonal accents). Our scholars have memorized the seven Vyahritis and can perform extended jaaps of 1008 or 10008 repetitions.',
+      duration: '1-3 Hours',
+      dakshina: 'From ₹2,100'
+    },
+    shaanti: {
+      name: 'Shaanti Hawan',
+      subtitle: 'The Fire Ceremony of Peace',
+      category: 'Sukh Shanti',
+      description: 'A purifying fire ceremony designed to restore balance and tranquility in the home. Through precise mantra sequences and offerings, negative energies are transformed and peace is established.',
+      scholarly: 'This hawan requires knowledge of specific Shanti Suktas from the Yajurveda. The scholar calibrates the ceremony based on the specific disturbances affecting the household.',
+      duration: '2-4 Hours',
+      dakshina: 'From ₹5,100'
+    },
+    vastu: {
+      name: 'Vastu Dosh Nivaran',
+      subtitle: 'Recalibration of Sacred Space',
+      category: 'Home Related',
+      description: 'Addresses panchabhuta (five-element) imbalances in your living or working space. Maps directional Vedic energy fields and recalibrates them through targeted mantra sequences.',
+      scholarly: 'This ceremony requires the scholar to map your space against 32 Marmasthana energy points. Mantra sequences are calibrated to each cardinal direction with distinct pitch variations.',
+      duration: '3-5 Hours',
+      dakshina: 'From ₹10,000'
+    },
+    kaalsarp: {
+      name: 'Kaal Sarp Puja',
+      subtitle: 'Neutralizing Planetary Shadows',
+      category: 'Grah Dosh, Home Related',
+      description: 'When all planets in your horoscope are hemmed between Rahu and Ketu, Kaal Sarp Dosh creates recurring obstacles. This puja neutralizes these effects and unlocks blocked potential.',
+      scholarly: 'Requires analysis of the native\'s birth chart to identify the specific type of Kaal Sarp Dosh (there are 12 varieties). The ceremony is then customized accordingly.',
+      duration: '2-3 Hours',
+      dakshina: 'From ₹1,100'
+    },
+    rudra: {
+      name: 'Rudraabhishek',
+      subtitle: 'Divine Purification & Shiva\'s Grace',
+      category: 'Life Consolidations, Grah Dosh',
+      description: 'Sacred abhishekam of the Shivalinga with Panchamrit, Gangajal, and Himalayan herbs while reciting Sri Rudram — 11 chapters of the Yajurveda\'s most potent hymn.',
+      scholarly: 'Sri Rudram recitation requires mastery of the complex Chamakam pattern. Our scholars have completed traditional Rudra Parayana training spanning several years.',
+      duration: '3-4 Hours',
+      dakshina: 'From ₹11,000'
+    },
+    laxmi: {
+      name: 'Sri Laxmi Pujan',
+      subtitle: 'Invocation of Goddess of Wealth',
+      category: 'Dhan Samriddhi',
+      description: 'Sacred invocation of Goddess Lakshmi to attract material abundance, remove financial blockages, and establish lasting prosperity in the household.',
+      scholarly: 'Includes recitation of Sri Sukta and Lakshmi Sahasranama. The scholar performs specific yantra-based rituals to establish a permanent Lakshmi presence.',
+      duration: '2-3 Hours',
+      dakshina: 'From ₹10,000'
+    },
+    ganesh: {
+      name: 'Ganesh Puja',
+      subtitle: 'Obstacle Removal & Auspicious Beginnings',
+      category: 'Dhan Samriddhi, Education',
+      description: 'The foundational Vedic invocation performed before any new venture, move, or ceremony to clear energetic obstructions and invite divine grace.',
+      scholarly: 'Includes Ganapati Atharvashirsha and Ganesh Sahasranama. Essential for consecrating new spaces, starting businesses, or beginning significant life chapters.',
+      duration: '1.5-2 Hours',
+      dakshina: 'From ₹11,000'
+    },
+    vyapar: {
+      name: 'Vyapar Samriddhi Puja',
+      subtitle: 'Business Growth & Trade Success',
+      category: 'Business',
+      description: 'A targeted ceremony for entrepreneurs and business owners addressing structural karmic blockages in trade and inviting divine momentum into commercial endeavors.',
+      scholarly: 'The scholar analyzes the business owner\'s chart and the business commencement date to identify specific blockages and prescribe targeted mantras.',
+      duration: '2-3 Hours',
+      dakshina: 'From ₹2,100'
+    },
+    karyavikas: {
+      name: 'Karya Vikas Pujan',
+      subtitle: 'Career Advancement & Professional Growth',
+      category: 'Business',
+      description: 'Specialized ceremony for professionals seeking career progression, promotions, job stability, and success in professional endeavors.',
+      scholarly: 'Combines elements of Saraswati and Lakshmi worship with career-specific mantras. Timing is aligned with favorable planetary transits.',
+      duration: '2-3 Hours',
+      dakshina: 'From ₹10,000'
+    },
+    kuberlakshmi: {
+      name: 'Dhan Kuber Lakshmi Aradhana',
+      subtitle: 'Dual Wealth Invocation',
+      category: 'Money & Business',
+      description: 'Combined invocation of Goddess Lakshmi (wealth attraction) and Lord Kubera (wealth retention) for complete financial stability and growth.',
+      scholarly: 'Includes Kubera Mantra jaap and Lakshmi Gayatri. A Kubera Yantra may be consecrated as a permanent anchor for wealth consciousness.',
+      duration: '1-2 Hours',
+      dakshina: 'From ₹501'
+    },
+    sundarkand: {
+      name: 'Sundarkand Path',
+      subtitle: 'Hanuman\'s Blessing & Divine Protection',
+      category: 'Money & Business',
+      description: 'Complete recitation of the fifth chapter of Ramayana — Hanuman\'s journey to Lanka. Considered among the most powerful protective and success-bringing rituals.',
+      scholarly: 'Requires complete memorization of all dohas and chaupais with correct rhythm and pronunciation. Our scholars have practiced this path since childhood.',
+      duration: '3-4 Hours',
+      dakshina: 'From ₹10,000'
+    },
+    mrityunjay: {
+      name: 'Maha Mrityunjay Jaap',
+      subtitle: 'Supreme Vitality & Life Force Protection',
+      category: 'Death & Life Resolutions',
+      description: 'The Rigveda\'s most powerful health invocation. 32 Sanskrit syllables requiring precise phonetic mastery, prescribed for chronic illness and life protection.',
+      scholarly: 'This mantra\'s efficacy depends entirely on correct pronunciation of each syllable. Our scholars perform 1.25 lakh (125,000) repetitions in extended ceremonies.',
+      duration: '2-6 Hours',
+      dakshina: 'From ₹2,100'
+    },
+    karnavedh: {
+      name: 'Karna Ved Sanskaar',
+      subtitle: 'Sacred Body Purification',
+      category: 'Body Related',
+      description: 'Sacred ear-piercing ceremony performed according to Vedic traditions, believed to activate specific marma points for health and spiritual development.',
+      scholarly: 'Performed on an auspicious muhurta with specific mantras for each stage. The ceremony includes preliminary purification rituals.',
+      duration: '1-2 Hours',
+      dakshina: 'From ₹5,100'
+    },
+    agnihotra: {
+      name: 'Agnihotra',
+      subtitle: 'Daily Vedic Fire Ritual',
+      category: 'Daily Life',
+      description: 'An ancient Vedic fire ritual performed at precise sunrise and sunset times, purifying the atmosphere and establishing daily spiritual discipline.',
+      scholarly: 'Requires exact timing calculations and specific copper pyramid apparatus. The scholar can train household members to continue the practice independently.',
+      duration: 'Training Session + Setup',
+      dakshina: 'From ₹11,000'
+    },
+    brahmayajj: {
+      name: 'Brahmayajj',
+      subtitle: 'The Scholar\'s Sacrifice',
+      category: 'Daily Life',
+      description: 'One of the five great daily sacrifices (Pancha Maha Yajnas) prescribed in the Vedas — honoring the sages through study and recitation of sacred texts.',
+      scholarly: 'Includes instruction on proper Vedic study methods and establishing a daily Svadhyaya (self-study) practice in the home.',
+      duration: '2-3 Hours',
+      dakshina: 'From ₹10,000'
+    },
+    gaudaan: {
+      name: 'Gau Daan',
+      subtitle: 'Sacred Cow Donation',
+      category: 'Death & Life Resolutions',
+      description: 'The sacred cow donation ceremony, considered highly meritorious for spiritual advancement and resolving ancestral karmic debts.',
+      scholarly: 'Includes proper Sankalpa, selection of appropriate Gau Shala, and complete ritual protocols for the donation ceremony.',
+      duration: '2-3 Hours',
+      dakshina: 'From ₹2,100'
+    },
+    chhapanbhog: {
+      name: 'Chhapan Bhog',
+      subtitle: 'Grand Devotional Offering',
+      category: 'Happy Life, Ceremony',
+      description: 'Elaborate offering of 56 sacred food items to the deity — a grand devotional ceremony for celebrating life\'s blessings and special occasions.',
+      scholarly: 'Requires preparation of all 56 items according to Sattvic principles. The scholar conducts the offering with appropriate mantras for each item.',
+      duration: '4-6 Hours',
+      dakshina: 'From ₹11,000'
+    },
+    janamdiwas: {
+      name: 'Janam Diwas Hawan',
+      subtitle: 'Birthday Fire Blessing',
+      category: 'Birth, Life',
+      description: 'Sacred fire ceremony performed on birthdays to invoke divine blessings for the year ahead, aligned with one\'s Vedic birth chart.',
+      scholarly: 'The scholar analyzes the native\'s annual chart (Varshphal) and customizes the hawan to strengthen beneficial planets and mitigate challenges.',
+      duration: '2-3 Hours',
+      dakshina: 'From ₹11,000'
+    },
+    namkaran: {
+      name: 'Naam Karan',
+      subtitle: 'Sacred Baby Naming Ceremony',
+      category: 'Birth, Children, Name',
+      description: 'The sacred naming ceremony where the child\'s name is selected based on their Janma Nakshatra and whispered by the scholar in the Vedic naming protocol.',
+      scholarly: 'Requires calculation of the child\'s exact birth chart and identification of auspicious first letters. Multiple name options are provided based on Nakshatra.',
+      duration: '1.5-2 Hours',
+      dakshina: 'From ₹3,100'
+    },
+    vivah: {
+      name: 'Vivah Sanskaar',
+      subtitle: 'Sacred Marriage Ceremony',
+      category: 'Marriage',
+      description: 'Complete Vedic wedding ceremony performed with meticulous adherence to scriptural protocols — the most significant of all 16 Samskaras.',
+      scholarly: 'Includes all seven steps (Saptapadi), sacred fire witnessing, and complete ritual sequence. The scholar guides both families through every stage.',
+      duration: '4-6 Hours',
+      dakshina: 'From ₹11,000'
+    },
+    maanglik: {
+      name: 'Maanglik Dosh Nivaaran',
+      subtitle: 'Mars Affliction Remedy',
+      category: 'Marriage',
+      description: 'Specific Vedic ceremony to neutralize Mangal Dosh (Mars affliction) affecting marriage prospects, performed with precise astrological timing.',
+      scholarly: 'Requires detailed chart analysis to confirm the Dosh and its severity. Remedial measures are customized based on the specific placement of Mars.',
+      duration: '2-3 Hours',
+      dakshina: 'From ₹5,100'
+    },
+    putrpraapti: {
+      name: 'Putr Praapti Puja',
+      subtitle: 'Blessing for Progeny',
+      category: 'Marriage',
+      description: 'Sacred ceremony invoking divine blessings for couples seeking children, performed with Santan Gopal mantras and specific fertility-related rituals.',
+      scholarly: 'Includes analysis of both partners\' charts for fifth house strength. Santan Gopal Yantra may be consecrated for ongoing worship.',
+      duration: '2-3 Hours',
+      dakshina: 'From ₹5,100'
+    },
+    lagan: {
+      name: 'Lagan',
+      subtitle: 'Vedic Engagement Ceremony',
+      category: 'Marriage',
+      description: 'Traditional Vedic engagement ceremony establishing the formal commitment between families before the marriage ceremony.',
+      scholarly: 'Includes Ganesh Puja, exchange of gifts with mantras, and formal declaration of intent. Auspicious timing is calculated for the ceremony.',
+      duration: '1.5-2 Hours',
+      dakshina: 'From ₹2,100'
+    },
+    vedaarambh: {
+      name: 'Ved Aarambh',
+      subtitle: 'Sacred Education Initiation',
+      category: 'Life Related, Education',
+      description: 'Sacred ceremony marking the beginning of formal education — the child\'s initiation into the world of knowledge and learning.',
+      scholarly: 'Traditionally performed before starting school. Includes Saraswati Puja and the symbolic writing of the first letters with the scholar\'s guidance.',
+      duration: '2-3 Hours',
+      dakshina: 'From ₹11,000'
+    },
+    pitrapujan: {
+      name: 'Pitra Dosh / Pitra Pujan',
+      subtitle: 'Ancestral Peace Ceremony',
+      category: 'After Death',
+      description: 'Sacred offering to ancestors releasing karmic bonds between living and departed, addressing unexplained recurring obstacles in family lineage.',
+      scholarly: 'Includes Tarpan (water offerings), Pind Daan preparation, and recitation of Pitra Sukta. Best performed during Pitru Paksha.',
+      duration: '2-3 Hours',
+      dakshina: 'From ₹5,100'
+    },
+    antiyeshti: {
+      name: 'Antiyeshti',
+      subtitle: 'Sacred Final Rites',
+      category: 'Death',
+      description: 'The sacred final rites performed with complete Vedic protocols, ensuring the departed soul\'s peaceful transition and liberation (Moksha).',
+      scholarly: 'The scholar guides the family through the complete sequence of Antim Sanskar with compassion and precision, including all 13-day rituals if required.',
+      duration: 'As Required',
+      dakshina: 'From ₹54'
+    }
+  };
+
   // ── NAVBAR SCROLL ──
   const navbar = document.getElementById('navbar');
   window.addEventListener('scroll', () => {
     navbar.classList.toggle('scrolled', window.scrollY > 20);
-    // Lotus
     const l = document.getElementById('lotus-btn');
     if (window.scrollY > 350) l.classList.add('visible'); else l.classList.remove('visible');
   }, { passive: true });
 
   // ── MOBILE MENU ──
-  function toggleMob() {
-    document.getElementById('mob-menu').classList.toggle('open');
-  }
-  function closeMob() {
-    document.getElementById('mob-menu').classList.remove('open');
-  }
+  function toggleMob() { document.getElementById('mob-menu').classList.toggle('open'); }
+  function closeMob() { document.getElementById('mob-menu').classList.remove('open'); }
 
   // ── SCROLL TO TOP ──
-  function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
+  function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
 
   // ── FILTER SYSTEM ──
   function filterLib(category) {
-    // Update pills
     document.querySelectorAll('.filter-pill').forEach(p => {
       p.classList.toggle('active', p.dataset.filter === category);
     });
-    // Filter cards
     const cards = document.querySelectorAll('.lib-card[data-category]');
     let visible = 0;
     cards.forEach(card => {
@@ -883,11 +1403,8 @@
       card.classList.toggle('filtered-out', !matches);
       if (matches) visible++;
     });
-    // Update count
     document.getElementById('filter-count').textContent = visible + ' of ' + cards.length + ' ceremonies';
-    // Empty state
     document.getElementById('empty-state').style.display = visible === 0 ? 'block' : 'none';
-    // Scroll filter bar into view on mobile
     if (window.innerWidth < 768) {
       document.getElementById('filter-bar').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
@@ -907,14 +1424,56 @@
     m.classList.remove('visible');
     setTimeout(() => { m.style.display = 'none'; document.body.style.overflow = ''; }, 320);
   }
-  // Backdrop click
   document.querySelectorAll('.modal-overlay').forEach(m => {
     m.addEventListener('click', e => { if (e.target === m) closeModal(m.id.replace('modal-', '')); });
   });
-  // Escape key
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.visible').forEach(m => closeModal(m.id.replace('modal-', '')));
   });
+
+  // ── SERVICE DETAIL MODAL ──
+  function openServiceModal(serviceId) {
+    const data = serviceData[serviceId];
+    if (!data) return;
+    
+    const content = document.getElementById('service-modal-content');
+    content.innerHTML = `
+      <div style="margin-bottom:1rem;">
+        <span class="modal-tag">${data.category}</span>
+      </div>
+      <div class="modal-section">
+        <p class="modal-section-lbl">The Invocation</p>
+        <p class="modal-invoc-title">${data.name}</p>
+        <p class="modal-invoc-sub">${data.subtitle}</p>
+      </div>
+      <div style="width:36px;height:2px;background:#D4AF37;margin-bottom:1.25rem;"></div>
+      <div class="modal-section">
+        <p class="modal-section-lbl">The Vedic Intent</p>
+        <p class="modal-section-body">${data.description}</p>
+      </div>
+      <div class="modal-section">
+        <p class="modal-section-lbl">The Scholarly Edge</p>
+        <div class="modal-edge-block">${data.scholarly}</div>
+      </div>
+      <div class="modal-section">
+        <p class="modal-section-lbl">The Elements</p>
+        <div class="modal-detail-row">
+          <span class="modal-detail-label">Duration</span>
+          <span class="modal-detail-val">${data.duration}</span>
+        </div>
+        <div class="modal-detail-row">
+          <span class="modal-detail-label">Dakshina</span>
+          <span class="modal-detail-val" style="font-family:'Cinzel',serif;font-weight:700;color:#4A0E0E;">${data.dakshina}</span>
+        </div>
+      </div>
+      <a href="https://wa.me/919667039964?text=Pranam.%20I'm%20interested%20in%20${encodeURIComponent(data.name)}.%20Please%20guide%20me."
+         target="_blank" class="btn-discuss" data-testid="modal-service-discuss-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652c1.746.943 3.71 1.444 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.48-8.45z"/></svg>
+        Discuss with Jaynendra
+      </a>
+    `;
+    openModal('service');
+  }
 
   // ── CONSULTATION MODAL ──
   function openConsultModal(service) {
@@ -941,6 +1500,26 @@
     window.open(`https://wa.me/919667039964?text=${msg}`, '_blank', 'noopener,noreferrer');
     closeModal('consult');
     document.getElementById('consult-form').reset();
+  }
+
+  // ── LIVE CHAT MODAL ──
+  function openLiveChatModal() {
+    openModal('livechat');
+    setTimeout(() => { const n = document.getElementById('livechat-name'); if (n) n.focus(); }, 380);
+  }
+
+  function submitLiveChatForm(e) {
+    e.preventDefault();
+    const name    = document.getElementById('livechat-name').value.trim();
+    const phone   = document.getElementById('livechat-phone').value.trim();
+    const message = document.getElementById('livechat-message').value.trim();
+    const msgBody = message ? ` My message: ${message}` : '';
+    const msg     = encodeURIComponent(
+      `Pranam. My name is ${name}. My phone number is ${phone}.${msgBody} Please contact me at your convenience.`
+    );
+    window.open(`https://wa.me/919667039964?text=${msg}`, '_blank', 'noopener,noreferrer');
+    closeModal('livechat');
+    document.getElementById('livechat-form').reset();
   }
 </script>
 </body>

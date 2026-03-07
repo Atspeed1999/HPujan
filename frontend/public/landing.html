@@ -67,13 +67,19 @@ body::after {
 /* ── NAV DROPDOWN ── */
 .nav-dropdown { position: relative; }
 .nav-dropdown-menu {
-  display: none; position: absolute; top: calc(100% + 10px); left: 50%;
+  position: absolute; top: 100%; left: 50%;
   transform: translateX(-50%); min-width: 220px;
   background: rgba(253,251,247,0.98); backdrop-filter: blur(20px);
   border: 1px solid rgba(212,175,55,0.25); box-shadow: 0 12px 40px rgba(74,14,14,0.1);
   z-index: 300; padding: 0.4rem 0;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+  padding-top: 14px; margin-top: 0;
 }
-.nav-dropdown:hover .nav-dropdown-menu { display: block; }
+.nav-dropdown-menu::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 14px; background: transparent;
+}
+.nav-dropdown:hover .nav-dropdown-menu { opacity: 1; visibility: visible; pointer-events: auto; }
 .nav-dropdown-item {
   display: block; padding: 0.75rem 1.25rem; font-size: 0.75rem;
   text-transform: uppercase; letter-spacing: 0.11em; color: #5A4A4A;
@@ -294,6 +300,23 @@ body::after {
 }
 @keyframes waRing { 0% { transform: scale(1); opacity: 0.7; } 100% { transform: scale(1.5); opacity: 0; } }
 
+/* ── FLOATING LIVE CHAT ── */
+.live-chat-btn {
+  position: fixed; bottom: 2rem; right: 6rem; z-index: 999;
+  height: 44px; background: #4A0E0E; border-radius: 22px;
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0 1.25rem 0 0.875rem;
+  box-shadow: 0 8px 32px rgba(74,14,14,0.35); text-decoration: none;
+  transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+  cursor: pointer; border: 1.5px solid #D4AF37;
+}
+.live-chat-btn:hover { transform: scale(1.05); box-shadow: 0 12px 44px rgba(74,14,14,0.45); background: #6A1E1E; }
+.live-chat-btn span {
+  color: #D4AF37; font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
+}
+
 /* ── FOOTER DEEP MAROON ── */
 #footer { background: #4A0E0E; position: relative; overflow: hidden; border-top: 2px solid #D4AF37; }
 #footer::before {
@@ -370,6 +393,16 @@ section[id] { scroll-margin-top: 80px; }
 </a>
 
 <!-- =========================================
+     FLOATING LIVE CHAT
+========================================= -->
+<button onclick="openLiveChatModal()" class="live-chat-btn" data-testid="live-chat-btn" aria-label="Live Chat">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </svg>
+  <span>Leave a Message</span>
+</button>
+
+<!-- =========================================
      NAVIGATION
 ========================================= -->
 <nav id="navbar" role="navigation">
@@ -388,7 +421,7 @@ section[id] { scroll-margin-top: 80px; }
             <svg class="nav-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
           </a>
           <div class="nav-dropdown-menu">
-            <a href="services.html" class="nav-dropdown-item" style="color:#D4AF37;font-weight:700;" data-testid="nav-vedic-library">The Vedic Library — All 16</a>
+            <a href="services.html" class="nav-dropdown-item" style="color:#D4AF37;font-weight:700;" data-testid="nav-vedic-library">The Vedic Library — All 27</a>
             <div style="height:1px;background:rgba(212,175,55,0.18);margin:0.2rem 0;"></div>
             <a href="#find-path" class="nav-dropdown-item" data-testid="nav-browse-purpose">Browse by Purpose</a>
             <div style="height:1px;background:rgba(212,175,55,0.18);margin:0.2rem 0;"></div>
@@ -695,6 +728,14 @@ section[id] { scroll-margin-top: 80px; }
         </div>
       </div>
 
+    </div>
+
+    <!-- View All Services Button -->
+    <div class="text-center mt-14" data-aos="fade-up" data-aos-delay="300">
+      <a href="services.html" class="btn-primary" data-testid="view-all-services-btn">
+        View All 27 Vedic Ceremonies
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
     </div>
 
     <div class="text-center mt-12" data-aos="fade-up" data-aos-delay="350">
@@ -1217,6 +1258,50 @@ section[id] { scroll-margin-top: 80px; }
   </div>
 </div>
 
+<!-- MODAL: Live Chat / Leave a Message -->
+<div id="modal-livechat" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Leave a Message" data-testid="modal-livechat">
+  <div class="modal-drop">
+    <div class="modal-paper">
+      <button class="modal-close" onclick="closeModal('livechat')" data-testid="modal-livechat-close" aria-label="Close">&times;</button>
+      <div class="modal-inner">
+        <div class="modal-section">
+          <p class="modal-section-lbl">Leave a Message</p>
+          <p class="modal-invoc-title">We'll Connect With You</p>
+          <p class="modal-invoc-sub">Share your details and Jaynendra will reach out personally</p>
+        </div>
+        <div style="width:36px;height:2px;background:#D4AF37;margin-bottom:1.25rem;"></div>
+        <p style="font-size:0.875rem;color:#5A4A4A;line-height:1.75;margin-bottom:1.5rem;">
+          Leave your contact details and a brief message. Our scholar Jaynendra will contact you via WhatsApp or phone call within 24 hours to discuss your Vedic requirements.
+        </p>
+        <form id="livechat-form" onsubmit="submitLiveChatForm(event)">
+          <div class="consult-field">
+            <label for="livechat-name" class="consult-label">Your Name *</label>
+            <input type="text" id="livechat-name" class="consult-input" placeholder="How should we address you?" required autocomplete="name" data-testid="livechat-name-input"/>
+          </div>
+          <div class="consult-field">
+            <label for="livechat-phone" class="consult-label">Phone Number *</label>
+            <input type="tel" id="livechat-phone" class="consult-input" placeholder="+91 98765 43210" required autocomplete="tel" data-testid="livechat-phone-input"/>
+          </div>
+          <div class="consult-field">
+            <label for="livechat-message" class="consult-label">Your Message</label>
+            <textarea id="livechat-message" class="consult-input" rows="3" placeholder="Tell us about your requirement or intention..." style="resize:vertical;min-height:80px;" data-testid="livechat-message-input"></textarea>
+          </div>
+          <button type="submit" class="btn-discuss" style="margin-top:0.5rem;" data-testid="livechat-submit-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+            Send Message via WhatsApp
+          </button>
+        </form>
+        <p style="font-size:0.72rem;color:#9A8A8A;text-align:center;margin-top:1rem;line-height:1.6;">
+          This will open WhatsApp with your message pre-filled. Jaynendra will respond within 24 hours.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- AOS -->
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 <script>
@@ -1337,6 +1422,26 @@ section[id] { scroll-margin-top: 80px; }
     window.open(`https://wa.me/919667039964?text=${msg}`, '_blank', 'noopener,noreferrer');
     closeModal('consult');
     document.getElementById('consult-form').reset();
+  }
+
+  // ── LIVE CHAT MODAL ──
+  function openLiveChatModal() {
+    openModal('livechat');
+    setTimeout(() => { const n = document.getElementById('livechat-name'); if (n) n.focus(); }, 380);
+  }
+
+  function submitLiveChatForm(e) {
+    e.preventDefault();
+    const name    = document.getElementById('livechat-name').value.trim();
+    const phone   = document.getElementById('livechat-phone').value.trim();
+    const message = document.getElementById('livechat-message').value.trim();
+    const msgBody = message ? ` My message: ${message}` : '';
+    const msg     = encodeURIComponent(
+      `Pranam. My name is ${name}. My phone number is ${phone}.${msgBody} Please contact me at your convenience.`
+    );
+    window.open(`https://wa.me/919667039964?text=${msg}`, '_blank', 'noopener,noreferrer');
+    closeModal('livechat');
+    document.getElementById('livechat-form').reset();
   }
 
 </script>
