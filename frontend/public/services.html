@@ -185,7 +185,9 @@
       transition: transform 0.5s ease-in-out, box-shadow 0.5s ease-in-out, border-color 0.5s ease-in-out, opacity 0.5s ease-in-out;
     }
     .lib-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(74,14,14,0.11); border-color: #D4AF37; }
-    .lib-card.filtered-out { opacity: 0.12; transform: scale(0.97); pointer-events: none; }
+    .lib-card.filtered-out { 
+      display: none !important;
+    }
     .lib-card::after {
       content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 3;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23c)' opacity='0.1'/%3E%3C/svg%3E");
@@ -1405,6 +1407,8 @@
     });
     document.getElementById('filter-count').textContent = visible + ' of ' + cards.length + ' ceremonies';
     document.getElementById('empty-state').style.display = visible === 0 ? 'block' : 'none';
+    // Refresh AOS to re-animate visible cards
+    setTimeout(() => { AOS.refresh(); }, 50);
     if (window.innerWidth < 768) {
       document.getElementById('filter-bar').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
