@@ -300,23 +300,6 @@ body::after {
 }
 @keyframes waRing { 0% { transform: scale(1); opacity: 0.7; } 100% { transform: scale(1.5); opacity: 0; } }
 
-/* ── FLOATING LIVE CHAT ── */
-.live-chat-btn {
-  position: fixed; bottom: 2rem; right: 6rem; z-index: 999;
-  height: 44px; background: #4A0E0E; border-radius: 22px;
-  display: flex; align-items: center; gap: 0.5rem;
-  padding: 0 1.25rem 0 0.875rem;
-  box-shadow: 0 8px 32px rgba(74,14,14,0.35); text-decoration: none;
-  transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
-  cursor: pointer; border: 1.5px solid #D4AF37;
-}
-.live-chat-btn:hover { transform: scale(1.05); box-shadow: 0 12px 44px rgba(74,14,14,0.45); background: #6A1E1E; }
-.live-chat-btn span {
-  color: #D4AF37; font-size: 0.72rem; font-weight: 600;
-  letter-spacing: 0.1em; text-transform: uppercase;
-  font-family: 'Inter', sans-serif;
-}
-
 /* ── FOOTER DEEP MAROON ── */
 #footer { background: #4A0E0E; position: relative; overflow: hidden; border-top: 2px solid #D4AF37; }
 #footer::before {
@@ -393,16 +376,6 @@ section[id] { scroll-margin-top: 80px; }
 </a>
 
 <!-- =========================================
-     FLOATING LIVE CHAT
-========================================= -->
-<button onclick="openLiveChatModal()" class="live-chat-btn" data-testid="live-chat-btn" aria-label="Live Chat">
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-  </svg>
-  <span>Leave a Message</span>
-</button>
-
-<!-- =========================================
      NAVIGATION
 ========================================= -->
 <nav id="navbar" role="navigation">
@@ -435,7 +408,7 @@ section[id] { scroll-margin-top: 80px; }
       <div class="hidden md:block">
         <button onclick="openConsultModal('')"
            class="btn-consult" data-testid="nav-consult-btn">
-          Request a Vedic Alignment Call
+          Book Alignment Call
         </button>
       </div>
 
@@ -457,7 +430,7 @@ section[id] { scroll-margin-top: 80px; }
       <a href="#faq" class="nav-link py-2" onclick="closeMob()" data-testid="mob-faq">FAQ</a>
       <div style="border-top:1px solid rgba(212,175,55,0.18);padding-top:1rem;">
         <button onclick="openConsultModal('');closeMob();"
-           class="btn-consult" style="justify-content:center;width:100%;cursor:pointer;" data-testid="mob-consult">Request a Vedic Alignment Call</button>
+           class="btn-consult" style="justify-content:center;width:100%;cursor:pointer;" data-testid="mob-consult">Book Alignment Call</button>
       </div>
     </div>
   </div>
@@ -623,7 +596,7 @@ section[id] { scroll-margin-top: 80px; }
       Not sure which path to choose for yourself?
       <button onclick="openConsultModal('')"
          style="background:none;border:none;cursor:pointer;color:#D4AF37;font-weight:600;text-decoration:underline;text-underline-offset:3px;font-size:0.88rem;padding:0;" data-testid="path-consult-link">
-        Request a Vedic Alignment Call
+        Book Alignment Call
       </button>
     </p>
 
@@ -740,7 +713,7 @@ section[id] { scroll-margin-top: 80px; }
 
     <div class="text-center mt-12" data-aos="fade-up" data-aos-delay="350">
       <p style="font-size:0.85rem;color:#5A4A4A;margin-bottom:1rem;">Have a specific intention not listed here?</p>
-      <a href="#" onclick="openConsultModal('Custom Vedic Ceremony');return false;" class="btn-consult" data-testid="services-custom-btn">Request a Vedic Alignment Call</a>
+      <a href="#" onclick="openConsultModal('Custom Vedic Ceremony');return false;" class="btn-consult" data-testid="services-custom-btn">Book Alignment Call</a>
     </div>
 
   </div>
@@ -928,7 +901,7 @@ section[id] { scroll-margin-top: 80px; }
 
     <div class="text-center mt-14" data-aos="fade-up" data-aos-delay="400">
       <button onclick="openConsultModal('Muhurta Consultation')" class="btn-primary" data-testid="process-book-btn">
-        Request a Vedic Alignment Call
+        Book Alignment Call
       </button>
     </div>
   </div>
@@ -1034,51 +1007,21 @@ section[id] { scroll-margin-top: 80px; }
 ========================================= -->
 
 <!-- CONSULTATION / ALIGNMENT CALL MODAL -->
-<div id="modal-consult" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Request a Vedic Alignment Call" data-testid="modal-consult">
-  <div class="modal-drop">
+<div id="modal-consult" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Book Alignment Call" data-testid="modal-consult">
+  <div class="modal-drop" style="max-width:720px;">
     <div class="modal-paper">
       <button class="modal-close" onclick="closeModal('consult')" data-testid="modal-consult-close" aria-label="Close">&times;</button>
-      <div class="modal-inner">
+      <div class="modal-inner" style="padding:1.5rem 1.5rem 0;">
 
-        <div class="modal-section">
+        <div class="modal-section" style="margin-bottom:1rem;">
           <p class="modal-section-lbl">Scholar's Desk</p>
-          <p class="modal-invoc-title">Vedic Alignment Call</p>
-          <p class="modal-invoc-sub">A 10-minute scholarly consultation — no sales, only guidance</p>
+          <p class="modal-invoc-title">Book Alignment Call</p>
+          <p class="modal-invoc-sub">A 15-minute scholarly consultation — no sales, only guidance</p>
         </div>
-        <div class="gold-divider mb-4" style="width:36px;"></div>
 
-        <p style="font-size:0.875rem;color:#5A4A4A;line-height:1.75;margin-bottom:1.5rem;">
-          In the Gurukul tradition, every ceremony begins with a conversation — a Sankalpa consultation where the scholar understands your intention before prescribing a ritual. Share your details below, and a scholar will connect within 24 hours.
-        </p>
+        <!-- Cal.com Embed -->
+        <div style="width:100%;height:480px;overflow:auto;border-radius:8px;" id="my-cal-inline-15min"></div>
 
-        <form id="consult-form" onsubmit="submitConsultForm(event)">
-          <div class="consult-field">
-            <label for="consult-name" class="consult-label">Your Name</label>
-            <input type="text" id="consult-name" class="consult-input" placeholder="As you wish to be addressed" required autocomplete="name"/>
-          </div>
-          <div class="consult-field">
-            <label for="consult-purpose" class="consult-label">Your Intention</label>
-            <div class="consult-select-wrap">
-              <select id="consult-purpose" class="consult-input" required>
-                <option value="" disabled selected>Select your path...</option>
-                <option value="Vastu Shanti — Space Harmonization">Vastu Shanti — Space Harmonization</option>
-                <option value="Lakshmi-Kuber Havan — Prosperity Invocation">Lakshmi-Kuber Havan — Prosperity Invocation</option>
-                <option value="Maha Mrityunjaya Havan — Health &amp; Protection">Maha Mrityunjaya Havan — Health &amp; Protection</option>
-                <option value="Muhurta Consultation — Auspicious Timing">Muhurta Consultation — Auspicious Timing</option>
-                <option value="Custom Vedic Ceremony">Custom Vedic Ceremony</option>
-                <option value="a ceremony — I need guidance to identify my path">I need guidance to identify my path</option>
-              </select>
-            </div>
-          </div>
-          <button type="submit" class="btn-discuss" style="margin-top:0.5rem;" data-testid="consult-connect-btn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652c1.746.943 3.71 1.444 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.48-8.45z"/></svg>
-            Connect with the Scholar's Desk
-          </button>
-        </form>
-
-        <p style="font-size:0.72rem;color:#9A8A8A;text-align:center;margin-top:1rem;line-height:1.6;">
-          This will open WhatsApp with your Sankalpa message pre-filled. The scholar will respond within 24 hours.
-        </p>
       </div>
     </div>
   </div>
@@ -1124,7 +1067,7 @@ section[id] { scroll-margin-top: 80px; }
           <div style="background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);padding:1.25rem;">
             <div class="modal-detail-row"><span class="modal-detail-label">Duration</span><span class="modal-detail-val">3–4 Hours</span></div>
             <div class="modal-detail-row"><span class="modal-detail-label">Scholars</span><span class="modal-detail-val">2 Gurukul-trained Scholars</span></div>
-            <div class="modal-detail-row"><span class="modal-detail-label">Samagri</span><span class="modal-detail-val">Himalayan herbs, pure Desi ghee, sacred Peepal wood, Saptamrit — sourced directly from Gurukul herb gardens</span></div>
+            <div class="modal-detail-row"><span class="modal-detail-label">Samagri</span><span class="modal-detail-val">100% Shastra-Compliant Elements: A2 Gir Cow Ghee, hand-ground Himalayan herbs, sacred Peepal wood. No market-adulterated substitutes.</span></div>
             <div class="modal-detail-row" style="margin-bottom:0;">
               <span class="modal-detail-label">Dakshina</span>
               <span class="modal-detail-val font-serif font-bold text-maroon" style="font-size:1.15rem;">From ₹15,000 <span style="font-size:0.72rem;font-weight:400;color:#7A6A6A;font-family:'Inter',sans-serif;">— disclosed fully before commitment</span></span>
@@ -1135,7 +1078,7 @@ section[id] { scroll-margin-top: 80px; }
         <a href="https://wa.me/919667039964?text=I'm%20interested%20in%20Vastu%20Shanti%20Havan.%20Please%20guide%20me."
            target="_blank" class="btn-discuss" data-testid="modal-vastu-discuss-btn">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652c1.746.943 3.71 1.444 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.48-8.45z"/></svg>
-          Discuss with Jaynendra
+          Book Alignment Call
         </a>
       </div>
     </div>
@@ -1182,7 +1125,7 @@ section[id] { scroll-margin-top: 80px; }
           <div style="background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);padding:1.25rem;">
             <div class="modal-detail-row"><span class="modal-detail-label">Duration</span><span class="modal-detail-val">3–4 Hours</span></div>
             <div class="modal-detail-row"><span class="modal-detail-label">Scholars</span><span class="modal-detail-val">2 Gurukul-trained Scholars</span></div>
-            <div class="modal-detail-row"><span class="modal-detail-label">Samagri</span><span class="modal-detail-val">Himalayan lotus seeds, kumkum, ashtagandha, saffron, pure ghee — no pre-packaged substitutes</span></div>
+            <div class="modal-detail-row"><span class="modal-detail-label">Samagri</span><span class="modal-detail-val">100% Shastra-Compliant Elements: A2 Gir Cow Ghee, hand-ground Himalayan herbs, pure Navagraha woods. No market-adulterated substitutes.</span></div>
             <div class="modal-detail-row" style="margin-bottom:0;">
               <span class="modal-detail-label">Dakshina</span>
               <span class="modal-detail-val font-serif font-bold text-maroon" style="font-size:1.15rem;">From ₹11,000 <span style="font-size:0.72rem;font-weight:400;color:#7A6A6A;font-family:'Inter',sans-serif;">— disclosed fully before commitment</span></span>
@@ -1193,7 +1136,7 @@ section[id] { scroll-margin-top: 80px; }
         <a href="https://wa.me/919667039964?text=I'm%20interested%20in%20Lakshmi-Kuber%20Havan.%20Please%20guide%20me."
            target="_blank" class="btn-discuss" data-testid="modal-lakshmi-discuss-btn">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652c1.746.943 3.71 1.444 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.48-8.45z"/></svg>
-          Discuss with Jaynendra
+          Book Alignment Call
         </a>
       </div>
     </div>
@@ -1240,7 +1183,7 @@ section[id] { scroll-margin-top: 80px; }
           <div style="background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);padding:1.25rem;">
             <div class="modal-detail-row"><span class="modal-detail-label">Duration</span><span class="modal-detail-val">4–5 Hours</span></div>
             <div class="modal-detail-row"><span class="modal-detail-label">Scholars</span><span class="modal-detail-val">3 Gurukul-trained Scholars</span></div>
-            <div class="modal-detail-row"><span class="modal-detail-label">Samagri</span><span class="modal-detail-val">108 Himalayan medicinal herbs, Bilva leaves, white sesame, pure ghee, Badri wood — each verified against Ayurvedic botanical texts</span></div>
+            <div class="modal-detail-row"><span class="modal-detail-label">Samagri</span><span class="modal-detail-val">100% Shastra-Compliant Elements: 108 Himalayan medicinal herbs, A2 Gir Cow Ghee, Bilva leaves, Badri wood — verified against Ayurvedic texts. No market-adulterated substitutes.</span></div>
             <div class="modal-detail-row" style="margin-bottom:0;">
               <span class="modal-detail-label">Dakshina</span>
               <span class="modal-detail-val font-serif font-bold text-maroon" style="font-size:1.15rem;">From ₹21,000 <span style="font-size:0.72rem;font-weight:400;color:#7A6A6A;font-family:'Inter',sans-serif;">— disclosed fully before commitment</span></span>
@@ -1251,52 +1194,8 @@ section[id] { scroll-margin-top: 80px; }
         <a href="https://wa.me/919667039964?text=I'm%20interested%20in%20Maha%20Mrityunjaya%20Havan.%20Please%20guide%20me."
            target="_blank" class="btn-discuss" data-testid="modal-maha-discuss-btn">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652c1.746.943 3.71 1.444 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.48-8.45z"/></svg>
-          Discuss with Jaynendra
+          Book Alignment Call
         </a>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL: Live Chat / Leave a Message -->
-<div id="modal-livechat" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Leave a Message" data-testid="modal-livechat">
-  <div class="modal-drop">
-    <div class="modal-paper">
-      <button class="modal-close" onclick="closeModal('livechat')" data-testid="modal-livechat-close" aria-label="Close">&times;</button>
-      <div class="modal-inner">
-        <div class="modal-section">
-          <p class="modal-section-lbl">Leave a Message</p>
-          <p class="modal-invoc-title">We'll Connect With You</p>
-          <p class="modal-invoc-sub">Share your details and Jaynendra will reach out personally</p>
-        </div>
-        <div style="width:36px;height:2px;background:#D4AF37;margin-bottom:1.25rem;"></div>
-        <p style="font-size:0.875rem;color:#5A4A4A;line-height:1.75;margin-bottom:1.5rem;">
-          Leave your contact details and a brief message. Our scholar Jaynendra will contact you via WhatsApp or phone call within 24 hours to discuss your Vedic requirements.
-        </p>
-        <form id="livechat-form" onsubmit="submitLiveChatForm(event)">
-          <div class="consult-field">
-            <label for="livechat-name" class="consult-label">Your Name *</label>
-            <input type="text" id="livechat-name" class="consult-input" placeholder="How should we address you?" required autocomplete="name" data-testid="livechat-name-input"/>
-          </div>
-          <div class="consult-field">
-            <label for="livechat-phone" class="consult-label">Phone Number *</label>
-            <input type="tel" id="livechat-phone" class="consult-input" placeholder="+91 98765 43210" required autocomplete="tel" data-testid="livechat-phone-input"/>
-          </div>
-          <div class="consult-field">
-            <label for="livechat-message" class="consult-label">Your Message</label>
-            <textarea id="livechat-message" class="consult-input" rows="3" placeholder="Tell us about your requirement or intention..." style="resize:vertical;min-height:80px;" data-testid="livechat-message-input"></textarea>
-          </div>
-          <button type="submit" class="btn-discuss" style="margin-top:0.5rem;" data-testid="livechat-submit-btn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="22" y1="2" x2="11" y2="13"></line>
-              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-            </svg>
-            Send Message via WhatsApp
-          </button>
-        </form>
-        <p style="font-size:0.72rem;color:#9A8A8A;text-align:center;margin-top:1rem;line-height:1.6;">
-          This will open WhatsApp with your message pre-filled. Jaynendra will respond within 24 hours.
-        </p>
       </div>
     </div>
   </div>
@@ -1304,6 +1203,13 @@ section[id] { scroll-margin-top: 80px; }
 
 <!-- AOS -->
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
+<!-- Cal.com Embed Script -->
+<script type="text/javascript">
+  (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+  Cal("init", "15min", {origin:"https://app.cal.com"});
+</script>
+
 <script>
   AOS.init({ duration: 720, easing: 'ease-out-cubic', once: true, offset: 55 });
 
@@ -1398,50 +1304,21 @@ section[id] { scroll-margin-top: 80px; }
     if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.visible').forEach(m => closeModal(m.id.replace('modal-', '')));
   });
 
+  // Cal.com initialized flag
+  let calInitialized = false;
+
   function openConsultModal(service) {
-    const sel = document.getElementById('consult-purpose');
-    if (service) {
-      for (let i = 0; i < sel.options.length; i++) {
-        if (sel.options[i].value.toLowerCase().includes(service.toLowerCase())) {
-          sel.selectedIndex = i; break;
-        }
-      }
-    }
     openModal('consult');
-    setTimeout(() => { const n = document.getElementById('consult-name'); if (n) n.focus(); }, 380);
-  }
-
-  function submitConsultForm(e) {
-    e.preventDefault();
-    const name    = document.getElementById('consult-name').value.trim();
-    const purpose = document.getElementById('consult-purpose').value;
-    const nameStr = name ? ` My name is ${name}.` : '';
-    const msg     = encodeURIComponent(
-      `Pranam.${nameStr} I would like to request a Vedic Alignment Call regarding ${purpose}. Please let me know a suitable time for the scholar.`
-    );
-    window.open(`https://wa.me/919667039964?text=${msg}`, '_blank', 'noopener,noreferrer');
-    closeModal('consult');
-    document.getElementById('consult-form').reset();
-  }
-
-  // ── LIVE CHAT MODAL ──
-  function openLiveChatModal() {
-    openModal('livechat');
-    setTimeout(() => { const n = document.getElementById('livechat-name'); if (n) n.focus(); }, 380);
-  }
-
-  function submitLiveChatForm(e) {
-    e.preventDefault();
-    const name    = document.getElementById('livechat-name').value.trim();
-    const phone   = document.getElementById('livechat-phone').value.trim();
-    const message = document.getElementById('livechat-message').value.trim();
-    const msgBody = message ? ` My message: ${message}` : '';
-    const msg     = encodeURIComponent(
-      `Pranam. My name is ${name}. My phone number is ${phone}.${msgBody} Please contact me at your convenience.`
-    );
-    window.open(`https://wa.me/919667039964?text=${msg}`, '_blank', 'noopener,noreferrer');
-    closeModal('livechat');
-    document.getElementById('livechat-form').reset();
+    // Initialize Cal.com widget when modal opens (only once)
+    if (!calInitialized && typeof Cal !== 'undefined') {
+      Cal.ns["15min"]("inline", {
+        elementOrSelector:"#my-cal-inline-15min",
+        config: {"layout":"month_view","useSlotsViewOnSmallScreen":"true","theme":"auto"},
+        calLink: "homepujan/15min",
+      });
+      Cal.ns["15min"]("ui", {"cssVarsPerTheme":{"light":{"cal-brand":"#4b1110"},"dark":{"cal-brand":"#d4af39"}},"hideEventTypeDetails":false,"layout":"month_view"});
+      calInitialized = true;
+    }
   }
 
 </script>
