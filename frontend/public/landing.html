@@ -400,9 +400,9 @@ section[id] { scroll-margin-top: 80px; }
 
   /* Trust bar — compact horizontal on mobile */
   .trust-col { padding: 0.5rem 0.35rem !important; }
-  .trust-col .font-cinzel { font-size: 1.4rem !important; }
-  .trust-col p:last-child { font-size: 0.55rem !important; letter-spacing: 0.08em !important; }
-  .trust-col .gold-divider { margin-top: 0.25rem !important; margin-bottom: 0.25rem !important; }
+  .trust-col .trust-icon { width: 1.75rem !important; height: 1.75rem !important; }
+  .trust-col p:last-child { font-size: 0.58rem !important; letter-spacing: 0.08em !important; line-height: 1.3 !important; }
+  .trust-col .gold-divider { margin-top: 0.35rem !important; margin-bottom: 0.35rem !important; }
 
   /* Horizontal scroll for path tiles on mobile */
   .path-scroll-row {
@@ -490,6 +490,65 @@ section[id] { scroll-margin-top: 80px; }
   .scroll-nav-btn.scroll-hidden { opacity: 0; pointer-events: none; }
 }
 </style>
+
+  <style>
+    /* Robust Carousel CSS */
+    .carousel-container {
+      display: flex !important;
+      overflow-x: auto !important;
+      scroll-snap-type: x mandatory !important;
+      gap: 2rem !important;
+      padding-bottom: 1.5rem !important;
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
+    .carousel-container::-webkit-scrollbar {
+      display: none !important;
+    }
+    .carousel-card {
+      flex: 0 0 auto !important;
+      scroll-snap-align: start !important;
+      width: 85% !important;
+    }
+    @media (min-width: 768px) {
+      .carousel-card {
+        width: calc(33.333% - 1.34rem) !important;
+      }
+    }
+    .filtered-out {
+      display: none !important;
+    }
+    .scroll-nav-wrapper:hover .scroll-nav-btn:not(.scroll-hidden) { opacity: 1 !important; pointer-events: auto !important; }
+    @media (max-width: 767px) {
+      .scroll-nav-wrapper .scroll-nav-btn:not(.scroll-hidden) { opacity: 1 !important; pointer-events: auto !important; width:32px!important; height:32px!important; left:-4px!important; right:-4px!important; }
+    }
+
+    /* Edge-state arrow hiding (works on all viewports) */
+    #services .scroll-nav-btn.scroll-hidden { opacity: 0 !important; pointer-events: none !important; }
+
+    /* Slider position dots */
+    .services-dots {
+      display: flex;
+      justify-content: center;
+      gap: 0.55rem;
+      margin-top: 1.25rem;
+    }
+    .services-dot {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: rgba(74,14,14,0.18);
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      transition: background 0.25s, transform 0.25s, width 0.25s;
+    }
+    .services-dot:hover { background: rgba(74,14,14,0.4); }
+    .services-dot.active {
+      background: #D4AF37;
+      width: 26px;
+      border-radius: 6px;
+    }
+  </style>
 </head>
 <body>
 
@@ -552,7 +611,7 @@ section[id] { scroll-margin-top: 80px; }
       <div class="hidden md:block">
         <button onclick="openConsultModal('')"
            class="btn-consult" data-testid="nav-consult-btn">
-          Book Alignment Call
+          Book Free Consultation
         </button>
       </div>
 
@@ -574,7 +633,7 @@ section[id] { scroll-margin-top: 80px; }
       <a href="#faq" class="nav-link py-2" onclick="closeMob()" data-testid="mob-faq">FAQ</a>
       <div style="border-top:1px solid rgba(212,175,55,0.18);padding-top:1rem;">
         <button onclick="openConsultModal('');closeMob();"
-           class="btn-consult" style="justify-content:center;width:100%;cursor:pointer;" data-testid="mob-consult">Book Alignment Call</button>
+           class="btn-consult" style="justify-content:center;width:100%;cursor:pointer;" data-testid="mob-consult">Book Free Consultation</button>
       </div>
     </div>
   </div>
@@ -602,18 +661,18 @@ section[id] { scroll-margin-top: 80px; }
         <h1 class="font-cinzel font-normal leading-tight mb-6"
             style="font-size:clamp(2.4rem,5.5vw,4.2rem);letter-spacing:0.04em;line-height:1.15;color:#D4AF37;"
             data-aos="fade-up" data-aos-delay="80">
-          ANCIENT PRECISION.<br>MODERN PEACE.
+          Your Family Pandit,<br>Wherever You Are
         </h1>
 
         <p class="leading-relaxed mb-10 max-w-lg"
            style="font-size:1.05rem;color:rgba(245,239,224,0.8);line-height:1.75;"
            data-aos="fade-up" data-aos-delay="200">
-          Restoring balance and harmony to your home through authentic Vedic rituals performed by Gurukul-certified pandits, ensuring spiritual well-being and peace of mind.
+          Gurukul-trained pandits who explain every mantra, perform every ritual with meaning.
         </p>
 
         <div class="flex flex-wrap gap-4 mb-6" data-aos="fade-up" data-aos-delay="320">
           <button onclick="openConsultModal('')" class="btn-hero-primary" data-testid="hero-book-call-btn">
-            Book Vedic Alignment Call
+            Book Free Consultation Call
           </button>
           <a href="#lineage" class="btn-hero-secondary" data-testid="hero-pedigree-btn">Explore the Lineage</a>
         </div>
@@ -626,7 +685,7 @@ section[id] { scroll-margin-top: 80px; }
 
         <p style="font-size:0.82rem;color:rgba(245,239,224,0.5);display:flex;align-items:center;gap:0;"
            data-aos="fade-up" data-aos-delay="480">
-          —No aggregators. Direct scholar access. Delhi NCR &amp; beyond.
+          Free consultation, meet before you book.
         </p>
 
       </div>
@@ -640,20 +699,37 @@ section[id] { scroll-margin-top: 80px; }
 <section id="trust" style="background:#F5EFE0;border-top:1px solid rgba(212,175,55,0.22);border-bottom:1px solid rgba(212,175,55,0.22);">
   <div class="max-w-7xl mx-auto px-6 md:px-12 py-12">
     <div class="grid grid-cols-3">
-      <div class="trust-col text-center px-6 py-4" data-aos="fade-up" data-aos-delay="0" data-testid="trust-years">
-        <p class="font-cinzel font-bold" style="font-size:clamp(2.2rem,4.5vw,3.2rem);color:#D4AF37;">20+</p>
+      <div class="trust-col text-center px-6 py-4" data-aos="fade-up" data-aos-delay="0" data-testid="trust-pandits">
+        <div class="trust-icon mx-auto" style="width:clamp(2.4rem,4.5vw,3.2rem);height:clamp(2.4rem,4.5vw,3.2rem);color:#D4AF37;">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:100%;height:100%;">
+            <circle cx="32" cy="24" r="11"/>
+            <path d="M22 32 L18 50 L26 46 L32 52 L38 46 L46 50 L42 32"/>
+            <circle cx="32" cy="24" r="4" fill="currentColor" stroke="none"/>
+          </svg>
+        </div>
         <div class="gold-divider mx-auto my-3" style="width:36px;"></div>
-        <p style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.15em;color:#5A4A4A;font-weight:500;">Years of Vedic Study</p>
+        <p style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.15em;color:#5A4A4A;font-weight:600;">Gurukul Certified Pandits</p>
       </div>
-      <div class="trust-col text-center px-6 py-4" data-aos="fade-up" data-aos-delay="120" data-testid="trust-shlokas">
-        <p class="font-cinzel font-bold" style="font-size:clamp(2.2rem,4.5vw,3.2rem);color:#D4AF37;">15,000+</p>
+      <div class="trust-col text-center px-6 py-4" data-aos="fade-up" data-aos-delay="120" data-testid="trust-rituals">
+        <div class="trust-icon mx-auto" style="width:clamp(2.4rem,4.5vw,3.2rem);height:clamp(2.4rem,4.5vw,3.2rem);color:#D4AF37;">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:100%;height:100%;">
+            <path d="M32 6 C 36 16 46 22 46 34 C 46 44 40 52 32 52 C 24 52 18 44 18 34 C 18 26 24 22 26 16 C 28 22 30 24 32 22 C 33 18 32 12 32 6 Z" fill="currentColor" fill-opacity="0.15"/>
+            <path d="M32 26 C 34 32 40 34 40 40 C 40 45 36 49 32 49 C 28 49 24 45 24 40 C 24 36 28 34 30 30 C 31 33 32 33 32 32 Z" fill="currentColor" stroke="none"/>
+          </svg>
+        </div>
         <div class="gold-divider mx-auto my-3" style="width:36px;"></div>
-        <p style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.15em;color:#5A4A4A;font-weight:500;">Shlokas Memorized</p>
+        <p style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.15em;color:#5A4A4A;font-weight:600;">10,000+ Rituals Performed</p>
       </div>
       <div class="trust-col text-center px-6 py-4" data-aos="fade-up" data-aos-delay="240" data-testid="trust-samagri">
-        <p class="font-cinzel font-bold" style="font-size:clamp(2.2rem,4.5vw,3.2rem);color:#D4AF37;">100%</p>
+        <div class="trust-icon mx-auto" style="width:clamp(2.4rem,4.5vw,3.2rem);height:clamp(2.4rem,4.5vw,3.2rem);color:#D4AF37;">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:100%;height:100%;">
+            <path d="M32 54 C 18 54 10 42 12 26 C 24 24 36 28 44 38 C 48 44 48 50 46 54 Z" fill="currentColor" fill-opacity="0.15"/>
+            <path d="M32 54 C 18 54 10 42 12 26 C 24 24 36 28 44 38 C 48 44 48 50 46 54 Z"/>
+            <path d="M14 28 C 26 36 38 46 46 54"/>
+          </svg>
+        </div>
         <div class="gold-divider mx-auto my-3" style="width:36px;"></div>
-        <p style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.15em;color:#5A4A4A;font-weight:500;">Authentic Himalayan Samagri</p>
+        <p style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.15em;color:#5A4A4A;font-weight:600;">Pure Samagri Guaranteed</p>
       </div>
     </div>
   </div>
@@ -683,7 +759,7 @@ section[id] { scroll-margin-top: 80px; }
       </button>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 path-scroll-row">
 
-      <div class="path-tile" data-filter="beginnings" onclick="filterServices('beginnings')" data-testid="path-tile-beginnings" role="button" tabindex="0">
+      <a class="path-tile" href="services.html?category=home" data-testid="path-tile-beginnings">
         <div class="path-tile-icon">
           <svg width="34" height="34" viewBox="0 0 38 38" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 20 L19 8 L34 20"/><path d="M8 17 L8 32 L30 32 L30 17"/>
@@ -695,9 +771,9 @@ section[id] { scroll-margin-top: 80px; }
         <p style="font-size:0.75rem;color:#D4AF37;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem;">Home / Office</p>
         <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.65;flex-grow:1;">Griha Pravesh, Vastu Shanti, new office consecration — sanctifying your fresh starts with scholarly precision.</p>
         <span class="path-tile-cta">Explore Rituals &rarr;</span>
-      </div>
+      </a>
 
-      <div class="path-tile" data-filter="success" onclick="filterServices('success')" data-testid="path-tile-success" role="button" tabindex="0">
+      <a class="path-tile" href="services.html?category=business" data-testid="path-tile-success">
         <div class="path-tile-icon">
           <svg width="34" height="34" viewBox="0 0 38 38" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <line x1="19" y1="34" x2="19" y2="20"/>
@@ -713,9 +789,9 @@ section[id] { scroll-margin-top: 80px; }
         <p style="font-size:0.75rem;color:#D4AF37;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem;">Business / Career</p>
         <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.65;flex-grow:1;">Lakshmi-Kuber Havan, Saraswati Puja, business invocations — aligning your endeavors with Vedic abundance.</p>
         <span class="path-tile-cta">Explore Rituals &rarr;</span>
-      </div>
+      </a>
 
-      <div class="path-tile" data-filter="health" onclick="filterServices('health')" data-testid="path-tile-health" role="button" tabindex="0">
+      <a class="path-tile" href="services.html?category=personal" data-testid="path-tile-health">
         <div class="path-tile-icon">
           <svg width="34" height="34" viewBox="0 0 38 38" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M19 5 L31 9 L31 21 C31 28 19 34 19 34 C19 34 7 28 7 21 L7 9 Z"/>
@@ -728,7 +804,7 @@ section[id] { scroll-margin-top: 80px; }
         <p style="font-size:0.75rem;color:#D4AF37;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem;">Wellness / Peace</p>
         <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.65;flex-grow:1;">Maha Mrityunjaya Havan, Navagraha Shanti, ancestral rites — invoking divine protection and longevity.</p>
         <span class="path-tile-cta">Explore Rituals &rarr;</span>
-      </div>
+      </a>
 
     </div>
     </div>
@@ -738,7 +814,7 @@ section[id] { scroll-margin-top: 80px; }
       Not sure which path to choose for yourself?
       <button onclick="openConsultModal('')"
          style="background:none;border:none;cursor:pointer;color:#D4AF37;font-weight:600;text-decoration:underline;text-underline-offset:3px;font-size:0.88rem;padding:0;" data-testid="path-consult-link">
-        Book Alignment Call
+        Book Free Consultation
       </button>
     </p>
 
@@ -760,71 +836,16 @@ section[id] { scroll-margin-top: 80px; }
       </p>
     </div>
 
-    <div class="scroll-nav-wrapper">
-      <button class="scroll-nav-btn scroll-left scroll-hidden md:!hidden" onclick="scrollRow(this, -1)" aria-label="Scroll left">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+    <div class="scroll-nav-wrapper group" style="position:relative;">
+      <button class="scroll-nav-btn scroll-left scroll-hidden" onclick="scrollRow(this, -1)" aria-label="Scroll left" style="display:flex;position:absolute;top:50%;transform:translateY(-50%);z-index:10;width:44px;height:44px;align-items:center;justify-content:center;background:rgba(253,251,247,0.95);border:1px solid rgba(212,175,55,0.4);border-radius:50%;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.1);color:#D4AF37;left:-18px;transition:all 0.3s;" onmouseover="this.style.background='#D4AF37';this.style.color='#4A0E0E';" onmouseout="this.style.background='rgba(253,251,247,0.95)';this.style.color='#D4AF37';">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
       </button>
-      <button class="scroll-nav-btn scroll-right md:!hidden" onclick="scrollRow(this, 1)" aria-label="Scroll right">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 6 15 12 9 18"/></svg>
+      <button class="scroll-nav-btn scroll-right" onclick="scrollRow(this, 1)" aria-label="Scroll right" style="display:flex;position:absolute;top:50%;transform:translateY(-50%);z-index:10;width:44px;height:44px;align-items:center;justify-content:center;background:rgba(253,251,247,0.95);border:1px solid rgba(212,175,55,0.4);border-radius:50%;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.1);color:#D4AF37;right:-18px;transition:all 0.3s;" onmouseover="this.style.background='#D4AF37';this.style.color='#4A0E0E';" onmouseout="this.style.background='rgba(253,251,247,0.95)';this.style.color='#D4AF37';">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 6 15 12 9 18"/></svg>
       </button>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 services-scroll-row" id="services-grid">
 
-      <!-- CARD 1: VASTU SHANTI -->
-      <div class="service-card" data-category="beginnings" data-testid="service-card-vastu">
-        <div class="overflow-hidden relative" style="height:210px;">
-          <img src="/images/Vastu%20Dosh%20Nivaran.jpeg"
-               alt="Vastu Shanti Havan" class="card-img w-full h-full object-cover" loading="lazy"/>
-          <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(74,14,14,0.5) 0%,transparent 55%);pointer-events:none;"></div>
-          <span class="absolute top-4 left-4" style="font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#D4AF37;background:rgba(74,14,14,0.8);padding:4px 10px;backdrop-filter:blur(4px);">New Beginnings</span>
-        </div>
-        <div class="p-8">
-          <h3 class="font-serif font-bold text-maroon mb-1" style="font-size:1.2rem;">Vastu Shanti Havan</h3>
-          <p style="font-size:1.25rem;color:#D4AF37;font-weight:500;letter-spacing:0.03em;margin-bottom:0.75rem;line-height:1.3;">Space Harmonization &amp; Corrective Vedic Protocol</p>
-          <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.7;margin-bottom:1.5rem;">
-            Recalibrate the five elemental energies of your home. A complete Vedic ceremony addressing accumulated energetic imbalances through targeted mantra and offering sequences.
-          </p>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid #E5DED0;">
-            <span class="font-serif font-bold text-maroon" style="font-size:1.4rem;">From ₹15,000</span>
-            <button onclick="openModal('vastu')"
-                    style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.12em;color:#D4AF37;font-weight:500;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;transition:color 0.2s;"
-                    onmouseover="this.style.color='#4A0E0E'" onmouseout="this.style.color='#D4AF37'"
-                    data-testid="service-vastu-explore-btn">
-              Explore
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- CARD 2: LAKSHMI-KUBER -->
-      <div class="service-card" data-category="success" data-testid="service-card-lakshmi">
-        <div class="overflow-hidden relative" style="height:210px;">
-          <img src="/images/Dhan_Kuber_Lakshmi_202603200656.jpeg"
-               alt="Lakshmi-Kuber Havan" class="card-img w-full h-full object-cover" loading="lazy"/>
-          <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(74,14,14,0.5) 0%,transparent 55%);pointer-events:none;"></div>
-          <span class="absolute top-4 left-4" style="font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#D4AF37;background:rgba(74,14,14,0.8);padding:4px 10px;backdrop-filter:blur(4px);">Success &amp; Growth</span>
-        </div>
-        <div class="p-8">
-          <h3 class="font-serif font-bold text-maroon mb-1" style="font-size:1.2rem;">Lakshmi-Kuber Havan</h3>
-          <p style="font-size:1.25rem;color:#D4AF37;font-weight:500;letter-spacing:0.03em;margin-bottom:0.75rem;line-height:1.3;">Invoking Prosperity &amp; Removing Professional Blockages</p>
-          <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.7;margin-bottom:1.5rem;">
-            A precise dual invocation of Goddess Lakshmi and Lord Kubera. This Havan creates Vedic pathways for material abundance, addressing blockages in income flow and career momentum.
-          </p>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid #E5DED0;">
-            <span class="font-serif font-bold text-maroon" style="font-size:1.4rem;">From ₹11,000</span>
-            <button onclick="openModal('lakshmi')"
-                    style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.12em;color:#D4AF37;font-weight:500;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;transition:color 0.2s;"
-                    onmouseover="this.style.color='#4A0E0E'" onmouseout="this.style.color='#D4AF37'"
-                    data-testid="service-lakshmi-explore-btn">
-              Explore
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- CARD 3: MAHA MRITYUNJAYA -->
-      <div class="service-card" data-category="health" data-testid="service-card-maha">
+    <div class="carousel-container services-scroll-row" id="services-grid">
+      <div class="service-card carousel-card" data-category="health" data-testid="service-card-maha">
         <div class="overflow-hidden relative" style="height:210px;">
           <img src="/images/Maha_Mirityunjay_Jaap_202603200700.jpeg"
                alt="Maha Mrityunjaya Havan" class="card-img w-full h-full object-cover" loading="lazy"/>
@@ -838,7 +859,7 @@ section[id] { scroll-margin-top: 80px; }
             The most potent Vedic invocation for health and longevity. 108 Mrityunjaya mantras recited with meticulous phonetic precision, each offering made with specific Himalayan medicinal herbs.
           </p>
           <div style="display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid #E5DED0;">
-            <span class="font-serif font-bold text-maroon" style="font-size:1.4rem;">From ₹21,000</span>
+            <span class="font-serif font-bold text-maroon" style="font-size:1.4rem;">From ₹1,100</span>
             <button onclick="openModal('maha')"
                     style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.12em;color:#D4AF37;font-weight:500;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;transition:color 0.2s;"
                     onmouseover="this.style.color='#4A0E0E'" onmouseout="this.style.color='#D4AF37'"
@@ -850,8 +871,115 @@ section[id] { scroll-margin-top: 80px; }
         </div>
       </div>
 
+      <div class="service-card carousel-card" data-category="beginnings" data-testid="service-card-satyanarayan">
+        <div class="overflow-hidden relative" style="height:210px;">
+          <img src="/images/Satya%20Narayan%20Katha.jpeg" alt="Satya Narayan Katha" class="card-img w-full h-full object-cover" loading="lazy"/>
+          <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(74,14,14,0.5) 0%,transparent 55%);pointer-events:none;"></div>
+          <span class="absolute top-4 left-4" style="font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#D4AF37;background:rgba(74,14,14,0.8);padding:4px 10px;backdrop-filter:blur(4px);">New Beginnings</span>
+        </div>
+        <div class="p-8">
+          <h3 class="font-serif font-bold text-maroon mb-1" style="font-size:1.2rem;">Satya Narayan Katha</h3>
+          <p style="font-size:1.25rem;color:#D4AF37;font-weight:500;letter-spacing:0.03em;margin-bottom:0.75rem;line-height:1.3;">Sukh Sampatti &amp; Sukh Shanti</p>
+          <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.7;margin-bottom:1.5rem;">
+            A sacred narrative recitation invoking Lord Vishnu's blessings for peace, prosperity, and fulfillment of intentions in the household.
+          </p>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid #E5DED0;">
+            <span class="font-serif font-bold text-maroon" style="font-size:1.4rem;">From ₹1,100</span>
+            <button onclick="openConsultModal('Satya Narayan Katha')" style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.12em;color:#D4AF37;font-weight:500;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;transition:color 0.2s;" onmouseover="this.style.color='#4A0E0E'" onmouseout="this.style.color='#D4AF37'">
+              Consult <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="service-card carousel-card" data-category="beginnings" data-testid="service-card-gayatri">
+        <div class="overflow-hidden relative" style="height:210px;">
+          <img src="/images/Gayatri_Jaap_202603200621.jpeg" alt="Gayatri Jaap" class="card-img w-full h-full object-cover" loading="lazy"/>
+          <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(74,14,14,0.5) 0%,transparent 55%);pointer-events:none;"></div>
+          <span class="absolute top-4 left-4" style="font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#D4AF37;background:rgba(74,14,14,0.8);padding:4px 10px;backdrop-filter:blur(4px);">New Beginnings</span>
+        </div>
+        <div class="p-8">
+          <h3 class="font-serif font-bold text-maroon mb-1" style="font-size:1.2rem;">Gayatri Jaap</h3>
+          <p style="font-size:1.25rem;color:#D4AF37;font-weight:500;letter-spacing:0.03em;margin-bottom:0.75rem;line-height:1.3;">Spiritual Clarity</p>
+          <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.7;margin-bottom:1.5rem;">
+            The most sacred Vedic mantra recited in precise repetitions to invoke divine illumination, peace of mind, and spiritual protection.
+          </p>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid #E5DED0;">
+            <span class="font-serif font-bold text-maroon" style="font-size:1.4rem;">From ₹1,100</span>
+            <button onclick="openConsultModal('Gayatri Jaap')" style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.12em;color:#D4AF37;font-weight:500;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;transition:color 0.2s;" onmouseover="this.style.color='#4A0E0E'" onmouseout="this.style.color='#D4AF37'">
+              Consult <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="service-card carousel-card" data-category="health" data-testid="service-card-agnihotra">
+        <div class="overflow-hidden relative" style="height:210px;">
+          <img src="/images/Agnihotra_202603200659.jpeg" alt="Agnihotra" class="card-img w-full h-full object-cover" loading="lazy"/>
+          <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(74,14,14,0.5) 0%,transparent 55%);pointer-events:none;"></div>
+          <span class="absolute top-4 left-4" style="font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#D4AF37;background:rgba(74,14,14,0.8);padding:4px 10px;backdrop-filter:blur(4px);">Health &amp; Protection</span>
+        </div>
+        <div class="p-8">
+          <h3 class="font-serif font-bold text-maroon mb-1" style="font-size:1.2rem;">Agnihotra</h3>
+          <p style="font-size:1.25rem;color:#D4AF37;font-weight:500;letter-spacing:0.03em;margin-bottom:0.75rem;line-height:1.3;">Daily Purification</p>
+          <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.7;margin-bottom:1.5rem;">
+            An ancient Vedic fire ritual performed at sunrise and sunset, purifying the atmosphere and establishing a daily spiritual discipline.
+          </p>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid #E5DED0;">
+            <span class="font-serif font-bold text-maroon" style="font-size:1.4rem;">From ₹1,100</span>
+            <button onclick="openConsultModal('Agnihotra')" style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.12em;color:#D4AF37;font-weight:500;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;transition:color 0.2s;" onmouseover="this.style.color='#4A0E0E'" onmouseout="this.style.color='#D4AF37'">
+              Consult <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="service-card carousel-card" data-category="beginnings" data-testid="service-card-shaanti">
+        <div class="overflow-hidden relative" style="height:210px;">
+          <img src="/images/Shanti_Havan_in_202603200643-2.jpeg" alt="Shaanti Hawan" class="card-img w-full h-full object-cover" loading="lazy"/>
+          <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(74,14,14,0.5) 0%,transparent 55%);pointer-events:none;"></div>
+          <span class="absolute top-4 left-4" style="font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#D4AF37;background:rgba(74,14,14,0.8);padding:4px 10px;backdrop-filter:blur(4px);">New Beginnings</span>
+        </div>
+        <div class="p-8">
+          <h3 class="font-serif font-bold text-maroon mb-1" style="font-size:1.2rem;">Shaanti Hawan</h3>
+          <p style="font-size:1.25rem;color:#D4AF37;font-weight:500;letter-spacing:0.03em;margin-bottom:0.75rem;line-height:1.3;">Peace in the Home</p>
+          <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.7;margin-bottom:1.5rem;">
+            A purifying fire ceremony designed to restore balance and tranquility to the household, removing negative energies and establishing calm.
+          </p>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid #E5DED0;">
+            <span class="font-serif font-bold text-maroon" style="font-size:1.4rem;">From ₹2,100</span>
+            <button onclick="openConsultModal('Shaanti Hawan')" style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.12em;color:#D4AF37;font-weight:500;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;transition:color 0.2s;" onmouseover="this.style.color='#4A0E0E'" onmouseout="this.style.color='#D4AF37'">
+              Consult <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="service-card carousel-card" data-category="success" data-testid="service-card-vyapar">
+        <div class="overflow-hidden relative" style="height:210px;">
+          <img src="/images/Vyapar_Samriddhi_Pooja_202603200656.jpeg" alt="Vyapar Samriddhi Puja" class="card-img w-full h-full object-cover" loading="lazy"/>
+          <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(74,14,14,0.5) 0%,transparent 55%);pointer-events:none;"></div>
+          <span class="absolute top-4 left-4" style="font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#D4AF37;background:rgba(74,14,14,0.8);padding:4px 10px;backdrop-filter:blur(4px);">Success &amp; Growth</span>
+        </div>
+        <div class="p-8">
+          <h3 class="font-serif font-bold text-maroon mb-1" style="font-size:1.2rem;">Vyapar Samriddhi</h3>
+          <p style="font-size:1.25rem;color:#D4AF37;font-weight:500;letter-spacing:0.03em;margin-bottom:0.75rem;line-height:1.3;">Trade Success</p>
+          <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.7;margin-bottom:1.5rem;">
+            Targeted Vedic ceremony for business owners and entrepreneurs to remove trade obstacles and invite momentum into commercial endeavors.
+          </p>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid #E5DED0;">
+            <span class="font-serif font-bold text-maroon" style="font-size:1.4rem;">From ₹2,100</span>
+            <button onclick="openConsultModal('Vyapar Samriddhi Puja')" style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.12em;color:#D4AF37;font-weight:500;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;transition:color 0.2s;" onmouseover="this.style.color='#4A0E0E'" onmouseout="this.style.color='#D4AF37'">
+              Consult <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
     </div>
     </div>
+
+    <div id="services-dots" class="services-dots" role="tablist" aria-label="Service slide indicators"></div>
 
     <!-- View All Services Button -->
     <div class="text-center mt-14" data-aos="fade-up" data-aos-delay="300">
@@ -863,7 +991,7 @@ section[id] { scroll-margin-top: 80px; }
 
     <div class="text-center mt-12" data-aos="fade-up" data-aos-delay="350">
       <p style="font-size:0.85rem;color:#5A4A4A;margin-bottom:1rem;">Have a specific intention not listed here?</p>
-      <a href="#" onclick="openConsultModal('Custom Vedic Ceremony');return false;" class="btn-consult" data-testid="services-custom-btn">Book Alignment Call</a>
+      <a href="#" onclick="openConsultModal('Custom Vedic Ceremony');return false;" class="btn-consult" data-testid="services-custom-btn">Book Free Consultation</a>
     </div>
 
   </div>
@@ -1193,7 +1321,7 @@ section[id] { scroll-margin-top: 80px; }
 
     <div class="text-center mt-14" data-aos="fade-up" data-aos-delay="400">
       <button onclick="openConsultModal('Muhurta Consultation')" class="btn-primary" data-testid="process-book-btn">
-        Book Alignment Call
+        Book Free Consultation
       </button>
     </div>
   </div>
@@ -1299,7 +1427,7 @@ section[id] { scroll-margin-top: 80px; }
 ========================================= -->
 
 <!-- CONSULTATION / ALIGNMENT CALL MODAL -->
-<div id="modal-consult" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Book Alignment Call" data-testid="modal-consult">
+<div id="modal-consult" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Book Free Consultation" data-testid="modal-consult">
   <div class="modal-drop" style="max-width:720px;">
     <div class="modal-paper">
       <button class="modal-close" onclick="closeModal('consult')" data-testid="modal-consult-close" aria-label="Close">&times;</button>
@@ -1307,7 +1435,7 @@ section[id] { scroll-margin-top: 80px; }
 
         <div class="modal-section" style="margin-bottom:1rem;">
           <p class="modal-section-lbl">Scholar's Desk</p>
-          <p class="modal-invoc-title">Book Alignment Call</p>
+          <p class="modal-invoc-title">Book Free Consultation</p>
           <p class="modal-invoc-sub">A 15-minute scholarly consultation — no sales, only guidance</p>
         </div>
 
@@ -1358,17 +1486,17 @@ section[id] { scroll-margin-top: 80px; }
           <p class="modal-section-lbl">The Elements</p>
           <div style="background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);padding:1.25rem;">
             <div class="modal-detail-row"><span class="modal-detail-label">Duration</span><span class="modal-detail-val">3–4 Hours</span></div>
-            <div class="modal-detail-row"><span class="modal-detail-label">Scholars</span><span class="modal-detail-val">2 Gurukul-trained Scholars</span></div>
+            <div class="modal-detail-row"><span class="modal-detail-label">Scholars</span><span class="modal-detail-val">Gurukul Trained Scholars</span></div>
             <div class="modal-detail-row"><span class="modal-detail-label">Samagri</span><span class="modal-detail-val">100% Shastra-Compliant Elements: A2 Gir Cow Ghee, hand-ground Himalayan herbs, sacred Peepal wood. No market-adulterated substitutes.</span></div>
             <div class="modal-detail-row" style="margin-bottom:0;">
               <span class="modal-detail-label">Dakshina</span>
-              <span class="modal-detail-val font-serif font-bold text-maroon" style="font-size:1.15rem;">From ₹15,000 <span style="font-size:0.72rem;font-weight:400;color:#7A6A6A;font-family:'Inter',sans-serif;">— disclosed fully before commitment</span></span>
+              <span class="modal-detail-val font-serif font-bold text-maroon" style="font-size:1.15rem;">From ₹15,000 <span style="font-size:0.72rem;font-weight:400;color:#7A6A6A;font-family:'Inter',sans-serif;">— does not include the cost of Samagri</span></span>
             </div>
           </div>
         </div>
 
         <button onclick="closeModal('vastu');openConsultModal('Vastu Shanti Havan')" class="btn-discuss" data-testid="modal-vastu-discuss-btn">
-          Book Alignment Call
+          Book Free Consultation
         </button>
       </div>
     </div>
@@ -1413,18 +1541,18 @@ section[id] { scroll-margin-top: 80px; }
         <div class="modal-section" style="margin-bottom:1.5rem;">
           <p class="modal-section-lbl">The Elements</p>
           <div style="background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);padding:1.25rem;">
-            <div class="modal-detail-row"><span class="modal-detail-label">Duration</span><span class="modal-detail-val">3–4 Hours</span></div>
-            <div class="modal-detail-row"><span class="modal-detail-label">Scholars</span><span class="modal-detail-val">2 Gurukul-trained Scholars</span></div>
+            <div class="modal-detail-row"><span class="modal-detail-label">Duration</span><span class="modal-detail-val">2 Hours</span></div>
+            <div class="modal-detail-row"><span class="modal-detail-label">Scholars</span><span class="modal-detail-val">Gurukul Trained Scholars</span></div>
             <div class="modal-detail-row"><span class="modal-detail-label">Samagri</span><span class="modal-detail-val">100% Shastra-Compliant Elements: A2 Gir Cow Ghee, hand-ground Himalayan herbs, pure Navagraha woods. No market-adulterated substitutes.</span></div>
             <div class="modal-detail-row" style="margin-bottom:0;">
               <span class="modal-detail-label">Dakshina</span>
-              <span class="modal-detail-val font-serif font-bold text-maroon" style="font-size:1.15rem;">From ₹11,000 <span style="font-size:0.72rem;font-weight:400;color:#7A6A6A;font-family:'Inter',sans-serif;">— disclosed fully before commitment</span></span>
+              <span class="modal-detail-val font-serif font-bold text-maroon" style="font-size:1.15rem;">From ₹5,100 <span style="font-size:0.72rem;font-weight:400;color:#7A6A6A;font-family:'Inter',sans-serif;">— does not include the cost of Samagri</span></span>
             </div>
           </div>
         </div>
 
         <button onclick="closeModal('lakshmi');openConsultModal('Lakshmi-Kuber Havan')" class="btn-discuss" data-testid="modal-lakshmi-discuss-btn">
-          Book Alignment Call
+          Book Free Consultation
         </button>
       </div>
     </div>
@@ -1469,18 +1597,18 @@ section[id] { scroll-margin-top: 80px; }
         <div class="modal-section" style="margin-bottom:1.5rem;">
           <p class="modal-section-lbl">The Elements</p>
           <div style="background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);padding:1.25rem;">
-            <div class="modal-detail-row"><span class="modal-detail-label">Duration</span><span class="modal-detail-val">4–5 Hours</span></div>
-            <div class="modal-detail-row"><span class="modal-detail-label">Scholars</span><span class="modal-detail-val">3 Gurukul-trained Scholars</span></div>
+            <div class="modal-detail-row"><span class="modal-detail-label">Duration</span><span class="modal-detail-val">2 Hours</span></div>
+            <div class="modal-detail-row"><span class="modal-detail-label">Scholars</span><span class="modal-detail-val">Gurukul Trained Scholars</span></div>
             <div class="modal-detail-row"><span class="modal-detail-label">Samagri</span><span class="modal-detail-val">100% Shastra-Compliant Elements: 108 Himalayan medicinal herbs, A2 Gir Cow Ghee, Bilva leaves, Badri wood — verified against Ayurvedic texts. No market-adulterated substitutes.</span></div>
             <div class="modal-detail-row" style="margin-bottom:0;">
               <span class="modal-detail-label">Dakshina</span>
-              <span class="modal-detail-val font-serif font-bold text-maroon" style="font-size:1.15rem;">From ₹21,000 <span style="font-size:0.72rem;font-weight:400;color:#7A6A6A;font-family:'Inter',sans-serif;">— disclosed fully before commitment</span></span>
+              <span class="modal-detail-val font-serif font-bold text-maroon" style="font-size:1.15rem;">From ₹1,100 <span style="font-size:0.72rem;font-weight:400;color:#7A6A6A;font-family:'Inter',sans-serif;">— does not include the cost of Samagri</span></span>
             </div>
           </div>
         </div>
 
         <button onclick="closeModal('maha');openConsultModal('Maha Mrityunjaya Havan')" class="btn-discuss" data-testid="modal-maha-discuss-btn">
-          Book Alignment Call
+          Book Free Consultation
         </button>
       </div>
     </div>
@@ -1543,12 +1671,15 @@ section[id] { scroll-margin-top: 80px; }
     if (activeFilter === category) {
       activeFilter = null;
       tiles.forEach(t => t.classList.remove('active'));
-      cards.forEach(c => { c.style.opacity = '1'; c.style.transform = ''; c.style.pointerEvents = 'auto'; c.classList.remove('filtered-out','filtered-in'); });
+      cards.forEach(c => { c.style.display = ''; c.style.opacity = '1'; c.style.transform = ''; c.style.pointerEvents = 'auto'; c.classList.remove('filtered-out','filtered-in'); });
       label.innerHTML = 'Each ceremony is meticulously designed following Vedic scripture, performed with unadulterated Himalayan materials.';
       
       const grid = document.getElementById('services-grid');
-      if (grid && window.innerWidth < 768) {
-        grid.scrollTo({ left: 0, behavior: 'smooth' });
+      if (grid) {
+        if (window.innerWidth < 768) {
+          grid.scrollTo({ left: 0, behavior: 'smooth' });
+        }
+        if (typeof updateScrollArrows === 'function') setTimeout(() => updateScrollArrows(grid), 100);
       }
       return;
     }
@@ -1563,7 +1694,7 @@ section[id] { scroll-margin-top: 80px; }
         c.style.opacity = '1'; c.style.transform = 'scale(1)'; c.style.pointerEvents = 'auto';
         c.classList.remove('filtered-out'); c.classList.add('filtered-in');
       } else {
-        c.style.opacity = '0.15'; c.style.transform = 'scale(0.97)'; c.style.pointerEvents = 'none';
+        c.style.opacity = '1'; c.style.transform = 'scale(1)'; c.style.pointerEvents = 'auto';
         c.classList.remove('filtered-in'); c.classList.add('filtered-out');
       }
     });
@@ -1571,15 +1702,16 @@ section[id] { scroll-margin-top: 80px; }
     
     setTimeout(() => {
       document.getElementById('services').scrollIntoView({ behavior: 'smooth', block: 'start' });
-      // Scroll horizontal grid on mobile
-      if (firstMatchedCard && window.innerWidth < 768) {
-        const grid = document.getElementById('services-grid');
-        if (grid) {
+      const grid = document.getElementById('services-grid');
+      if (grid) {
+        // Scroll horizontal grid on mobile
+        if (firstMatchedCard && window.innerWidth < 768) {
           const cardRect = firstMatchedCard.getBoundingClientRect();
           const gridRect = grid.getBoundingClientRect();
           // Scroll the grid horizontally by the distance from grid's left to card's left, minus some padding
           grid.scrollBy({ left: cardRect.left - gridRect.left - 16, behavior: 'smooth' });
         }
+        if (typeof updateScrollArrows === 'function') setTimeout(() => updateScrollArrows(grid), 100);
       }
     }, 120);
   }
@@ -1653,6 +1785,44 @@ section[id] { scroll-margin-top: 80px; }
     // Initial check
     setTimeout(() => updateScrollArrows(row), 500);
   });
+
+  // ── SERVICES SLIDER POSITION DOTS ──
+  (function initServiceDots() {
+    const slider = document.getElementById('services-grid');
+    const dotsBox = document.getElementById('services-dots');
+    if (!slider || !dotsBox) return;
+    const cards = slider.querySelectorAll(':scope > .service-card');
+    if (!cards.length) return;
+
+    cards.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.className = 'services-dot' + (i === 0 ? ' active' : '');
+      b.type = 'button';
+      b.setAttribute('role', 'tab');
+      b.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+      b.addEventListener('click', () => {
+        cards[i].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+      });
+      dotsBox.appendChild(b);
+    });
+
+    const dots = dotsBox.querySelectorAll('.services-dot');
+    function syncDots() {
+      const sLeft = slider.scrollLeft;
+      let nearestIdx = 0;
+      let nearestDist = Infinity;
+      cards.forEach((card, i) => {
+        const dist = Math.abs(card.offsetLeft - sLeft);
+        if (dist < nearestDist) { nearestDist = dist; nearestIdx = i; }
+      });
+      dots.forEach((d, i) => d.classList.toggle('active', i === nearestIdx));
+    }
+    slider.addEventListener('scroll', () => {
+      window.requestAnimationFrame(syncDots);
+    }, { passive: true });
+    window.addEventListener('resize', syncDots);
+    setTimeout(syncDots, 300);
+  })();
 
 </script>
 
