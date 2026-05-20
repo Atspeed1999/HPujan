@@ -1,6 +1,10 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Request
+from fastapi import FastAPI, APIRouter, HTTPException, Request, Depends, Query
+from fastapi.responses import HTMLResponse, PlainTextResponse
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
+import csv
+import io
 import os
 import json
 import logging
@@ -460,6 +464,250 @@ async def razorpay_webhook(request: Request):
     # Unrecognised event: still return 200 so Razorpay stops retrying.
     logger.info("[WEBHOOK] ignored event=%s", event)
     return {"status": "ignored", "event": event}
+
+
+# ── ADMIN DASHBOARD ──
+# HTTP Basic auth. Browser shows native login popup. Credentials kept in .env
+# so they're never committed; refresh requires server restart.
+ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME', '')
+ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', '')
+_security = HTTPBasic()
+
+
+def require_admin(credentials: HTTPBasicCredentials = Depends(_security)) -> str:
+    if not (ADMIN_USERNAME and ADMIN_PASSWORD):
+        raise HTTPException(status_code=500, detail="Admin credentials not configured")
+    ok_user = hmac.compare_digest(credentials.username.encode(), ADMIN_USERNAME.encode())
+    ok_pass = hmac.compare_digest(credentials.password.encode(), ADMIN_PASSWORD.encode())
+    if not (ok_user and ok_pass):
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid credentials",
+            headers={"WWW-Authenticate": 'Basic realm="HomePujan Admin"'},
+        )
+    return credentials.username
+
+
+def db_query_bookings(status: str | None = None, q: str | None = None, limit: int = 1000) -> list[dict]:
+    """Filtered listing for admin. status ∈ {paid, created, failed, signature_mismatch}.
+    q does a LIKE match across customer name / email / phone / service_name."""
+    where, vals = [], []
+    if status:
+        where.append("status = ?")
+        vals.append(status)
+    if q:
+        like = f"%{q}%"
+        where.append("(customer_name LIKE ? OR customer_email LIKE ? OR customer_phone LIKE ? OR service_name LIKE ?)")
+        vals.extend([like, like, like, like])
+    sql = "SELECT * FROM bookings"
+    if where:
+        sql += " WHERE " + " AND ".join(where)
+    sql += " ORDER BY created_at DESC LIMIT ?"
+    vals.append(limit)
+    with _conn() as c:
+        rows = c.execute(sql, vals).fetchall()
+    return [_row_to_api(r) for r in rows]
+
+
+def db_status_counts() -> dict[str, int]:
+    with _conn() as c:
+        rows = c.execute("SELECT status, COUNT(*) AS n FROM bookings GROUP BY status").fetchall()
+    return {r['status']: r['n'] for r in rows}
+
+
+_ADMIN_HTML = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>HomePujan — Admin</title>
+<style>
+  :root { --maroon: #4A0E0E; --gold: #D4AF37; --cream: #FFFEFB; --ink: #2D2D2D; --line: #E5DED0; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif; margin: 0; background: #F9F4EC; color: var(--ink); }
+  header { background: var(--maroon); color: var(--gold); padding: 1.1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+  header h1 { font-family: 'Cinzel', Georgia, serif; font-size: 1.15rem; margin: 0; letter-spacing: 0.06em; }
+  header .meta { font-size: 0.75rem; opacity: 0.85; }
+  main { max-width: 1280px; margin: 1.5rem auto; padding: 0 1.5rem; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem; }
+  .stat { background: white; border: 1px solid var(--line); border-radius: 8px; padding: 0.85rem 1rem; }
+  .stat .lbl { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; color: #7A6A6A; font-weight: 600; }
+  .stat .val { font-family: 'Cinzel', Georgia, serif; font-size: 1.5rem; font-weight: 700; color: var(--maroon); margin-top: 4px; }
+  .stat.paid .val { color: #1E7F3E; }
+  .stat.failed .val { color: #9B1C1C; }
+  .filters { background: white; border: 1px solid var(--line); border-radius: 8px; padding: 0.85rem 1rem; display: flex; gap: 0.65rem; flex-wrap: wrap; align-items: center; margin-bottom: 1rem; }
+  .filters form { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; flex: 1; }
+  .filters input, .filters select { padding: 0.5rem 0.7rem; border: 1px solid var(--line); border-radius: 6px; font-size: 0.85rem; font-family: inherit; }
+  .filters input[type=search] { flex: 1; min-width: 200px; }
+  .filters button { padding: 0.5rem 1rem; border: 1px solid var(--maroon); background: var(--maroon); color: var(--gold); font-weight: 600; border-radius: 6px; cursor: pointer; font-size: 0.8rem; letter-spacing: 0.04em; }
+  .filters a.export { padding: 0.5rem 1rem; background: transparent; color: var(--maroon); border: 1px solid var(--maroon); border-radius: 6px; text-decoration: none; font-size: 0.8rem; font-weight: 600; }
+  .filters a.clear { font-size: 0.78rem; color: #7A6A6A; text-decoration: underline; }
+  table { width: 100%; border-collapse: collapse; background: white; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; font-size: 0.85rem; }
+  th, td { padding: 0.65rem 0.85rem; text-align: left; vertical-align: top; border-bottom: 1px solid #F0E9DE; }
+  th { background: #F9F4EC; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: #5A4A4A; font-weight: 700; }
+  tbody tr:hover { background: #FAF6EE; }
+  td.id { font-family: 'SF Mono', Menlo, monospace; font-size: 0.72rem; color: #5A4A4A; }
+  td.amt { font-family: 'Cinzel', Georgia, serif; font-weight: 700; color: var(--maroon); white-space: nowrap; }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+  .pill.paid { background: #E2F5E8; color: #1E7F3E; }
+  .pill.created { background: #FFF4D8; color: #8A6300; }
+  .pill.failed { background: #FDECEC; color: #9B1C1C; }
+  .pill.signature_mismatch { background: #FDECEC; color: #9B1C1C; }
+  .empty { text-align: center; padding: 3rem; color: #7A6A6A; }
+  small.muted { color: #7A6A6A; }
+  .wa { color: #25D366; text-decoration: none; }
+  .wa:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<header>
+  <h1>HomePujan — Bookings</h1>
+  <div class="meta">__COUNT__ rows · DB: __DB__</div>
+</header>
+<main>
+  <div class="stats">__STATS__</div>
+  <div class="filters">
+    <form method="get" action="/admin">
+      <input type="search" name="q" placeholder="Search name, email, phone or service…" value="__Q__" autofocus/>
+      <select name="status">
+        <option value="">All statuses</option>
+        <option value="paid"     __SEL_PAID__>Paid</option>
+        <option value="created"  __SEL_CREATED__>Created (not yet paid)</option>
+        <option value="failed"   __SEL_FAILED__>Failed</option>
+        <option value="signature_mismatch" __SEL_SIG__>Signature mismatch</option>
+      </select>
+      <button type="submit">Apply</button>
+      <a class="clear" href="/admin">Clear</a>
+    </form>
+    <a class="export" href="/admin/export.csv__QS__">Export CSV</a>
+  </div>
+  __TABLE__
+</main>
+</body>
+</html>"""
+
+
+def _fmt_dt(iso: str | None) -> str:
+    if not iso:
+        return '—'
+    try:
+        dt = datetime.fromisoformat(iso.replace('Z', '+00:00'))
+        return dt.strftime('%d %b %Y, %H:%M')
+    except Exception:
+        return iso
+
+
+def _wa_link(phone: str) -> str:
+    digits = ''.join(ch for ch in phone if ch.isdigit())
+    if len(digits) == 10:
+        digits = '91' + digits
+    return f"https://wa.me/{digits}"
+
+
+def _render_admin(bookings: list[dict], q: str, status: str) -> str:
+    counts = db_status_counts()
+    total = sum(counts.values())
+    stat_cards = [
+        ('Total', total, ''),
+        ('Paid', counts.get('paid', 0), 'paid'),
+        ('Created', counts.get('created', 0), 'created'),
+        ('Failed', counts.get('failed', 0) + counts.get('signature_mismatch', 0), 'failed'),
+    ]
+    stats_html = ''.join(
+        f'<div class="stat {cls}"><div class="lbl">{lbl}</div><div class="val">{val}</div></div>'
+        for lbl, val, cls in stat_cards
+    )
+
+    if not bookings:
+        table_html = '<div class="empty">No bookings match your filter.</div>'
+    else:
+        rows_html = []
+        for b in bookings:
+            cust = b['customer']
+            wa = _wa_link(cust['phone'])
+            slot = _fmt_dt(b['slot_iso'])
+            created = _fmt_dt(b['created_at'])
+            paid = _fmt_dt(b['paid_at']) if b['paid_at'] else '—'
+            status_class = b['status']
+            rows_html.append(f"""
+                <tr>
+                  <td class="id" title="{b['id']}">{b['id'][:8]}</td>
+                  <td>{b['service_name']}<br/><small class="muted">{b['service_id']}</small></td>
+                  <td>{cust['name']}<br/><small class="muted">{cust['email']}</small><br/><a class="wa" href="{wa}" target="_blank" rel="noopener">{cust['phone']} ↗</a></td>
+                  <td>{slot}</td>
+                  <td class="amt">₹{b['amount_paise']/100:,.0f}</td>
+                  <td><span class="pill {status_class}">{b['status'].replace('_', ' ')}</span></td>
+                  <td><small class="muted">{created}</small></td>
+                  <td><small class="muted">{paid}</small></td>
+                  <td class="id" title="{b['razorpay_payment_id'] or '—'}">{(b['razorpay_payment_id'] or '—')[:14]}</td>
+                </tr>
+            """)
+        table_html = f"""
+        <table>
+          <thead><tr>
+            <th>ID</th><th>Ceremony</th><th>Yajamana</th><th>Slot</th>
+            <th>Dakshina</th><th>Status</th><th>Created</th><th>Paid</th><th>Payment ID</th>
+          </tr></thead>
+          <tbody>{''.join(rows_html)}</tbody>
+        </table>"""
+
+    qs_parts = []
+    if q: qs_parts.append(f"q={q}")
+    if status: qs_parts.append(f"status={status}")
+    qs = ('?' + '&'.join(qs_parts)) if qs_parts else ''
+
+    return (_ADMIN_HTML
+        .replace('__COUNT__', str(len(bookings)))
+        .replace('__DB__', 'sqlite')
+        .replace('__STATS__', stats_html)
+        .replace('__TABLE__', table_html)
+        .replace('__Q__', q.replace('"', '&quot;') if q else '')
+        .replace('__SEL_PAID__',    'selected' if status == 'paid' else '')
+        .replace('__SEL_CREATED__', 'selected' if status == 'created' else '')
+        .replace('__SEL_FAILED__',  'selected' if status == 'failed' else '')
+        .replace('__SEL_SIG__',     'selected' if status == 'signature_mismatch' else '')
+        .replace('__QS__', qs))
+
+
+@app.get("/admin", response_class=HTMLResponse)
+async def admin_dashboard(
+    _user: str = Depends(require_admin),
+    q: str = Query('', max_length=120),
+    status: str = Query('', max_length=32),
+):
+    bookings = db_query_bookings(status=status or None, q=q or None)
+    return HTMLResponse(_render_admin(bookings, q, status))
+
+
+@app.get("/admin/export.csv", response_class=PlainTextResponse)
+async def admin_export_csv(
+    _user: str = Depends(require_admin),
+    q: str = Query('', max_length=120),
+    status: str = Query('', max_length=32),
+):
+    bookings = db_query_bookings(status=status or None, q=q or None)
+    buf = io.StringIO()
+    w = csv.writer(buf)
+    w.writerow([
+        'booking_id', 'service_id', 'service_name', 'amount_inr',
+        'slot_iso', 'name', 'email', 'phone',
+        'status', 'razorpay_order_id', 'razorpay_payment_id',
+        'created_at', 'paid_at',
+    ])
+    for b in bookings:
+        c = b['customer']
+        w.writerow([
+            b['id'], b['service_id'], b['service_name'], f"{b['amount_paise']/100:.2f}",
+            b['slot_iso'], c['name'], c['email'], c['phone'],
+            b['status'], b['razorpay_order_id'], b['razorpay_payment_id'] or '',
+            b['created_at'], b['paid_at'] or '',
+        ])
+    filename = f"bookings-{datetime.now(timezone.utc).strftime('%Y%m%d-%H%M%S')}.csv"
+    return PlainTextResponse(
+        buf.getvalue(),
+        media_type='text/csv; charset=utf-8',
+        headers={'Content-Disposition': f'attachment; filename="{filename}"'},
+    )
 
 
 # Mount router + CORS + startup
