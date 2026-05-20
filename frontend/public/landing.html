@@ -534,8 +534,8 @@ section[id] { scroll-margin-top: 80px; }
 .pay-summary-row .lbl { color: #7A6A6A; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding-top: 2px; }
 .pay-summary-row .val { color: #2D2D2D; font-weight: 600; text-align: right; }
 .pay-summary-total { font-family: 'Cinzel', serif; font-size: 1.1rem; color: #4A0E0E; font-weight: 700; }
-.pay-actions { display: flex; gap: 0.6rem; margin-top: 1rem; }
-.pay-actions .btn-discuss, .pay-actions .btn-consult { flex: 1; padding: 0.85rem 0.75rem; font-size: 0.74rem; }
+.pay-actions { display: flex; gap: 0.6rem; margin-top: 1rem; align-items: stretch; }
+.pay-actions .btn-discuss, .pay-actions .btn-align { flex: 1; padding: 0.85rem 0.75rem; font-size: 0.74rem; margin: 0; border-width: 1px; }
 .pay-error { display: none; background: #FDECEC; color: #9B1C1C; border: 1px solid #F5C2C2; padding: 0.7rem 0.9rem; border-radius: 6px; font-size: 0.82rem; margin-bottom: 0.85rem; line-height: 1.5; }
 .pay-error.visible { display: block; }
 .pay-confirm-icon { width: 56px; height: 56px; border-radius: 50%; background: rgba(212,175,55,0.18); color: #4A0E0E; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 1.8rem; }
@@ -1770,7 +1770,7 @@ section[id] { scroll-margin-top: 80px; }
             <input type="tel" id="pay-phone" class="consult-input" autocomplete="tel" placeholder="10-digit Indian mobile"/>
           </div>
           <div class="pay-actions">
-            <button type="button" class="btn-consult" onclick="payGoTo(1)">Back</button>
+            <button type="button" class="btn-align" onclick="payGoTo(1)">Back</button>
             <button type="button" class="btn-discuss" id="pay-next-2">Review &amp; Pay</button>
           </div>
         </div>
@@ -1787,7 +1787,7 @@ section[id] { scroll-margin-top: 80px; }
           </div>
           <p style="font-size:0.72rem;color:#7A6A6A;line-height:1.6;margin-bottom:0.9rem;">Dakshina does not include the cost of Samagri. You will be redirected to Razorpay's secure checkout.</p>
           <div class="pay-actions">
-            <button type="button" class="btn-consult" onclick="payGoTo(2)">Back</button>
+            <button type="button" class="btn-align" onclick="payGoTo(2)">Back</button>
             <button type="button" class="btn-discuss" id="pay-do-pay">Pay Now</button>
           </div>
         </div>
@@ -1810,7 +1810,7 @@ section[id] { scroll-margin-top: 80px; }
             <a id="pay-confirm-wa" href="#" target="_blank" rel="noopener" class="btn-discuss" style="flex:1;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;">Message on WhatsApp</a>
           </div>
           <div class="pay-actions" style="margin-top:0.5rem;">
-            <button type="button" class="btn-consult" onclick="closeModal('pay')">Close</button>
+            <button type="button" class="btn-align" onclick="closeModal('pay')">Close</button>
           </div>
         </div>
 
@@ -2172,7 +2172,10 @@ section[id] { scroll-margin-top: 80px; }
     const isLocal = h === 'localhost' || h === '127.0.0.1' || h === '0.0.0.0';
     return (isLocal ? 'http://localhost:8000' : '') + '/api';
   })();
-  const PAY_TIME_SLOTS = ['06:00', '08:00', '10:00', '17:00', '19:00'];
+  const PAY_TIME_SLOTS = [
+    '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00',
+    '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'
+  ];
   const PAY_MAX_DAYS_AHEAD = 90;
   const PAY_WHATSAPP_NUMBER = '919667039964';
 
