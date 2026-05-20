@@ -63,6 +63,9 @@ chainlit.md
 
 # Data and databases
 agenthub/agents/youtube/db
+backend/bookings.db
+backend/bookings.db-shm
+backend/bookings.db-wal
 
 # Archive files and large assets
 **/*.zip

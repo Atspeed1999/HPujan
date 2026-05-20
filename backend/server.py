@@ -5,11 +5,11 @@ import os
 import logging
 import hmac
 import hashlib
+import sqlite3
 import requests
 from requests.auth import HTTPBasicAuth
 from pathlib import Path
-from pydantic import BaseModel, Field, ConfigDict, EmailStr
-from typing import List, Optional
+from pydantic import BaseModel, ConfigDict, EmailStr
 import uuid
 from datetime import datetime, timezone
 
@@ -17,73 +17,142 @@ from datetime import datetime, timezone
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-# MongoDB connection is OPTIONAL. If motor or Mongo is unavailable, the app
-# still serves payment endpoints; bookings are kept in-memory only and logged.
-db = None
-MONGO_ENABLED = False
-try:
-    from motor.motor_asyncio import AsyncIOMotorClient
-    mongo_url = os.environ.get('MONGO_URL')
-    db_name = os.environ.get('DB_NAME', 'homepujan_db')
-    if mongo_url:
-        client = AsyncIOMotorClient(mongo_url, serverSelectionTimeoutMS=2000)
-        db = client[db_name]
-        MONGO_ENABLED = True
-except Exception:
-    # motor not installed or Mongo client creation failed — fall back silently
-    db = None
-    MONGO_ENABLED = False
+# ── Logging ──
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+)
+logger = logging.getLogger(__name__)
 
-# Create the main app without a prefix
+
+# ── SQLite (single-file persistence; survives restarts) ──
+DB_PATH = Path(os.environ.get('SQLITE_DB_PATH', str(ROOT_DIR / 'bookings.db')))
+
+def _conn() -> sqlite3.Connection:
+    c = sqlite3.connect(DB_PATH, isolation_level=None, timeout=10.0)
+    c.row_factory = sqlite3.Row
+    c.execute("PRAGMA journal_mode=WAL")
+    c.execute("PRAGMA synchronous=NORMAL")
+    c.execute("PRAGMA foreign_keys=ON")
+    return c
+
+def init_db() -> None:
+    with _conn() as c:
+        c.executescript("""
+            CREATE TABLE IF NOT EXISTS bookings (
+                id                  TEXT PRIMARY KEY,
+                service_id          TEXT NOT NULL,
+                service_name        TEXT NOT NULL,
+                amount_paise        INTEGER NOT NULL,
+                currency            TEXT NOT NULL DEFAULT 'INR',
+                slot_iso            TEXT NOT NULL,
+                customer_name       TEXT NOT NULL,
+                customer_email      TEXT NOT NULL,
+                customer_phone      TEXT NOT NULL,
+                razorpay_order_id   TEXT NOT NULL UNIQUE,
+                razorpay_payment_id TEXT,
+                status              TEXT NOT NULL,
+                created_at          TEXT NOT NULL,
+                paid_at             TEXT
+            );
+            CREATE INDEX IF NOT EXISTS idx_bookings_status     ON bookings(status);
+            CREATE INDEX IF NOT EXISTS idx_bookings_created_at ON bookings(created_at);
+            CREATE INDEX IF NOT EXISTS idx_bookings_order_id   ON bookings(razorpay_order_id);
+        """)
+
+
+def _row_to_api(row: sqlite3.Row) -> dict:
+    """Shape DB row back into the nested-customer dict the API used to return."""
+    return {
+        "id": row["id"],
+        "service_id": row["service_id"],
+        "service_name": row["service_name"],
+        "amount_paise": row["amount_paise"],
+        "currency": row["currency"],
+        "slot_iso": row["slot_iso"],
+        "customer": {
+            "name": row["customer_name"],
+            "email": row["customer_email"],
+            "phone": row["customer_phone"],
+        },
+        "razorpay_order_id": row["razorpay_order_id"],
+        "razorpay_payment_id": row["razorpay_payment_id"],
+        "status": row["status"],
+        "created_at": row["created_at"],
+        "paid_at": row["paid_at"],
+    }
+
+
+def db_save_booking(doc: dict) -> None:
+    with _conn() as c:
+        c.execute(
+            """INSERT INTO bookings (
+                id, service_id, service_name, amount_paise, currency, slot_iso,
+                customer_name, customer_email, customer_phone,
+                razorpay_order_id, razorpay_payment_id, status, created_at, paid_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            (
+                doc['id'], doc['service_id'], doc['service_name'],
+                doc['amount_paise'], doc['currency'], doc['slot_iso'],
+                doc['customer']['name'], doc['customer']['email'], doc['customer']['phone'],
+                doc['razorpay_order_id'], doc.get('razorpay_payment_id'),
+                doc['status'], doc['created_at'], doc.get('paid_at'),
+            ),
+        )
+    logger.info(
+        "[BOOKING CREATED] %s | %s | ₹%.0f | %s | %s <%s>",
+        doc['id'], doc['service_name'], doc['amount_paise']/100,
+        doc['slot_iso'], doc['customer']['name'], doc['customer']['email'],
+    )
+
+
+def db_update_booking(booking_id: str, order_id: str, updates: dict) -> bool:
+    """Update only if (id, order_id) match. Returns True if a row was matched."""
+    cols, vals = [], []
+    for k, v in updates.items():
+        cols.append(f"{k} = ?")
+        vals.append(v)
+    vals.extend([booking_id, order_id])
+    with _conn() as c:
+        cur = c.execute(
+            f"UPDATE bookings SET {', '.join(cols)} WHERE id = ? AND razorpay_order_id = ?",
+            vals,
+        )
+        matched = cur.rowcount > 0
+    if matched:
+        logger.info(
+            "[BOOKING UPDATED] %s | status=%s | payment_id=%s",
+            booking_id, updates.get('status', '?'), updates.get('razorpay_payment_id', '—'),
+        )
+    return matched
+
+
+def db_list_bookings(limit: int = 1000) -> list[dict]:
+    with _conn() as c:
+        rows = c.execute(
+            "SELECT * FROM bookings ORDER BY created_at DESC LIMIT ?", (limit,)
+        ).fetchall()
+    return [_row_to_api(r) for r in rows]
+
+
+# ── App ──
 app = FastAPI()
-
-# Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
 
-# Define Models
-class StatusCheck(BaseModel):
-    model_config = ConfigDict(extra="ignore")  # Ignore MongoDB's _id field
-    
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    client_name: str
-    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-
-class StatusCheckCreate(BaseModel):
-    client_name: str
-
-# Add your routes to the router instead of directly to app
 @api_router.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "HomePujan API"}
 
-@api_router.post("/status", response_model=StatusCheck)
-async def create_status_check(input: StatusCheckCreate):
-    if db is None:
-        raise HTTPException(status_code=503, detail="Database not configured")
-    status_dict = input.model_dump()
-    status_obj = StatusCheck(**status_dict)
 
-    # Convert to dict and serialize datetime to ISO string for MongoDB
-    doc = status_obj.model_dump()
-    doc['timestamp'] = doc['timestamp'].isoformat()
-
-    _ = await db.status_checks.insert_one(doc)
-    return status_obj
-
-@api_router.get("/status", response_model=List[StatusCheck])
-async def get_status_checks():
-    if db is None:
-        return []
-    # Exclude MongoDB's _id field from the query results
-    status_checks = await db.status_checks.find({}, {"_id": 0}).to_list(1000)
-
-    # Convert ISO string timestamps back to datetime objects
-    for check in status_checks:
-        if isinstance(check['timestamp'], str):
-            check['timestamp'] = datetime.fromisoformat(check['timestamp'])
-
-    return status_checks
+@api_router.get("/health")
+async def health():
+    try:
+        with _conn() as c:
+            c.execute("SELECT 1").fetchone()
+        return {"status": "ok", "db": "sqlite", "db_path": str(DB_PATH)}
+    except Exception as e:
+        raise HTTPException(status_code=503, detail=f"DB unreachable: {e}")
 
 
 # ── RAZORPAY PAYMENT INTEGRATION ──
@@ -121,47 +190,6 @@ SERVICE_CATALOG = {
     'pitrapujan':    {'name': 'Pitra Dosh / Pitra Pujan',      'price_paise':  510000},
     'antiyeshti':    {'name': 'Antiyeshti',                    'price_paise':  110000},
 }
-
-# In-memory booking store. Used as fallback when MongoDB unreachable; also kept
-# in parallel with Mongo so admin endpoints always have something to show.
-_BOOKINGS_MEM: dict = {}
-
-
-async def _save_booking(doc: dict) -> None:
-    """Persist booking. Always writes to in-memory; best-effort to Mongo."""
-    _BOOKINGS_MEM[doc['id']] = dict(doc)
-    print(f"\n[BOOKING CREATED] {doc['id']} | {doc['service_name']} | "
-          f"₹{doc['amount_paise']/100:.0f} | {doc['slot_iso']} | "
-          f"{doc['customer'].get('name')} <{doc['customer'].get('email')}>")
-    if db is None:
-        return
-    try:
-        await db.bookings.insert_one(dict(doc))
-    except Exception as e:
-        logger.warning("Mongo insert skipped (%s): %s", type(e).__name__, e)
-
-
-async def _update_booking(booking_id: str, order_id: str, updates: dict) -> bool:
-    """Update booking by id+order_id. Returns True if a record was matched."""
-    matched_mem = False
-    if booking_id in _BOOKINGS_MEM and _BOOKINGS_MEM[booking_id].get('razorpay_order_id') == order_id:
-        _BOOKINGS_MEM[booking_id].update(updates)
-        matched_mem = True
-        status = updates.get('status', '?')
-        print(f"[BOOKING UPDATED] {booking_id} | status={status} | "
-              f"payment_id={updates.get('razorpay_payment_id', '—')}")
-
-    if db is None:
-        return matched_mem
-    try:
-        result = await db.bookings.update_one(
-            {"id": booking_id, "razorpay_order_id": order_id},
-            {"$set": updates},
-        )
-        return matched_mem or result.matched_count > 0
-    except Exception as e:
-        logger.warning("Mongo update skipped (%s): %s", type(e).__name__, e)
-        return matched_mem
 
 
 class Customer(BaseModel):
@@ -247,8 +275,9 @@ async def create_order(req: CreateOrderRequest):
         "razorpay_payment_id": None,
         "status": "created",
         "created_at": datetime.now(timezone.utc).isoformat(),
+        "paid_at": None,
     }
-    await _save_booking(booking_doc)
+    db_save_booking(booking_doc)
 
     return {
         "booking_id": booking_id,
@@ -274,13 +303,13 @@ async def verify_payment(req: VerifyRequest):
     ).hexdigest()
 
     if not hmac.compare_digest(expected_sig, req.razorpay_signature):
-        await _update_booking(req.booking_id, req.razorpay_order_id, {
+        db_update_booking(req.booking_id, req.razorpay_order_id, {
             "status": "signature_mismatch",
             "razorpay_payment_id": req.razorpay_payment_id,
         })
         raise HTTPException(status_code=400, detail="Signature verification failed")
 
-    matched = await _update_booking(req.booking_id, req.razorpay_order_id, {
+    matched = db_update_booking(req.booking_id, req.razorpay_order_id, {
         "status": "paid",
         "razorpay_payment_id": req.razorpay_payment_id,
         "paid_at": datetime.now(timezone.utc).isoformat(),
@@ -292,16 +321,16 @@ async def verify_payment(req: VerifyRequest):
 
 
 @api_router.get("/payments/bookings")
-async def list_bookings_inmemory():
-    """Dev helper. Returns whatever is in the in-memory booking store."""
+async def list_bookings():
+    bookings = db_list_bookings()
     return {
-        "mongo_enabled": MONGO_ENABLED,
-        "count": len(_BOOKINGS_MEM),
-        "bookings": list(_BOOKINGS_MEM.values()),
+        "db": "sqlite",
+        "count": len(bookings),
+        "bookings": bookings,
     }
 
 
-# Include the router in the main app
+# Mount router + CORS + startup
 app.include_router(api_router)
 
 app.add_middleware(
@@ -312,13 +341,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
 
-@app.on_event("shutdown")
-async def shutdown_db_client():
-    client.close()
+@app.on_event("startup")
+async def on_startup():
+    init_db()
+    logger.info("SQLite ready at %s", DB_PATH)
