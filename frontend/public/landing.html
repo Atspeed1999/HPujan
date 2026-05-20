@@ -489,6 +489,123 @@ section[id] { scroll-margin-top: 80px; }
   .scroll-nav-btn.scroll-right { right: -4px; }
   .scroll-nav-btn.scroll-hidden { opacity: 0; pointer-events: none; }
 }
+
+/* ── PAY WIZARD ── */
+.pay-stepper { display: flex; align-items: center; justify-content: center; gap: 0.55rem; margin: 0.5rem 0 1.4rem; flex-wrap: wrap; }
+.pay-step-dot {
+  width: 26px; height: 26px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+  font-family: 'Cinzel', serif; font-size: 0.72rem; font-weight: 700;
+  background: #F5EFE6; color: #7A6A6A; border: 1px solid rgba(212,175,55,0.35); transition: all 0.25s;
+}
+.pay-step-dot.active { background: #4A0E0E; color: #D4AF37; border-color: #4A0E0E; }
+.pay-step-dot.done { background: #D4AF37; color: #4A0E0E; border-color: #D4AF37; }
+.pay-step-line { width: 22px; height: 1px; background: rgba(212,175,55,0.35); }
+.pay-step { display: none; }
+.pay-step.active { display: block; animation: payFade 0.28s ease; }
+@keyframes payFade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+.pay-cal-wrap { border: 1px solid rgba(212,175,55,0.25); border-radius: 8px; padding: 1rem; background: #FFFEFB; }
+.pay-cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+.pay-cal-nav button { background: none; border: 1px solid rgba(212,175,55,0.4); cursor: pointer; padding: 0.35rem 0.6rem; font-size: 0.95rem; color: #4A0E0E; border-radius: 4px; line-height: 1; }
+.pay-cal-nav button:disabled { opacity: 0.3; cursor: not-allowed; }
+.pay-cal-nav-title { font-family: 'Cinzel', serif; font-weight: 700; color: #4A0E0E; font-size: 0.95rem; }
+.pay-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.pay-cal-head { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #7A6A6A; text-align: center; padding: 4px 0; }
+.pay-cal-day {
+  aspect-ratio: 1 / 1; border: 1px solid transparent; background: transparent; cursor: pointer;
+  font-family: 'Inter', sans-serif; font-size: 0.85rem; color: #2D2D2D; border-radius: 6px; transition: all 0.18s;
+  display: flex; align-items: center; justify-content: center;
+}
+.pay-cal-day:hover:not(:disabled):not(.selected) { background: rgba(212,175,55,0.15); border-color: rgba(212,175,55,0.4); }
+.pay-cal-day.selected { background: #4A0E0E; color: #D4AF37; border-color: #4A0E0E; font-weight: 700; }
+.pay-cal-day:disabled { color: #C7BFB2; cursor: not-allowed; }
+.pay-cal-day.empty { visibility: hidden; cursor: default; }
+.pay-slot-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); gap: 0.5rem; margin-top: 1rem; }
+.pay-slot-pill {
+  padding: 0.55rem 0.5rem; border: 1px solid rgba(74,14,14,0.25); background: #FFFEFB; border-radius: 999px;
+  font-family: 'Inter', sans-serif; font-size: 0.78rem; color: #4A0E0E; cursor: pointer; text-align: center; transition: all 0.18s;
+}
+.pay-slot-pill:hover:not(.selected) { background: rgba(212,175,55,0.12); }
+.pay-slot-pill.selected { background: #4A0E0E; color: #D4AF37; border-color: #4A0E0E; font-weight: 700; }
+.pay-form-row { margin-bottom: 0.85rem; }
+.pay-form-row label { display: block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #5A4A4A; margin-bottom: 0.35rem; }
+.pay-summary { background: #F9F4EC; border: 1px solid rgba(212,175,55,0.25); border-radius: 8px; padding: 1rem 1.1rem; margin-bottom: 1rem; }
+.pay-summary-row { display: flex; justify-content: space-between; gap: 1rem; padding: 0.4rem 0; font-size: 0.85rem; }
+.pay-summary-row + .pay-summary-row { border-top: 1px dashed rgba(212,175,55,0.25); }
+.pay-summary-row .lbl { color: #7A6A6A; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding-top: 2px; }
+.pay-summary-row .val { color: #2D2D2D; font-weight: 600; text-align: right; }
+.pay-summary-total { font-family: 'Cinzel', serif; font-size: 1.1rem; color: #4A0E0E; font-weight: 700; }
+.pay-actions { display: flex; gap: 0.6rem; margin-top: 1rem; }
+.pay-actions .btn-discuss, .pay-actions .btn-consult { flex: 1; padding: 0.85rem 0.75rem; font-size: 0.74rem; }
+.pay-error { display: none; background: #FDECEC; color: #9B1C1C; border: 1px solid #F5C2C2; padding: 0.7rem 0.9rem; border-radius: 6px; font-size: 0.82rem; margin-bottom: 0.85rem; line-height: 1.5; }
+.pay-error.visible { display: block; }
+.pay-confirm-icon { width: 56px; height: 56px; border-radius: 50%; background: rgba(212,175,55,0.18); color: #4A0E0E; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 1.8rem; }
+.pay-confirm-detail { font-size: 0.85rem; color: #5A4A4A; line-height: 1.7; margin: 0.3rem 0; }
+.pay-confirm-id { font-family: 'Inter', monospace, monospace; font-size: 0.78rem; color: #4A0E0E; background: #F9F4EC; padding: 4px 8px; border-radius: 4px; display: inline-block; }
+
+/* ── LIB CARD (mirrors services.html) ── */
+.lib-card {
+  background: #fff; border: 1px solid #E5DED0; position: relative;
+  overflow: hidden; cursor: pointer;
+  transition: transform 0.5s ease-in-out, box-shadow 0.5s ease-in-out, border-color 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+.lib-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(74,14,14,0.11); border-color: #D4AF37; }
+.lib-card::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 3;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23c)' opacity='0.1'/%3E%3C/svg%3E");
+  opacity: 0.65;
+}
+.lib-card-img { position: relative; height: 195px; overflow: hidden; }
+.lib-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+.lib-card:hover .lib-card-img img { transform: scale(1.06); }
+.lib-card-img::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(74,14,14,0.5) 0%, transparent 60%);
+  pointer-events: none; z-index: 1;
+}
+.lib-cat-badge {
+  position: absolute; top: 12px; left: 12px; z-index: 2;
+  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+  color: #D4AF37; background: rgba(74,14,14,0.85); padding: 4px 10px;
+  backdrop-filter: blur(4px);
+}
+.lib-card-body { padding: 1.3rem 1.45rem 1.5rem; position: relative; z-index: 2; }
+.lib-card-sanskrit {
+  font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 700;
+  color: #4A0E0E; line-height: 1.2; margin-bottom: 0.2rem;
+}
+.lib-card-benefit {
+  font-family: 'Playfair Display', serif; font-size: 0.9rem;
+  color: #D4AF37; font-style: italic; margin-bottom: 0.6rem; line-height: 1.3;
+}
+.lib-card-desc {
+  font-size: 0.8rem; color: #6A5A5A; line-height: 1.65; margin-bottom: 0.9rem;
+  display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.lib-card-dakshina {
+  font-size: 0.67rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  color: #7A6A6A; margin-bottom: 0.85rem; border-top: 1px solid rgba(212,175,55,0.15);
+  padding-top: 0.75rem;
+}
+.lib-card-dakshina-amount {
+  font-family: 'Cinzel', serif; font-size: 1.05rem; font-weight: 700;
+  color: #4A0E0E; letter-spacing: 0.03em;
+}
+.btn-align {
+  display: block; width: 100%; text-align: center;
+  border: 1px solid #4A0E0E; color: #4A0E0E;
+  padding: 0.625rem 1rem; font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  font-family: 'Inter', sans-serif; cursor: pointer;
+  background: transparent; transition: background 0.25s, color 0.25s;
+  position: relative; z-index: 4;
+}
+.btn-align:hover { background: #4A0E0E; color: #D4AF37; }
+
+/* Carousel sizing for lib-cards on landing */
+.carousel-container > .lib-card { flex: 0 0 auto !important; scroll-snap-align: start !important; width: 85% !important; }
+@media (min-width: 768px) {
+  .carousel-container > .lib-card { width: calc(33.333% - 1.34rem) !important; }
+}
 </style>
 
   <style>
@@ -845,134 +962,99 @@ section[id] { scroll-margin-top: 80px; }
       </button>
 
     <div class="carousel-container services-scroll-row" id="services-grid">
-      <div class="service-card carousel-card" data-category="health" data-testid="service-card-maha">
-        <div class="overflow-hidden relative" style="height:210px;">
-          <img src="/images/Maha_Mirityunjay_Jaap_202603200700.jpeg"
-               alt="Maha Mrityunjaya Havan" class="card-img w-full h-full object-cover" loading="lazy"/>
-          <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(74,14,14,0.5) 0%,transparent 55%);pointer-events:none;"></div>
-          <span class="absolute top-4 left-4" style="font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#D4AF37;background:rgba(74,14,14,0.8);padding:4px 10px;backdrop-filter:blur(4px);">Health &amp; Protection</span>
+      <div class="lib-card carousel-card" data-category="health" data-testid="service-card-maha" onclick="openServiceModal('mrityunjay')">
+        <div class="lib-card-img">
+          <img src="/images/Maha_Mirityunjay_Jaap_202603200700.jpeg" alt="Maha Mrityunjaya Havan" loading="lazy"/>
+          <span class="lib-cat-badge">Health &amp; Protection</span>
         </div>
-        <div class="p-8">
-          <h3 class="font-serif font-bold text-maroon mb-1" style="font-size:1.2rem;">Maha Mrityunjaya Havan</h3>
-          <p style="font-size:1.25rem;color:#D4AF37;font-weight:500;letter-spacing:0.03em;margin-bottom:0.75rem;line-height:1.3;">Supreme Vitality &amp; Protecting Life Force</p>
-          <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.7;margin-bottom:1.5rem;">
-            The most potent Vedic invocation for health and longevity. 108 Mrityunjaya mantras recited with meticulous phonetic precision, each offering made with specific Himalayan medicinal herbs.
-          </p>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid #E5DED0;">
-            <span class="font-serif font-bold text-maroon" style="font-size:1.4rem;">From ₹1,100</span>
-            <button onclick="openModal('maha')"
-                    style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.12em;color:#D4AF37;font-weight:500;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;transition:color 0.2s;"
-                    onmouseover="this.style.color='#4A0E0E'" onmouseout="this.style.color='#D4AF37'"
-                    data-testid="service-maha-explore-btn">
-              Explore
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </button>
+        <div class="lib-card-body">
+          <p class="lib-card-sanskrit">Maha Mrityunjaya Havan</p>
+          <p class="lib-card-benefit">Supreme Vitality &amp; Protecting Life Force</p>
+          <p class="lib-card-desc">The most potent Vedic invocation for health and longevity. 108 Mrityunjaya mantras recited with meticulous phonetic precision, each offering made with specific Himalayan medicinal herbs.</p>
+          <div class="lib-card-dakshina">
+            Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹1,100</span>
           </div>
+          <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Maha Mrityunjaya Havan')" data-testid="card-maha-consult">Consult for Alignment</button>
         </div>
       </div>
 
-      <div class="service-card carousel-card" data-category="beginnings" data-testid="service-card-satyanarayan">
-        <div class="overflow-hidden relative" style="height:210px;">
-          <img src="/images/Satya%20Narayan%20Katha.jpeg" alt="Satya Narayan Katha" class="card-img w-full h-full object-cover" loading="lazy"/>
-          <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(74,14,14,0.5) 0%,transparent 55%);pointer-events:none;"></div>
-          <span class="absolute top-4 left-4" style="font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#D4AF37;background:rgba(74,14,14,0.8);padding:4px 10px;backdrop-filter:blur(4px);">New Beginnings</span>
+      <div class="lib-card carousel-card" data-category="beginnings" data-testid="service-card-satyanarayan" onclick="openServiceModal('satyanarayan')">
+        <div class="lib-card-img">
+          <img src="/images/Satya%20Narayan%20Katha.jpeg" alt="Satya Narayan Katha" loading="lazy"/>
+          <span class="lib-cat-badge">New Beginnings</span>
         </div>
-        <div class="p-8">
-          <h3 class="font-serif font-bold text-maroon mb-1" style="font-size:1.2rem;">Satya Narayan Katha</h3>
-          <p style="font-size:1.25rem;color:#D4AF37;font-weight:500;letter-spacing:0.03em;margin-bottom:0.75rem;line-height:1.3;">Sukh Sampatti &amp; Sukh Shanti</p>
-          <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.7;margin-bottom:1.5rem;">
-            A sacred narrative recitation invoking Lord Vishnu's blessings for peace, prosperity, and fulfillment of intentions in the household.
-          </p>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid #E5DED0;">
-            <span class="font-serif font-bold text-maroon" style="font-size:1.4rem;">From ₹1,100</span>
-            <button onclick="openConsultModal('Satya Narayan Katha')" style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.12em;color:#D4AF37;font-weight:500;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;transition:color 0.2s;" onmouseover="this.style.color='#4A0E0E'" onmouseout="this.style.color='#D4AF37'">
-              Consult <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </button>
+        <div class="lib-card-body">
+          <p class="lib-card-sanskrit">Satya Narayan Katha</p>
+          <p class="lib-card-benefit">Sukh Sampatti &amp; Sukh Shanti</p>
+          <p class="lib-card-desc">A sacred narrative recitation invoking Lord Vishnu's blessings for peace, prosperity, and fulfillment of intentions in the household.</p>
+          <div class="lib-card-dakshina">
+            Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹1,100</span>
           </div>
+          <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Satya Narayan Katha')" data-testid="card-satyanarayan-consult">Consult for Alignment</button>
         </div>
       </div>
 
-      <div class="service-card carousel-card" data-category="beginnings" data-testid="service-card-gayatri">
-        <div class="overflow-hidden relative" style="height:210px;">
-          <img src="/images/Gayatri_Jaap_202603200621.jpeg" alt="Gayatri Jaap" class="card-img w-full h-full object-cover" loading="lazy"/>
-          <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(74,14,14,0.5) 0%,transparent 55%);pointer-events:none;"></div>
-          <span class="absolute top-4 left-4" style="font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#D4AF37;background:rgba(74,14,14,0.8);padding:4px 10px;backdrop-filter:blur(4px);">New Beginnings</span>
+      <div class="lib-card carousel-card" data-category="beginnings" data-testid="service-card-gayatri" onclick="openServiceModal('gayatri')">
+        <div class="lib-card-img">
+          <img src="/images/Gayatri_Jaap_202603200621.jpeg" alt="Gayatri Jaap" loading="lazy"/>
+          <span class="lib-cat-badge">New Beginnings</span>
         </div>
-        <div class="p-8">
-          <h3 class="font-serif font-bold text-maroon mb-1" style="font-size:1.2rem;">Gayatri Jaap</h3>
-          <p style="font-size:1.25rem;color:#D4AF37;font-weight:500;letter-spacing:0.03em;margin-bottom:0.75rem;line-height:1.3;">Spiritual Clarity</p>
-          <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.7;margin-bottom:1.5rem;">
-            The most sacred Vedic mantra recited in precise repetitions to invoke divine illumination, peace of mind, and spiritual protection.
-          </p>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid #E5DED0;">
-            <span class="font-serif font-bold text-maroon" style="font-size:1.4rem;">From ₹1,100</span>
-            <button onclick="openConsultModal('Gayatri Jaap')" style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.12em;color:#D4AF37;font-weight:500;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;transition:color 0.2s;" onmouseover="this.style.color='#4A0E0E'" onmouseout="this.style.color='#D4AF37'">
-              Consult <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </button>
+        <div class="lib-card-body">
+          <p class="lib-card-sanskrit">Gayatri Jaap</p>
+          <p class="lib-card-benefit">Spiritual Clarity</p>
+          <p class="lib-card-desc">The most sacred Vedic mantra recited in precise repetitions to invoke divine illumination, peace of mind, and spiritual protection.</p>
+          <div class="lib-card-dakshina">
+            Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹1,100</span>
           </div>
+          <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Gayatri Jaap')" data-testid="card-gayatri-consult">Consult for Alignment</button>
         </div>
       </div>
 
-      <div class="service-card carousel-card" data-category="health" data-testid="service-card-agnihotra">
-        <div class="overflow-hidden relative" style="height:210px;">
-          <img src="/images/Agnihotra_202603200659.jpeg" alt="Agnihotra" class="card-img w-full h-full object-cover" loading="lazy"/>
-          <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(74,14,14,0.5) 0%,transparent 55%);pointer-events:none;"></div>
-          <span class="absolute top-4 left-4" style="font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#D4AF37;background:rgba(74,14,14,0.8);padding:4px 10px;backdrop-filter:blur(4px);">Health &amp; Protection</span>
+      <div class="lib-card carousel-card" data-category="health" data-testid="service-card-agnihotra" onclick="openServiceModal('agnihotra')">
+        <div class="lib-card-img">
+          <img src="/images/Agnihotra_202603200659.jpeg" alt="Agnihotra" loading="lazy"/>
+          <span class="lib-cat-badge">Health &amp; Protection</span>
         </div>
-        <div class="p-8">
-          <h3 class="font-serif font-bold text-maroon mb-1" style="font-size:1.2rem;">Agnihotra</h3>
-          <p style="font-size:1.25rem;color:#D4AF37;font-weight:500;letter-spacing:0.03em;margin-bottom:0.75rem;line-height:1.3;">Daily Purification</p>
-          <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.7;margin-bottom:1.5rem;">
-            An ancient Vedic fire ritual performed at sunrise and sunset, purifying the atmosphere and establishing a daily spiritual discipline.
-          </p>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid #E5DED0;">
-            <span class="font-serif font-bold text-maroon" style="font-size:1.4rem;">From ₹1,100</span>
-            <button onclick="openConsultModal('Agnihotra')" style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.12em;color:#D4AF37;font-weight:500;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;transition:color 0.2s;" onmouseover="this.style.color='#4A0E0E'" onmouseout="this.style.color='#D4AF37'">
-              Consult <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </button>
+        <div class="lib-card-body">
+          <p class="lib-card-sanskrit">Agnihotra</p>
+          <p class="lib-card-benefit">Daily Purification</p>
+          <p class="lib-card-desc">An ancient Vedic fire ritual performed at sunrise and sunset, purifying the atmosphere and establishing a daily spiritual discipline.</p>
+          <div class="lib-card-dakshina">
+            Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹1,100</span>
           </div>
+          <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Agnihotra')" data-testid="card-agnihotra-consult">Consult for Alignment</button>
         </div>
       </div>
 
-      <div class="service-card carousel-card" data-category="beginnings" data-testid="service-card-shaanti">
-        <div class="overflow-hidden relative" style="height:210px;">
-          <img src="/images/Shanti_Havan_in_202603200643-2.jpeg" alt="Shaanti Hawan" class="card-img w-full h-full object-cover" loading="lazy"/>
-          <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(74,14,14,0.5) 0%,transparent 55%);pointer-events:none;"></div>
-          <span class="absolute top-4 left-4" style="font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#D4AF37;background:rgba(74,14,14,0.8);padding:4px 10px;backdrop-filter:blur(4px);">New Beginnings</span>
+      <div class="lib-card carousel-card" data-category="beginnings" data-testid="service-card-shaanti" onclick="openServiceModal('shaanti')">
+        <div class="lib-card-img">
+          <img src="/images/Shanti_Havan_in_202603200643-2.jpeg" alt="Shaanti Hawan" loading="lazy"/>
+          <span class="lib-cat-badge">New Beginnings</span>
         </div>
-        <div class="p-8">
-          <h3 class="font-serif font-bold text-maroon mb-1" style="font-size:1.2rem;">Shaanti Hawan</h3>
-          <p style="font-size:1.25rem;color:#D4AF37;font-weight:500;letter-spacing:0.03em;margin-bottom:0.75rem;line-height:1.3;">Peace in the Home</p>
-          <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.7;margin-bottom:1.5rem;">
-            A purifying fire ceremony designed to restore balance and tranquility to the household, removing negative energies and establishing calm.
-          </p>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid #E5DED0;">
-            <span class="font-serif font-bold text-maroon" style="font-size:1.4rem;">From ₹2,100</span>
-            <button onclick="openConsultModal('Shaanti Hawan')" style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.12em;color:#D4AF37;font-weight:500;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;transition:color 0.2s;" onmouseover="this.style.color='#4A0E0E'" onmouseout="this.style.color='#D4AF37'">
-              Consult <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </button>
+        <div class="lib-card-body">
+          <p class="lib-card-sanskrit">Shaanti Hawan</p>
+          <p class="lib-card-benefit">Peace in the Home</p>
+          <p class="lib-card-desc">A purifying fire ceremony designed to restore balance and tranquility to the household, removing negative energies and establishing calm.</p>
+          <div class="lib-card-dakshina">
+            Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹2,100</span>
           </div>
+          <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Shaanti Hawan')" data-testid="card-shaanti-consult">Consult for Alignment</button>
         </div>
       </div>
 
-      <div class="service-card carousel-card" data-category="success" data-testid="service-card-vyapar">
-        <div class="overflow-hidden relative" style="height:210px;">
-          <img src="/images/Vyapar_Samriddhi_Pooja_202603200656.jpeg" alt="Vyapar Samriddhi Puja" class="card-img w-full h-full object-cover" loading="lazy"/>
-          <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(74,14,14,0.5) 0%,transparent 55%);pointer-events:none;"></div>
-          <span class="absolute top-4 left-4" style="font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#D4AF37;background:rgba(74,14,14,0.8);padding:4px 10px;backdrop-filter:blur(4px);">Success &amp; Growth</span>
+      <div class="lib-card carousel-card" data-category="success" data-testid="service-card-vyapar" onclick="openServiceModal('vyapar')">
+        <div class="lib-card-img">
+          <img src="/images/Vyapar_Samriddhi_Pooja_202603200656.jpeg" alt="Vyapar Samriddhi Puja" loading="lazy"/>
+          <span class="lib-cat-badge">Success &amp; Growth</span>
         </div>
-        <div class="p-8">
-          <h3 class="font-serif font-bold text-maroon mb-1" style="font-size:1.2rem;">Vyapar Samriddhi</h3>
-          <p style="font-size:1.25rem;color:#D4AF37;font-weight:500;letter-spacing:0.03em;margin-bottom:0.75rem;line-height:1.3;">Trade Success</p>
-          <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.7;margin-bottom:1.5rem;">
-            Targeted Vedic ceremony for business owners and entrepreneurs to remove trade obstacles and invite momentum into commercial endeavors.
-          </p>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid #E5DED0;">
-            <span class="font-serif font-bold text-maroon" style="font-size:1.4rem;">From ₹2,100</span>
-            <button onclick="openConsultModal('Vyapar Samriddhi Puja')" style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.12em;color:#D4AF37;font-weight:500;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;transition:color 0.2s;" onmouseover="this.style.color='#4A0E0E'" onmouseout="this.style.color='#D4AF37'">
-              Consult <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </button>
+        <div class="lib-card-body">
+          <p class="lib-card-sanskrit">Vyapar Samriddhi Puja</p>
+          <p class="lib-card-benefit">Trade Success</p>
+          <p class="lib-card-desc">Targeted Vedic ceremony for business owners and entrepreneurs to remove trade obstacles and invite momentum into commercial endeavors.</p>
+          <div class="lib-card-dakshina">
+            Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹2,100</span>
           </div>
+          <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Vyapar Samriddhi Puja')" data-testid="card-vyapar-consult">Consult for Alignment</button>
         </div>
       </div>
 
@@ -1615,8 +1697,133 @@ section[id] { scroll-margin-top: 80px; }
   </div>
 </div>
 
+<!-- ===================== SERVICE DETAIL MODAL (DYNAMIC) ===================== -->
+<div id="modal-service" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Service Details" data-testid="modal-service">
+  <div class="modal-drop">
+    <div class="modal-paper">
+      <button class="modal-close" onclick="closeModal('service')" data-testid="modal-service-close" aria-label="Close">&times;</button>
+      <div class="modal-inner" id="service-modal-content">
+        <!-- Content populated dynamically -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAYMENT MODAL ===================== -->
+<div id="modal-pay" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Pay & Schedule Service" data-testid="modal-pay">
+  <div class="modal-drop" style="max-width:680px;">
+    <div class="modal-paper">
+      <button class="modal-close" onclick="closeModal('pay')" data-testid="modal-pay-close" aria-label="Close">&times;</button>
+      <div class="modal-inner">
+        <div class="modal-section" style="margin-bottom:0.5rem;">
+          <p class="modal-section-lbl">Direct Booking</p>
+          <p class="modal-invoc-title" id="pay-service-title">Service</p>
+          <p class="modal-invoc-sub" id="pay-service-subtitle">Schedule your ceremony</p>
+        </div>
+
+        <div class="pay-stepper" id="pay-stepper">
+          <span class="pay-step-dot active" data-step-dot="1">1</span>
+          <span class="pay-step-line"></span>
+          <span class="pay-step-dot" data-step-dot="2">2</span>
+          <span class="pay-step-line"></span>
+          <span class="pay-step-dot" data-step-dot="3">3</span>
+          <span class="pay-step-line"></span>
+          <span class="pay-step-dot" data-step-dot="4">4</span>
+        </div>
+
+        <div class="pay-error" id="pay-error" role="alert"></div>
+
+        <!-- STEP 1: Date + Time -->
+        <div class="pay-step active" data-step="1">
+          <p class="modal-section-lbl" style="margin-bottom:0.7rem;">Select Date &amp; Time</p>
+          <div class="pay-cal-wrap">
+            <div class="pay-cal-nav">
+              <button type="button" id="pay-cal-prev" aria-label="Previous month">&lsaquo;</button>
+              <div class="pay-cal-nav-title" id="pay-cal-title"></div>
+              <button type="button" id="pay-cal-next" aria-label="Next month">&rsaquo;</button>
+            </div>
+            <div class="pay-cal-grid" id="pay-cal-grid"></div>
+          </div>
+          <div id="pay-slot-section" style="display:none;">
+            <p class="modal-section-lbl" style="margin:1.2rem 0 0.55rem;">Time Slot</p>
+            <div class="pay-slot-list" id="pay-slot-list"></div>
+            <p style="font-size:0.7rem;color:#7A6A6A;margin-top:0.6rem;line-height:1.55;">Scholar will confirm the most auspicious muhurta within your selected slot.</p>
+          </div>
+          <div class="pay-actions">
+            <button type="button" class="btn-discuss" id="pay-next-1" disabled style="opacity:0.45;cursor:not-allowed;">Continue</button>
+          </div>
+        </div>
+
+        <!-- STEP 2: Customer -->
+        <div class="pay-step" data-step="2">
+          <p class="modal-section-lbl" style="margin-bottom:0.7rem;">Your Details</p>
+          <div class="pay-form-row">
+            <label for="pay-name">Full Name</label>
+            <input type="text" id="pay-name" class="consult-input" autocomplete="name" placeholder="Yajamana name"/>
+          </div>
+          <div class="pay-form-row">
+            <label for="pay-email">Email</label>
+            <input type="email" id="pay-email" class="consult-input" autocomplete="email" placeholder="you@example.com"/>
+          </div>
+          <div class="pay-form-row">
+            <label for="pay-phone">Phone (WhatsApp)</label>
+            <input type="tel" id="pay-phone" class="consult-input" autocomplete="tel" placeholder="10-digit Indian mobile"/>
+          </div>
+          <div class="pay-actions">
+            <button type="button" class="btn-consult" onclick="payGoTo(1)">Back</button>
+            <button type="button" class="btn-discuss" id="pay-next-2">Review &amp; Pay</button>
+          </div>
+        </div>
+
+        <!-- STEP 3: Summary + Pay -->
+        <div class="pay-step" data-step="3">
+          <p class="modal-section-lbl" style="margin-bottom:0.7rem;">Review</p>
+          <div class="pay-summary">
+            <div class="pay-summary-row"><span class="lbl">Ceremony</span><span class="val" id="pay-sum-service">—</span></div>
+            <div class="pay-summary-row"><span class="lbl">Slot</span><span class="val" id="pay-sum-slot">—</span></div>
+            <div class="pay-summary-row"><span class="lbl">Yajamana</span><span class="val" id="pay-sum-name">—</span></div>
+            <div class="pay-summary-row"><span class="lbl">Contact</span><span class="val" id="pay-sum-contact">—</span></div>
+            <div class="pay-summary-row"><span class="lbl">Dakshina</span><span class="val pay-summary-total" id="pay-sum-amount">—</span></div>
+          </div>
+          <p style="font-size:0.72rem;color:#7A6A6A;line-height:1.6;margin-bottom:0.9rem;">Dakshina does not include the cost of Samagri. You will be redirected to Razorpay's secure checkout.</p>
+          <div class="pay-actions">
+            <button type="button" class="btn-consult" onclick="payGoTo(2)">Back</button>
+            <button type="button" class="btn-discuss" id="pay-do-pay">Pay Now</button>
+          </div>
+        </div>
+
+        <!-- STEP 4: Confirmation -->
+        <div class="pay-step" data-step="4">
+          <div style="text-align:center;padding:0.5rem 0 0.25rem;">
+            <div class="pay-confirm-icon">✓</div>
+            <p class="modal-invoc-title" style="font-size:1.25rem;">Booking Confirmed</p>
+            <p class="modal-invoc-sub">Scholar will reach out on WhatsApp shortly</p>
+          </div>
+          <div class="pay-summary" style="margin-top:1.1rem;">
+            <div class="pay-summary-row"><span class="lbl">Booking ID</span><span class="val"><span class="pay-confirm-id" id="pay-confirm-id">—</span></span></div>
+            <div class="pay-summary-row"><span class="lbl">Ceremony</span><span class="val" id="pay-confirm-service">—</span></div>
+            <div class="pay-summary-row"><span class="lbl">Slot</span><span class="val" id="pay-confirm-slot">—</span></div>
+            <div class="pay-summary-row"><span class="lbl">Paid</span><span class="val" id="pay-confirm-amount">—</span></div>
+          </div>
+          <p class="pay-confirm-detail" style="text-align:center;">A scholar will confirm the auspicious muhurta and Samagri list with you.</p>
+          <div class="pay-actions">
+            <a id="pay-confirm-wa" href="#" target="_blank" rel="noopener" class="btn-discuss" style="flex:1;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;">Message on WhatsApp</a>
+          </div>
+          <div class="pay-actions" style="margin-top:0.5rem;">
+            <button type="button" class="btn-consult" onclick="closeModal('pay')">Close</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- AOS -->
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
+<!-- Razorpay Checkout -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <!-- Cal.com Embed Script -->
 <script type="text/javascript">
@@ -1791,7 +1998,7 @@ section[id] { scroll-margin-top: 80px; }
     const slider = document.getElementById('services-grid');
     const dotsBox = document.getElementById('services-dots');
     if (!slider || !dotsBox) return;
-    const cards = slider.querySelectorAll(':scope > .service-card');
+    const cards = slider.querySelectorAll(':scope > .carousel-card');
     if (!cards.length) return;
 
     cards.forEach((_, i) => {
@@ -1824,6 +2031,461 @@ section[id] { scroll-margin-top: 80px; }
     setTimeout(syncDots, 300);
   })();
 
+</script>
+
+<!-- ============ PAY WIZARD (landing) ============ -->
+<script>
+  // Subset of services featured on landing. serviceId must match a key in
+  // the backend SERVICE_CATALOG (see backend/server.py). Landing's "maha" card
+  // points at backend 'mrityunjay' (Maha Mrityunjay Jaap, ₹1,100).
+  const serviceData = {
+    mrityunjay: {
+      serviceId: 'mrityunjay',
+      name: 'Maha Mrityunjaya Havan',
+      subtitle: 'Supreme Vitality & Protecting Life Force',
+      category: 'Health & Protection',
+      description: 'The most potent Vedic invocation for health and longevity. 108 Mrityunjaya mantras recited with meticulous phonetic precision, each offering made with specific Himalayan medicinal herbs to invoke Lord Shiva’s grace against untimely afflictions.',
+      scholarly: 'The scholar selects the herbs and ratio of ghee, samidha and havan dravya specific to the family’s constitution and intent — never a generic mix.',
+      duration: '3-4 Hours',
+      dakshina: 'From ₹1,100',
+      priceInr: 1100,
+    },
+    satyanarayan: {
+      serviceId: 'satyanarayan',
+      name: 'Satya Narayan Katha',
+      subtitle: 'Sukh Sampatti & Sukh Shanti',
+      category: 'New Beginnings',
+      description: 'A sacred narrative recitation invoking Lord Vishnu’s blessings for peace, prosperity, and the fulfillment of intentions in the household. Performed traditionally on Purnima and at the onset of new ventures.',
+      scholarly: 'The scholar guides the yajamana through every sankalpa and ensures the five chapters of the katha are recited with the proper svara and pause.',
+      duration: '2-3 Hours',
+      dakshina: 'From ₹1,100',
+      priceInr: 1100,
+    },
+    gayatri: {
+      serviceId: 'gayatri',
+      name: 'Gayatri Jaap',
+      subtitle: 'Spiritual Clarity',
+      category: 'New Beginnings',
+      description: 'The most sacred Vedic mantra recited in precise repetitions to invoke divine illumination, peace of mind, and spiritual protection. A practice that calibrates the inner instrument of perception.',
+      scholarly: 'The scholar enforces correct ucchaarana and counts the jaapa on a tulsi or rudraksha maala — never approximated, never abbreviated.',
+      duration: '2-3 Hours',
+      dakshina: 'From ₹1,100',
+      priceInr: 1100,
+    },
+    agnihotra: {
+      serviceId: 'agnihotra',
+      name: 'Agnihotra',
+      subtitle: 'Daily Purification',
+      category: 'Health & Protection',
+      description: 'An ancient Vedic fire ritual performed at sunrise and sunset, purifying the atmosphere and establishing a daily spiritual discipline. The ritual offerings are timed to the precise solar transition.',
+      scholarly: 'The scholar will set up your home agnihotra patra and train the householder so the ritual continues daily after the inaugural offering.',
+      duration: '1-2 Hours',
+      dakshina: 'From ₹1,100',
+      priceInr: 1100,
+    },
+    shaanti: {
+      serviceId: 'shaanti',
+      name: 'Shaanti Hawan',
+      subtitle: 'Peace in the Home',
+      category: 'New Beginnings',
+      description: 'A purifying fire ceremony designed to restore balance and tranquility to the household, removing negative energies and establishing calm before a new chapter — a move, a marriage, a baby, a venture.',
+      scholarly: 'The scholar diagnoses the underlying disturbance (vastu, graha, ancestral) and shapes the ahuti list and sankalpa around the correct root cause.',
+      duration: '2-3 Hours',
+      dakshina: 'From ₹2,100',
+      priceInr: 2100,
+    },
+    vyapar: {
+      serviceId: 'vyapar',
+      name: 'Vyapar Samriddhi Puja',
+      subtitle: 'Trade Success',
+      category: 'Success & Growth',
+      description: 'A targeted Vedic ceremony for business owners and entrepreneurs to remove trade obstacles and invite momentum into commercial endeavors. Aligns the workplace and intent before a launch, expansion or recovery.',
+      scholarly: 'The scholar performs the puja at the place of business (or its symbolic representation) and prescribes the daily upasana to sustain the momentum.',
+      duration: '2-3 Hours',
+      dakshina: 'From ₹2,100',
+      priceInr: 2100,
+    },
+  };
+
+  function openServiceModal(serviceId) {
+    const data = serviceData[serviceId];
+    if (!data) return;
+
+    const content = document.getElementById('service-modal-content');
+    content.innerHTML = `
+      <div style="margin-bottom:1rem;">
+        <span class="modal-tag">${data.category}</span>
+      </div>
+      <div class="modal-section">
+        <p class="modal-section-lbl">The Invocation</p>
+        <p class="modal-invoc-title">${data.name}</p>
+        <p class="modal-invoc-sub">${data.subtitle}</p>
+      </div>
+      <div style="width:36px;height:2px;background:#D4AF37;margin-bottom:1.25rem;"></div>
+      <div class="modal-section">
+        <p class="modal-section-lbl">The Vedic Intent</p>
+        <p class="modal-section-body">${data.description}</p>
+      </div>
+      <div class="modal-section">
+        <p class="modal-section-lbl">The Scholarly Edge</p>
+        <div class="modal-edge-block">${data.scholarly}</div>
+      </div>
+      <div class="modal-section">
+        <p class="modal-section-lbl">The Elements</p>
+        <div class="modal-detail-row">
+          <span class="modal-detail-label">Duration</span>
+          <span class="modal-detail-val">${data.duration}</span>
+        </div>
+        <div class="modal-detail-row">
+          <span class="modal-detail-label">Scholars</span>
+          <span class="modal-detail-val">Gurukul Trained Scholars</span>
+        </div>
+        <div class="modal-detail-row">
+          <span class="modal-detail-label">Dakshina</span>
+          <span class="modal-detail-val" style="font-family:'Cinzel',serif;font-weight:700;color:#4A0E0E;">${data.dakshina} <span style="font-size:0.72rem;font-weight:400;color:#7A6A6A;font-family:'Inter',sans-serif;">— does not include the cost of Samagri</span></span>
+        </div>
+      </div>
+      ${data.priceInr ? `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;align-items:stretch;">
+          <button onclick="closeModal('service');openConsultModal('${data.name}')" class="btn-align" style="padding:1rem 0.75rem;font-size:0.72rem;margin:0;" data-testid="modal-service-consult-btn">
+            Book Free Consultation
+          </button>
+          <button onclick="closeModal('service');openPayModal('${data.serviceId}')" class="btn-discuss" style="padding:1rem 0.75rem;font-size:0.72rem;letter-spacing:0.1em;margin:0;border-width:1px;" data-testid="modal-service-pay-btn">
+            Pay ₹${data.priceInr.toLocaleString('en-IN')} &amp; Schedule
+          </button>
+        </div>
+        <p style="margin-top:0.85rem;font-size:0.7rem;color:#7A6A6A;text-align:center;line-height:1.55;">
+          Direct booking includes scholar dispatch &amp; ceremony scheduling.<br/>Not sure? Consult first — it's free.
+        </p>
+      ` : `
+        <button onclick="closeModal('service');openConsultModal('${data.name}')" class="btn-discuss" data-testid="modal-service-discuss-btn">
+          Book Free Consultation
+        </button>
+      `}
+    `;
+    openModal('service');
+  }
+
+  const PAY_API_BASE = (function () {
+    if (window.__API_BASE__) return window.__API_BASE__ + '/api';
+    const h = (window.location && window.location.hostname) || '';
+    const isLocal = h === 'localhost' || h === '127.0.0.1' || h === '0.0.0.0';
+    return (isLocal ? 'http://localhost:8000' : '') + '/api';
+  })();
+  const PAY_TIME_SLOTS = ['06:00', '08:00', '10:00', '17:00', '19:00'];
+  const PAY_MAX_DAYS_AHEAD = 90;
+  const PAY_WHATSAPP_NUMBER = '919667039964';
+
+  const payState = {
+    serviceId: null, service: null, selectedDate: null, selectedSlot: null,
+    bookingId: null, orderId: null, amountPaise: null, serviceName: null,
+    rzpKeyId: null, calMonth: null, step: 1,
+  };
+
+  function payShowError(msg) {
+    const el = document.getElementById('pay-error');
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add('visible');
+  }
+  function payClearError() {
+    const el = document.getElementById('pay-error');
+    if (!el) return;
+    el.textContent = '';
+    el.classList.remove('visible');
+  }
+
+  function payGoTo(step) {
+    payClearError();
+    payState.step = step;
+    document.querySelectorAll('#modal-pay .pay-step').forEach(s => s.classList.toggle('active', Number(s.dataset.step) === step));
+    document.querySelectorAll('#modal-pay .pay-step-dot').forEach(d => {
+      const n = Number(d.dataset.stepDot);
+      d.classList.toggle('active', n === step);
+      d.classList.toggle('done', n < step);
+    });
+    if (step === 3) payRenderSummary();
+  }
+
+  function paySameDay(a, b) {
+    return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+  }
+  function payStartOfDay(d) { const x = new Date(d); x.setHours(0,0,0,0); return x; }
+  function payFormatMonth(d) { return d.toLocaleString('en-IN', { month: 'long', year: 'numeric' }); }
+  function payFormatDate(d) { return d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }); }
+
+  function payRenderCalendar() {
+    const month = payState.calMonth;
+    const grid = document.getElementById('pay-cal-grid');
+    if (!grid || !month) return;
+    document.getElementById('pay-cal-title').textContent = payFormatMonth(month);
+
+    const today = payStartOfDay(new Date());
+    const maxDate = new Date(today);
+    maxDate.setDate(maxDate.getDate() + PAY_MAX_DAYS_AHEAD);
+
+    const firstOfThisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    document.getElementById('pay-cal-prev').disabled =
+      month.getFullYear() === firstOfThisMonth.getFullYear() && month.getMonth() === firstOfThisMonth.getMonth();
+    const firstOfNextShown = new Date(month.getFullYear(), month.getMonth() + 1, 1);
+    document.getElementById('pay-cal-next').disabled = firstOfNextShown > maxDate;
+
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    let html = days.map(d => `<div class="pay-cal-head">${d}</div>`).join('');
+
+    const firstDay = new Date(month.getFullYear(), month.getMonth(), 1);
+    const startWeekday = firstDay.getDay();
+    const daysInMonth = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate();
+    for (let i = 0; i < startWeekday; i++) {
+      html += '<button type="button" class="pay-cal-day empty" disabled></button>';
+    }
+    for (let day = 1; day <= daysInMonth; day++) {
+      const d = new Date(month.getFullYear(), month.getMonth(), day);
+      const disabled = d < today || d > maxDate;
+      const selected = payState.selectedDate && paySameDay(d, payState.selectedDate);
+      html += `<button type="button" class="pay-cal-day${selected ? ' selected' : ''}" ${disabled ? 'disabled' : ''} data-day="${day}">${day}</button>`;
+    }
+    grid.innerHTML = html;
+
+    grid.querySelectorAll('.pay-cal-day[data-day]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const day = Number(btn.dataset.day);
+        paySelectDate(new Date(month.getFullYear(), month.getMonth(), day));
+      });
+    });
+  }
+
+  function paySelectDate(d) {
+    payState.selectedDate = d;
+    payState.selectedSlot = null;
+    payRenderCalendar();
+    payRenderSlots();
+    payUpdateContinue1();
+  }
+
+  function payRenderSlots() {
+    const sec = document.getElementById('pay-slot-section');
+    const list = document.getElementById('pay-slot-list');
+    if (!payState.selectedDate) { sec.style.display = 'none'; return; }
+    sec.style.display = 'block';
+    list.innerHTML = PAY_TIME_SLOTS.map(t =>
+      `<button type="button" class="pay-slot-pill${payState.selectedSlot === t ? ' selected' : ''}" data-slot="${t}">${t}</button>`
+    ).join('');
+    list.querySelectorAll('.pay-slot-pill').forEach(p => {
+      p.addEventListener('click', () => {
+        payState.selectedSlot = p.dataset.slot;
+        payRenderSlots();
+        payUpdateContinue1();
+      });
+    });
+  }
+
+  function payUpdateContinue1() {
+    const btn = document.getElementById('pay-next-1');
+    const ready = payState.selectedDate && payState.selectedSlot;
+    btn.disabled = !ready;
+    btn.style.opacity = ready ? '1' : '0.45';
+    btn.style.cursor = ready ? 'pointer' : 'not-allowed';
+  }
+
+  function payValidateCustomer() {
+    const name = document.getElementById('pay-name').value.trim();
+    const email = document.getElementById('pay-email').value.trim();
+    const phone = document.getElementById('pay-phone').value.trim();
+    if (name.length < 2) return { ok: false, msg: 'Please enter your full name.' };
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { ok: false, msg: 'Please enter a valid email address.' };
+    const phoneDigits = phone.replace(/\D/g, '');
+    if (phoneDigits.length < 10 || phoneDigits.length > 13) return { ok: false, msg: 'Please enter a valid phone number (10 digits, with or without country code).' };
+    return { ok: true, customer: { name, email, phone } };
+  }
+
+  function paySlotIso() {
+    const d = new Date(payState.selectedDate);
+    const [h, m] = payState.selectedSlot.split(':').map(Number);
+    d.setHours(h, m, 0, 0);
+    return d.toISOString();
+  }
+
+  function payRenderSummary() {
+    const v = payValidateCustomer();
+    if (!v.ok) { payGoTo(2); payShowError(v.msg); return; }
+    document.getElementById('pay-sum-service').textContent = payState.service.name;
+    const dt = new Date(paySlotIso());
+    document.getElementById('pay-sum-slot').textContent = `${payFormatDate(dt)} at ${payState.selectedSlot}`;
+    document.getElementById('pay-sum-name').textContent = v.customer.name;
+    document.getElementById('pay-sum-contact').textContent = `${v.customer.email} · ${v.customer.phone}`;
+    document.getElementById('pay-sum-amount').textContent = `₹${payState.service.priceInr.toLocaleString('en-IN')}`;
+  }
+
+  async function payFetchConfig() {
+    if (payState.rzpKeyId) return payState.rzpKeyId;
+    const r = await fetch(`${PAY_API_BASE}/payments/config`);
+    if (!r.ok) throw new Error('Payment configuration unavailable.');
+    const j = await r.json();
+    if (!j.key_id) throw new Error('Payment key missing.');
+    payState.rzpKeyId = j.key_id;
+    return j.key_id;
+  }
+
+  async function payDoPay() {
+    payClearError();
+    const v = payValidateCustomer();
+    if (!v.ok) { payGoTo(2); payShowError(v.msg); return; }
+
+    const payBtn = document.getElementById('pay-do-pay');
+    payBtn.disabled = true;
+    const originalLabel = payBtn.textContent;
+    payBtn.textContent = 'Preparing payment…';
+
+    try {
+      const keyId = await payFetchConfig();
+
+      const orderRes = await fetch(`${PAY_API_BASE}/payments/create-order`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          service_id: payState.service.serviceId,
+          slot_iso: paySlotIso(),
+          customer: v.customer,
+        }),
+      });
+      if (!orderRes.ok) {
+        const errBody = await orderRes.json().catch(() => ({}));
+        throw new Error(errBody.detail || 'Failed to create payment order.');
+      }
+      const order = await orderRes.json();
+      payState.bookingId = order.booking_id;
+      payState.orderId = order.order_id;
+      payState.amountPaise = order.amount;
+      payState.serviceName = order.service_name;
+
+      if (typeof window.Razorpay === 'undefined') {
+        throw new Error('Payment library failed to load. Please refresh and try again.');
+      }
+
+      const rzp = new window.Razorpay({
+        key: keyId,
+        amount: order.amount,
+        currency: order.currency,
+        name: 'HomePujan',
+        description: `${order.service_name} — Direct Booking`,
+        order_id: order.order_id,
+        prefill: { name: v.customer.name, email: v.customer.email, contact: v.customer.phone },
+        notes: { booking_id: order.booking_id, service_id: payState.service.serviceId, slot_iso: paySlotIso() },
+        theme: { color: '#4A0E0E' },
+        handler: function (resp) { payOnSuccess(resp); },
+        modal: {
+          ondismiss: function () {
+            payShowError('Payment was cancelled. You can try again or pick a different slot.');
+            payBtn.disabled = false;
+            payBtn.textContent = originalLabel;
+          },
+        },
+      });
+      rzp.on('payment.failed', function (resp) {
+        const desc = (resp && resp.error && resp.error.description) || 'Payment failed. Please try again.';
+        payShowError(desc);
+        payBtn.disabled = false;
+        payBtn.textContent = originalLabel;
+      });
+      rzp.open();
+    } catch (e) {
+      payShowError(e.message || 'Something went wrong. Please try again.');
+      payBtn.disabled = false;
+      payBtn.textContent = originalLabel;
+    }
+  }
+
+  async function payOnSuccess(resp) {
+    try {
+      const verifyRes = await fetch(`${PAY_API_BASE}/payments/verify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          booking_id: payState.bookingId,
+          razorpay_order_id: resp.razorpay_order_id,
+          razorpay_payment_id: resp.razorpay_payment_id,
+          razorpay_signature: resp.razorpay_signature,
+        }),
+      });
+      if (!verifyRes.ok) {
+        const errBody = await verifyRes.json().catch(() => ({}));
+        throw new Error(errBody.detail || 'Payment captured but verification failed. Please contact us.');
+      }
+      payRenderConfirmation();
+      payGoTo(4);
+    } catch (e) {
+      payShowError(e.message);
+      const payBtn = document.getElementById('pay-do-pay');
+      if (payBtn) { payBtn.disabled = false; payBtn.textContent = 'Pay Now'; }
+    }
+  }
+
+  function payRenderConfirmation() {
+    const dt = new Date(paySlotIso());
+    document.getElementById('pay-confirm-id').textContent = payState.bookingId;
+    document.getElementById('pay-confirm-service').textContent = payState.serviceName || payState.service.name;
+    document.getElementById('pay-confirm-slot').textContent = `${payFormatDate(dt)} at ${payState.selectedSlot}`;
+    document.getElementById('pay-confirm-amount').textContent = `₹${(payState.amountPaise / 100).toLocaleString('en-IN')}`;
+    const msg = encodeURIComponent(`Namaste, I've completed booking for ${payState.service.name} (Ref: ${payState.bookingId}) on ${payFormatDate(dt)} at ${payState.selectedSlot}. Please confirm the muhurta and Samagri list.`);
+    document.getElementById('pay-confirm-wa').href = `https://wa.me/${PAY_WHATSAPP_NUMBER}?text=${msg}`;
+  }
+
+  function openPayModal(key) {
+    const data = serviceData[key];
+    if (!data || !data.priceInr) return;
+    payState.serviceId = data.serviceId;
+    payState.service = data;
+    payState.selectedDate = null;
+    payState.selectedSlot = null;
+    payState.bookingId = null;
+    payState.orderId = null;
+    payState.amountPaise = null;
+    payState.serviceName = null;
+    payState.calMonth = new Date();
+    payState.calMonth.setDate(1);
+    payState.step = 1;
+
+    document.getElementById('pay-service-title').textContent = data.name;
+    document.getElementById('pay-service-subtitle').textContent = data.subtitle || 'Schedule your ceremony';
+    document.getElementById('pay-name').value = '';
+    document.getElementById('pay-email').value = '';
+    document.getElementById('pay-phone').value = '';
+    payClearError();
+    payGoTo(1);
+    payRenderCalendar();
+    payRenderSlots();
+    payUpdateContinue1();
+    openModal('pay');
+
+    payFetchConfig().catch(() => { /* swallow; surface later if user clicks pay */ });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const prev = document.getElementById('pay-cal-prev');
+    const next = document.getElementById('pay-cal-next');
+    if (prev) prev.addEventListener('click', () => {
+      payState.calMonth = new Date(payState.calMonth.getFullYear(), payState.calMonth.getMonth() - 1, 1);
+      payRenderCalendar();
+    });
+    if (next) next.addEventListener('click', () => {
+      payState.calMonth = new Date(payState.calMonth.getFullYear(), payState.calMonth.getMonth() + 1, 1);
+      payRenderCalendar();
+    });
+    const n1 = document.getElementById('pay-next-1');
+    if (n1) n1.addEventListener('click', () => {
+      if (!payState.selectedDate || !payState.selectedSlot) return;
+      payGoTo(2);
+    });
+    const n2 = document.getElementById('pay-next-2');
+    if (n2) n2.addEventListener('click', () => {
+      const v = payValidateCustomer();
+      if (!v.ok) { payShowError(v.msg); return; }
+      payGoTo(3);
+    });
+    const doPay = document.getElementById('pay-do-pay');
+    if (doPay) doPay.addEventListener('click', payDoPay);
+  });
 </script>
 
 </body>
