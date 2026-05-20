@@ -1,7 +1,8 @@
-from fastapi import FastAPI, APIRouter, HTTPException
+from fastapi import FastAPI, APIRouter, HTTPException, Request
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 import os
+import json
 import logging
 import hmac
 import hashlib
@@ -135,6 +136,61 @@ def db_list_bookings(limit: int = 1000) -> list[dict]:
     return [_row_to_api(r) for r in rows]
 
 
+def db_get_by_order_id(order_id: str) -> dict | None:
+    with _conn() as c:
+        row = c.execute(
+            "SELECT * FROM bookings WHERE razorpay_order_id = ?", (order_id,)
+        ).fetchone()
+    return _row_to_api(row) if row else None
+
+
+def db_mark_paid_by_order_id(order_id: str, payment_id: str) -> str:
+    """Idempotently mark a booking 'paid' by Razorpay order_id.
+    Returns: 'updated' | 'already_paid' | 'not_found'.
+    Safe to call multiple times (webhook retries)."""
+    paid_at = datetime.now(timezone.utc).isoformat()
+    with _conn() as c:
+        cur = c.execute(
+            """UPDATE bookings
+               SET status = 'paid', razorpay_payment_id = ?, paid_at = ?
+               WHERE razorpay_order_id = ? AND status != 'paid'""",
+            (payment_id, paid_at, order_id),
+        )
+        if cur.rowcount > 0:
+            return 'updated'
+        # rowcount == 0 either means not found OR already paid
+        row = c.execute(
+            "SELECT status FROM bookings WHERE razorpay_order_id = ?", (order_id,)
+        ).fetchone()
+    if row is None:
+        return 'not_found'
+    return 'already_paid'
+
+
+def db_mark_failed_by_order_id(order_id: str, payment_id: str | None, reason: str | None) -> str:
+    """Mark booking 'failed'. Refuses to downgrade an already 'paid' booking.
+    Returns: 'updated' | 'paid_kept' | 'not_found'."""
+    with _conn() as c:
+        # Only flip non-paid rows. Anything 'paid' is left alone (auth eventually
+        # succeeded; a stray 'failed' event must not erase that).
+        cur = c.execute(
+            """UPDATE bookings
+               SET status = 'failed', razorpay_payment_id = COALESCE(?, razorpay_payment_id)
+               WHERE razorpay_order_id = ? AND status != 'paid'""",
+            (payment_id, order_id),
+        )
+        if cur.rowcount > 0:
+            return 'updated'
+        row = c.execute(
+            "SELECT status FROM bookings WHERE razorpay_order_id = ?", (order_id,)
+        ).fetchone()
+    if row is None:
+        return 'not_found'
+    if row['status'] == 'paid':
+        return 'paid_kept'
+    return 'updated'
+
+
 # ── App ──
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
@@ -158,6 +214,7 @@ async def health():
 # ── RAZORPAY PAYMENT INTEGRATION ──
 RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID', '')
 RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET', '')
+RAZORPAY_WEBHOOK_SECRET = os.environ.get('RAZORPAY_WEBHOOK_SECRET', '')
 RAZORPAY_API_BASE = 'https://api.razorpay.com/v1'
 
 # Backend-authoritative price table. Frontend sends service_id only; amount lives here.
@@ -328,6 +385,81 @@ async def list_bookings():
         "count": len(bookings),
         "bookings": bookings,
     }
+
+
+@api_router.post("/payments/webhook")
+async def razorpay_webhook(request: Request):
+    """Server-to-server callback from Razorpay. Fires regardless of whether the
+    customer's browser comes back to /verify, so it catches payments that would
+    otherwise be missed (closed tab, crashed page, dropped network).
+
+    Razorpay POSTs the JSON event body and signs it with the webhook secret
+    using HMAC-SHA256, sent in the X-Razorpay-Signature header. We verify the
+    signature against the *raw* body (not re-serialised JSON) and refuse the
+    request if it doesn't match — that's the only thing keeping random callers
+    from flipping bookings to 'paid'.
+
+    Handler is idempotent: Razorpay retries up to a few times on non-2xx, so
+    receiving the same event twice must be a no-op. db_mark_paid_by_order_id
+    skips rows that are already 'paid', and db_mark_failed_by_order_id refuses
+    to downgrade a 'paid' booking back to 'failed'.
+
+    Subscribed events (configure these in Razorpay Dashboard → Settings →
+    Webhooks): payment.captured, payment.failed.
+    """
+    raw_body = await request.body()
+    received_sig = request.headers.get('X-Razorpay-Signature', '')
+
+    if not RAZORPAY_WEBHOOK_SECRET:
+        logger.error("Webhook received but RAZORPAY_WEBHOOK_SECRET is not configured")
+        raise HTTPException(status_code=500, detail="Webhook secret not configured")
+
+    if not received_sig:
+        raise HTTPException(status_code=400, detail="Missing X-Razorpay-Signature header")
+
+    expected_sig = hmac.new(
+        RAZORPAY_WEBHOOK_SECRET.encode(),
+        raw_body,
+        hashlib.sha256,
+    ).hexdigest()
+
+    if not hmac.compare_digest(expected_sig, received_sig):
+        logger.warning("Webhook signature mismatch — rejecting")
+        raise HTTPException(status_code=400, detail="Invalid webhook signature")
+
+    try:
+        payload = json.loads(raw_body)
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=400, detail="Invalid JSON")
+
+    event = payload.get('event', '')
+    payment_entity = (
+        payload.get('payload', {}).get('payment', {}).get('entity', {})
+    )
+    order_id = payment_entity.get('order_id')
+    payment_id = payment_entity.get('id')
+
+    if event == 'payment.captured':
+        if not order_id or not payment_id:
+            return {"status": "ignored", "reason": "missing order_id or payment_id"}
+        result = db_mark_paid_by_order_id(order_id, payment_id)
+        logger.info("[WEBHOOK] payment.captured order=%s payment=%s result=%s",
+                    order_id, payment_id, result)
+        return {"status": "ok", "event": event, "result": result}
+
+    if event == 'payment.failed':
+        if not order_id:
+            return {"status": "ignored", "reason": "missing order_id"}
+        reason = (payment_entity.get('error_description')
+                  or payment_entity.get('error_reason'))
+        result = db_mark_failed_by_order_id(order_id, payment_id, reason)
+        logger.info("[WEBHOOK] payment.failed order=%s reason=%s result=%s",
+                    order_id, reason, result)
+        return {"status": "ok", "event": event, "result": result}
+
+    # Unrecognised event: still return 200 so Razorpay stops retrying.
+    logger.info("[WEBHOOK] ignored event=%s", event)
+    return {"status": "ignored", "event": event}
 
 
 # Mount router + CORS + startup
