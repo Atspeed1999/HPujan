@@ -1,0 +1,11 @@
+---
+deployment:
+  tasks:
+    # Where the live homepujan.com site is served from. Default cPanel layout
+    # for a primary domain is ~/public_html — change if your hosting puts it
+    # elsewhere (addon domains often live under ~/domain.com or ~/public_html/sub).
+    - export DEPLOYPATH=$HOME/public_html/
+    # Only the static frontend goes to cPanel. Backend lives on Railway and
+    # auto-deploys from this same repo, so we deliberately skip backend/, tests/,
+    # docs, archives, the SQLite file, and the venv.
+    - /bin/cp -R frontend/public/. $DEPLOYPATH
