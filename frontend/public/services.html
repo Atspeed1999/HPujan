@@ -1607,7 +1607,9 @@
     if (window.__API_BASE__) return window.__API_BASE__ + '/api';
     const h = (window.location && window.location.hostname) || '';
     const isLocal = h === 'localhost' || h === '127.0.0.1' || h === '0.0.0.0';
-    return (isLocal ? 'http://localhost:8000' : '') + '/api';
+    if (isLocal) return 'http://localhost:8000/api';
+    // Production backend on Railway. Change once api.homepujan.com is wired up.
+    return 'https://hpujan-production.up.railway.app/api';
   })();
   const PAY_TIME_SLOTS = [
     '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00',
