@@ -1,181 +1,2497 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#000000" />
-        <meta name="description" content="A product of emergent.sh" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap" rel="stylesheet" />
-        <!--
-        manifest.json provides metadata used when your web app is installed on a
-        user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-        -->
-        <!--
-        Notice the use of %PUBLIC_URL% in the tags above.
-        It will be replaced with the URL of the `public` folder during the build.
-        Only files inside the `public` folder can be referenced from the HTML.
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="HomePujan — Gurukul scholars bringing 20 years of Vedic precision to your home. Vastu Shanti, Lakshmi-Kuber Havan, Maha Mrityunjaya."/>
+  <title>HomePujan — Ancient Precision. Modern Peace.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            maroon: '#4A0E0E',
+            gold: '#D4AF37',
+            parchment: '#FDFBF7',
+            cream: '#F5EFE0',
+            charcoal: '#2D2D2D',
+            muted: '#5A4A4A',
+          },
+          fontFamily: {
+            cinzel: ['Cinzel', 'Georgia', 'serif'],
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', sans-serif; background: #FDFBF7; color: #2D2D2D; overflow-x: hidden; }
 
-        Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-        work correctly both with client-side routing and a non-root public URL.
-        Learn how to configure a non-root public URL by running `npm run build`.
-        -->
-        <title>Emergent | Fullstack App</title>
-        <script>window.addEventListener("error",function(e){if(e.error instanceof DOMException&&e.error.name==="DataCloneError"&&e.message&&e.message.includes("PerformanceServerTiming")){e.stopImmediatePropagation();e.preventDefault()}},true);</script>
-        <script src="https://assets.emergent.sh/scripts/emergent-main.js"></script>
-        <!--
-        These two scripts have been added for the Visual Edits, please do not edit or remove them
-        -->
-        <script>
-            // Only load visual edit scripts when inside an iframe
-            if (window.self !== window.top) {
-                // Load debug monitor script
-                var debugMonitorScript = document.createElement('script');
-                debugMonitorScript.src = 'https://assets.emergent.sh/scripts/debug-monitor.js';
-                document.head.appendChild(debugMonitorScript);
+/* ── BODY NOISE TEXTURE ── */
+body::after {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9998;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  opacity: 0.55;
+}
 
-                // Configure Tailwind
-                window.tailwind = window.tailwind || {};
-                tailwind.config = {
-                    corePlugins: { preflight: false },
-                };
+/* ── NAVBAR ── */
+#navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: transparent;
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+  border-bottom: 1px solid transparent;
+  transition: box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease;
+}
+#navbar.scrolled {
+  box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+  background: rgba(253,251,247,0.96);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom-color: rgba(212,175,55,0.3);
+}
+/* Navbar link color on dark hero */
+#navbar:not(.scrolled) .nav-link { color: rgba(255,255,255,0.7); }
+#navbar:not(.scrolled) .nav-link:hover { color: #D4AF37; }
+#navbar:not(.scrolled) .nav-link::after { background: #D4AF37; }
+#navbar:not(.scrolled) .nav-logo-text { color: rgba(255,255,255,0.9); }
+#navbar:not(.scrolled) .btn-consult { color: #D4AF37; border-color: #D4AF37; }
+#navbar:not(.scrolled) .btn-consult:hover { background: #D4AF37; color: #2A0A0A; }
+#navbar:not(.scrolled) #menu-btn span { background: rgba(255,255,255,0.85); }
+.nav-link {
+  color: #5A4A4A; font-size: 0.78rem; font-weight: 500;
+  letter-spacing: 0.09em; text-transform: uppercase; text-decoration: none;
+  position: relative; padding-bottom: 2px; transition: color 0.2s;
+}
+.nav-link::after {
+  content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+  height: 1px; background: #D4AF37; transform: scaleX(0); transform-origin: left; transition: transform 0.3s;
+}
+.nav-link:hover { color: #4A0E0E; }
+.nav-link:hover::after { transform: scaleX(1); }
 
-                // Load Tailwind CDN
-                var tailwindScript = document.createElement('script');
-                tailwindScript.src = 'https://cdn.tailwindcss.com';
-                document.head.appendChild(tailwindScript);
-            }
-        </script>
-    </head>
-    <body>
-        <noscript>You need to enable JavaScript to run this app.</noscript>
-        <div id="root"></div>
-        <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+/* ── NAV DROPDOWN ── */
+.nav-dropdown { position: relative; }
+.nav-dropdown-menu {
+  position: absolute; top: 100%; left: 50%;
+  transform: translateX(-50%); min-width: 220px;
+  background: rgba(253,251,247,0.98); backdrop-filter: blur(20px);
+  border: 1px solid rgba(212,175,55,0.25); box-shadow: 0 12px 40px rgba(74,14,14,0.1);
+  z-index: 300; padding: 0.4rem 0;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+  padding-top: 14px; margin-top: 0;
+}
+.nav-dropdown-menu::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 14px; background: transparent;
+}
+.nav-dropdown:hover .nav-dropdown-menu { opacity: 1; visibility: visible; pointer-events: auto; }
+.nav-dropdown-item {
+  display: block; padding: 0.75rem 1.25rem; font-size: 0.75rem;
+  text-transform: uppercase; letter-spacing: 0.11em; color: #5A4A4A;
+  text-decoration: none; font-weight: 500; transition: color 0.2s, background 0.2s;
+}
+.nav-dropdown-item:hover { color: #4A0E0E; background: rgba(212,175,55,0.07); }
+.nav-chevron { display: inline-block; transition: transform 0.25s; vertical-align: middle; margin-left: 3px; }
+.nav-dropdown:hover .nav-chevron { transform: rotate(180deg); }
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+/* ── BUTTONS ── */
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: #4A0E0E; color: #D4AF37; padding: 0.875rem 2rem;
+  border: 2px solid #4A0E0E; font-family: 'Inter', sans-serif;
+  font-weight: 500; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
+  text-decoration: none; cursor: pointer; transition: background 0.3s, color 0.3s;
+}
+.btn-primary:hover { background: transparent; color: #4A0E0E; }
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: transparent; color: #4A0E0E; padding: 0.875rem 2rem;
+  border: 2px solid #4A0E0E; font-family: 'Inter', sans-serif;
+  font-weight: 500; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
+  text-decoration: none; cursor: pointer; transition: background 0.3s, color 0.3s;
+}
+.btn-secondary:hover { background: #4A0E0E; color: #FDFBF7; }
+.btn-consult {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  background: transparent; color: #4A0E0E; padding: 0.6rem 1.25rem;
+  border: 1px solid rgba(212,175,55,0.6); font-size: 0.78rem; font-weight: 500;
+  letter-spacing: 0.06em; text-decoration: none; transition: all 0.25s;
+}
+.btn-consult:hover { background: #D4AF37; border-color: #D4AF37; color: #4A0E0E; }
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-        <a
-            id="emergent-badge"
-            target="_blank"
-            href="https://app.emergent.sh/?utm_source=emergent-badge"
-            style="
-                display: inline-flex !important;
-                box-sizing: border-box;
-                width: 178px;
-                height: 40px;
-                padding: 8px 12px 8px 12px;
-                align-items: center !important;
-                gap: 8px;
-                border-radius: 50px !important;
-                background: #000 !important;
-                position: fixed !important;
-                bottom: 16px;
-                right: 16px;
-                text-decoration: none;
-                font-family: -apple-system, BlinkMacSystemFont,
-                    &quot;Segoe UI&quot;, Roboto, Oxygen, Ubuntu, Cantarell,
-                    &quot;Open Sans&quot;, &quot;Helvetica Neue&quot;,
-                    sans-serif !important;
-                font-size: 12px !important;
-                z-index: 9999 !important;
-            "
-        >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M15.5702 8.13142C15.7729 8.0412 16.0007 8.18878 15.9892 8.4103C15.8374 11.3192 14.0965 14.0405 11.2531 15.3065C8.40964 16.5725 5.2224 16.0453 2.95912 14.2117C2.78676 14.072 2.82955 13.804 3.03219 13.7137L4.95677 12.8568C5.04866 12.8159 5.15446 12.823 5.24204 12.8725C6.73377 13.7153 8.59176 13.8649 10.2772 13.1145C11.9626 12.3641 13.0947 10.8833 13.4665 9.21075C13.4883 9.11256 13.5539 9.02918 13.6457 8.98827L15.5702 8.13142Z" fill="white"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M15.3066 4.74698L15.5067 5.19653C15.5759 5.35178 15.5061 5.53366 15.3508 5.60278L1.29992 11.8586C1.14467 11.9278 0.962794 11.8579 0.893675 11.7027L0.701732 11.2716L0.693457 11.2531C-1.10317 7.21778 0.711626 2.49007 4.74692 0.693443C8.78221 -1.10318 13.51 0.711693 15.3066 4.74698ZM2.82356 8.55367C2.63552 8.63739 2.41991 8.51617 2.40853 8.31065C2.28373 6.05724 3.53858 3.85787 5.72286 2.88536C7.90715 1.91286 10.3813 2.45199 11.9724 4.05256C12.1175 4.19854 12.0633 4.43988 11.8753 4.5236L2.82356 8.55367Z" fill="white"/>
-            </svg>
-            <p
-                style="
-                    color: #FFF !important;
-                    font-family: 'Inter', sans-serif !important;
-                    font-size: 13px !important;
-                    font-style: normal !important;
-                    font-weight: 600 !important;
-                    line-height: 20px !important;
-                    margin: 0 !important;
-                    white-space: nowrap !important;
-                "
-            >
-                Made with Emergent
-            </p>
-        </a>
-        <script>
-            !(function (t, e) {
-                var o, n, p, r;
-                e.__SV ||
-                    ((window.posthog = e),
-                    (e._i = []),
-                    (e.init = function (i, s, a) {
-                        function g(t, e) {
-                            var o = e.split(".");
-                            2 == o.length && ((t = t[o[0]]), (e = o[1])),
-                                (t[e] = function () {
-                                    t.push(
-                                        [e].concat(
-                                            Array.prototype.slice.call(
-                                                arguments,
-                                                0,
-                                            ),
-                                        ),
-                                    );
-                                });
-                        }
-                        ((p = t.createElement("script")).type =
-                            "text/javascript"),
-                            (p.crossOrigin = "anonymous"),
-                            (p.async = !0),
-                            (p.src =
-                                s.api_host.replace(
-                                    ".i.posthog.com",
-                                    "-assets.i.posthog.com",
-                                ) + "/static/array.js"),
-                            (r =
-                                t.getElementsByTagName(
-                                    "script",
-                                )[0]).parentNode.insertBefore(p, r);
-                        var u = e;
-                        for (
-                            void 0 !== a ? (u = e[a] = []) : (a = "posthog"),
-                                u.people = u.people || [],
-                                u.toString = function (t) {
-                                    var e = "posthog";
-                                    return (
-                                        "posthog" !== a && (e += "." + a),
-                                        t || (e += " (stub)"),
-                                        e
-                                    );
-                                },
-                                u.people.toString = function () {
-                                    return u.toString(1) + ".people (stub)";
-                                },
-                                o =
-                                    "init me ws ys ps bs capture je Di ks register register_once register_for_session unregister unregister_for_session Ps getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty Es $s createPersonProfile Is opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing Ss debug xs getPageViewId captureTraceFeedback captureTraceMetric".split(
-                                        " ",
-                                    ),
-                                n = 0;
-                            n < o.length;
-                            n++
-                        )
-                            g(u, o[n]);
-                        e._i.push([i, s, a]);
-                    }),
-                    (e.__SV = 1));
-            })(document, window.posthog || []);
-            posthog.init("phc_xAvL2Iq4tFmANRE7kzbKwaSqp1HJjN7x48s3vr0CMjs", {
-                api_host: "https://us.i.posthog.com",
-                person_profiles: "identified_only", // or 'always' to create profiles for anonymous users as well,
-                session_recording: {
-                    recordCrossOriginIframes: true,
-                    capturePerformance: false,
-                },
+/* ── HERO DARK THEME ── */
+#hero {
+  background: #2D0808;
+  position: relative; overflow: hidden;
+}
+/* Mandala pattern overlay */
+.hero-mandala {
+  position: absolute; top: -15%; left: -10%;
+  width: 60%; height: 130%; pointer-events: none; z-index: 1;
+  opacity: 0.15;
+  background-image: url("/images/mandala.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+/* Hero image container */
+.hero-image-wrap {
+  position: absolute; top: 0; right: 0; bottom: 0;
+  width: 52%; z-index: 2;
+  overflow: hidden;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cdefs%3E%3Cfilter id='brush'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02 0.3' numOctaves='3' result='noise'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 15 -5' in='noise' result='coloredNoise'/%3E%3CfeDisplacementMap in='SourceGraphic' in2='coloredNoise' scale='50' xChannelSelector='R' yChannelSelector='G'/%3E%3C/filter%3E%3ClinearGradient id='grad' x1='0' y1='0' x2='1' y2='0'%3E%3Cstop offset='0' stop-color='transparent'/%3E%3Cstop offset='0.15' stop-color='transparent'/%3E%3Cstop offset='0.25' stop-color='black'/%3E%3Cstop offset='1' stop-color='black'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23grad)' filter='url(%23brush)'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cdefs%3E%3Cfilter id='brush'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02 0.3' numOctaves='3' result='noise'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 15 -5' in='noise' result='coloredNoise'/%3E%3CfeDisplacementMap in='SourceGraphic' in2='coloredNoise' scale='50' xChannelSelector='R' yChannelSelector='G'/%3E%3C/filter%3E%3ClinearGradient id='grad' x1='0' y1='0' x2='1' y2='0'%3E%3Cstop offset='0' stop-color='transparent'/%3E%3Cstop offset='0.15' stop-color='transparent'/%3E%3Cstop offset='0.25' stop-color='black'/%3E%3Cstop offset='1' stop-color='black'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23grad)' filter='url(%23brush)'/%3E%3C/svg%3E");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+.hero-image-wrap img {
+  width: 100%; height: 100%; object-fit: cover;
+  object-position: center;
+}
+.hero-image-wrap::before {
+  content: ''; position: absolute; inset: 0; z-index: 3;
+  background: linear-gradient(to right, rgba(45,8,8,0.5) 0%, transparent 40%);
+  pointer-events: none;
+}
+.hero-image-wrap::after {
+  content: ''; position: absolute; inset: 0; z-index: 3;
+  background: linear-gradient(to top, rgba(45,8,8,0.7) 0%, transparent 35%);
+  pointer-events: none;
+}
+/* Hero buttons – gold fill and gold outline */
+.btn-hero-primary {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: #C5A028; color: #1A0A05; padding: 0.95rem 2rem;
+  border: 2px solid #C5A028; font-family: 'Inter', sans-serif;
+  font-weight: 600; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+  text-decoration: none; cursor: pointer; transition: background 0.3s, color 0.3s, border-color 0.3s;
+}
+.btn-hero-primary:hover { background: #D4AF37; border-color: #D4AF37; }
+.btn-hero-secondary {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: transparent; color: #C5A028; padding: 0.95rem 2rem;
+  border: 2px solid rgba(197,160,40,0.6); font-family: 'Inter', sans-serif;
+  font-weight: 600; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+  text-decoration: none; cursor: pointer; transition: background 0.3s, color 0.3s, border-color 0.3s;
+}
+.btn-hero-secondary:hover { background: rgba(197,160,40,0.12); border-color: #C5A028; color: #D4AF37; }
+
+@media (max-width: 1023px) {
+  .hero-image-wrap { display: none; }
+}
+
+/* ── GOLD DIVIDER & SECTION LABEL ── */
+.gold-divider { width: 56px; height: 2px; background: linear-gradient(90deg, transparent, #D4AF37, transparent); }
+.section-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: #D4AF37; }
+
+/* ── TRUST BAR ── */
+.trust-col:not(:last-child) { border-right: 1px solid rgba(212,175,55,0.22); }
+
+
+/* ── PATH TILES (FILTER) ── */
+.path-tile {
+  background: #fff; border: 1px solid #E5DED0;
+  display: flex; flex-direction: column; cursor: pointer;
+  padding: 2rem; text-decoration: none; text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+  position: relative; overflow: hidden; user-select: none;
+}
+.path-tile::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: #D4AF37; transform: scaleX(0); transform-origin: left; transition: transform 0.35s ease;
+}
+.path-tile:hover, .path-tile.active { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(74,14,14,0.1); border-color: rgba(212,175,55,0.5); }
+.path-tile.active { background: rgba(212,175,55,0.04); }
+.path-tile:hover::before, .path-tile.active::before { transform: scaleX(1); }
+.path-tile-icon { width: 56px; height: 56px; border: 1px solid rgba(212,175,55,0.35); display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; transition: all 0.3s; }
+.path-tile:hover .path-tile-icon, .path-tile.active .path-tile-icon { background: rgba(212,175,55,0.08); border-color: rgba(212,175,55,0.7); }
+.path-tile-cta { margin-top: auto; padding-top: 1.25rem; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #D4AF37; transition: color 0.2s; }
+.path-tile:hover .path-tile-cta, .path-tile.active .path-tile-cta { color: #4A0E0E; }
+
+/* ── SERVICE CARDS ── */
+.service-card {
+  background: #fff; border: 1px solid #E5DED0; overflow: hidden;
+  cursor: pointer; text-align: left; position: relative;
+  transition: transform 0.6s ease-in-out, box-shadow 0.6s ease-in-out, border-color 0.6s ease-in-out, opacity 0.6s ease-in-out;
+}
+.service-card:hover { transform: translateY(-8px); box-shadow: 0 24px 60px rgba(74,14,14,0.11); border-color: #D4AF37; }
+.service-card.filtered-out { opacity: 0.15; transform: scale(0.97); pointer-events: none; }
+.service-card.filtered-in { opacity: 1; transform: scale(1.01); }
+.card-img { transition: transform 0.6s ease; }
+.service-card:hover .card-img { transform: scale(1.06); }
+/* Paper grain on service cards (10% — tactile printed feel) */
+.service-card::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 3;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='sg'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23sg)' opacity='0.1'/%3E%3C/svg%3E");
+  opacity: 0.7;
+}
+
+/* ── PARAMPARA SECTION ── */
+.pedigree-line-top, .pedigree-line-bottom {
+  position: absolute; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+}
+.pedigree-line-top { top: 0; } .pedigree-line-bottom { bottom: 0; }
+
+/* ── PROCESS ── */
+.step-num { font-family: 'Cinzel', serif; font-size: 4rem; font-weight: 700; color: rgba(212,175,55,0.2); line-height: 1; transition: color 0.35s; }
+.process-card:hover .step-num { color: rgba(212,175,55,0.55); }
+.process-icon { margin-bottom: 1.2rem; }
+
+/* ── FAQ ── */
+.faq-item { border-bottom: 1px solid #E5DED0; }
+.faq-question {
+  width: 100%; background: none; border: none; cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.5rem 0; font-family: 'Playfair Display', serif; font-size: 1.05rem;
+  color: #4A0E0E; text-align: left; transition: color 0.2s; user-select: none;
+}
+.faq-question:hover { color: #6B1515; }
+.faq-icon { color: #D4AF37; font-size: 1.4rem; font-weight: 300; min-width: 22px; text-align: center; transition: transform 0.3s; flex-shrink: 0; }
+.faq-icon.rotated { transform: rotate(45deg); }
+.faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.45s ease; }
+.faq-answer.open { max-height: 350px; }
+.faq-answer-text { padding-bottom: 1.5rem; color: #5A4A4A; line-height: 1.75; font-size: 0.92rem; }
+
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(20,4,4,0.8); z-index: 500;
+  display: none; align-items: center; justify-content: center;
+  padding: 1rem; opacity: 0; transition: opacity 0.3s ease;
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+.modal-overlay.visible { opacity: 1; }
+
+.modal-drop { filter: drop-shadow(0 24px 50px rgba(74,14,14,0.3)); max-width: 640px; width: 100%; max-height: 92vh; display: flex; flex-direction: column; }
+.modal-paper { background: #FDFBF7; clip-path: polygon(0% 2%, 2.5% 0.4%, 5% 1.6%, 7.5% 0%, 10% 1.8%, 12.5% 0.3%, 15% 1.5%, 17.5% 0%, 20% 1.8%, 22.5% 0.4%, 25% 1.6%, 27.5% 0%, 30% 1.8%, 32.5% 0.4%, 35% 1.5%, 37.5% 0%, 40% 1.8%, 42.5% 0.3%, 45% 1.6%, 47.5% 0%, 50% 1.8%, 52.5% 0.4%, 55% 1.5%, 57.5% 0%, 60% 1.8%, 62.5% 0.3%, 65% 1.6%, 67.5% 0%, 70% 1.8%, 72.5% 0.4%, 75% 1.5%, 77.5% 0%, 80% 1.8%, 82.5% 0.3%, 85% 1.6%, 87.5% 0%, 90% 1.8%, 92.5% 0.4%, 95% 1.5%, 97.5% 0%, 100% 1.5%, 100% 98.5%, 97.5% 100%, 95% 98.4%, 92.5% 99.8%, 90% 98.2%, 87.5% 100%, 85% 98.5%, 82.5% 99.7%, 80% 98.2%, 77.5% 100%, 75% 98.5%, 72.5% 99.6%, 70% 98.2%, 67.5% 100%, 65% 98.4%, 62.5% 99.7%, 60% 98.2%, 57.5% 100%, 55% 98.5%, 52.5% 99.6%, 50% 98.2%, 47.5% 100%, 45% 98.4%, 42.5% 99.7%, 40% 98.2%, 37.5% 100%, 35% 98.5%, 32.5% 99.6%, 30% 98.2%, 27.5% 100%, 25% 98.4%, 22.5% 99.7%, 20% 98.2%, 17.5% 100%, 15% 98.5%, 12.5% 99.6%, 10% 98.2%, 7.5% 100%, 5% 98.4%, 2.5% 99.7%, 0% 98%); position: relative; overflow: hidden; transform: translateY(24px); transition: transform 0.35s cubic-bezier(0.34,1.3,0.64,1); flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.modal-overlay.visible .modal-paper { transform: translateY(0); }
+.modal-inner { padding: 2.25rem 2.5rem 2.5rem; overflow-y: auto; flex: 1; scrollbar-width: thin; scrollbar-color: rgba(212,175,55,0.3) transparent; }
+.modal-inner::-webkit-scrollbar { width: 4px; }
+.modal-inner::-webkit-scrollbar-track { background: transparent; }
+.modal-inner::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.35); border-radius: 2px; }
+/* Modal scholarly sections */
+.modal-section { margin-bottom: 1.15rem; }
+.modal-section-lbl {
+  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase;
+  color: #D4AF37; margin-bottom: 0.45rem; display: flex; align-items: center; gap: 0.55rem;
+}
+.modal-section-lbl::after { content: ''; flex: 1; height: 1px; background: rgba(212,175,55,0.2); }
+.modal-section-body { font-size: 0.875rem; color: #5A4A4A; line-height: 1.78; }
+.modal-edge-block {
+  font-size: 0.865rem; color: #4A0E0E; line-height: 1.78;
+  background: rgba(74,14,14,0.04); border-left: 2px solid rgba(212,175,55,0.5);
+  padding: 0.8rem 1rem; font-style: italic;
+}
+.modal-invoc-title { font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: 700; color: #4A0E0E; line-height: 1.1; }
+.modal-invoc-sub { font-family: 'Playfair Display', serif; font-size: 0.98rem; color: #D4AF37; font-weight: 500; font-style: italic; margin-top: 0.3rem; }
+/* Subtle grain on modal */
+.modal-paper::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='fn'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23fn)' opacity='0.05'/%3E%3C/svg%3E");
+  opacity: 0.5;
+}
+.modal-inner > * { position: relative; z-index: 1; }
+.modal-close {
+  position: absolute; top: 1.25rem; right: 1.5rem; z-index: 10;
+  width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+  background: none; border: none; cursor: pointer;
+  color: #5A4A4A; font-size: 1.4rem; font-family: 'Inter', sans-serif;
+  transition: color 0.2s; line-height: 1;
+}
+.modal-close:hover { color: #4A0E0E; }
+.modal-tag {
+  display: inline-block; font-size: 0.65rem; font-weight: 600;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: #D4AF37; background: rgba(212,175,55,0.1);
+  border: 1px solid rgba(212,175,55,0.3); padding: 3px 8px;
+  margin-right: 6px; margin-bottom: 4px;
+}
+.modal-detail-row { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.6rem; }
+.modal-detail-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #5A4A4A; min-width: 90px; padding-top: 2px; }
+.modal-detail-val { font-size: 0.88rem; color: #2D2D2D; line-height: 1.5; }
+.btn-discuss {
+  display: inline-flex; align-items: center; gap: 0.5rem; width: 100%;
+  justify-content: center; background: #4A0E0E; color: #D4AF37;
+  padding: 1rem 2rem; border: 2px solid #4A0E0E; font-size: 0.82rem;
+  font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+  text-decoration: none; margin-top: 1.5rem; transition: background 0.3s, color 0.3s;
+}
+.btn-discuss:hover { background: transparent; color: #4A0E0E; }
+
+/* ── GOLD LOTUS (scroll to top) ── */
+#gold-lotus {
+  position: fixed; bottom: 2rem; left: 2rem; z-index: 999;
+  width: 52px; height: 52px; background: #4A0E0E;
+  border: 1.5px solid #D4AF37; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; opacity: 0; transform: translateY(16px);
+  transition: opacity 0.4s ease, transform 0.4s ease, background 0.25s ease;
+}
+#gold-lotus.visible { opacity: 1; transform: translateY(0); }
+#gold-lotus:hover { background: #D4AF37; }
+#gold-lotus:hover svg { stroke: #4A0E0E; }
+
+/* ── FLOATING WHATSAPP ── */
+.wa-float {
+  position: fixed; bottom: 2rem; right: 2rem; z-index: 999;
+  width: 58px; height: 58px; background: #25D366; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 8px 32px rgba(37,211,102,0.45); text-decoration: none;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.wa-float:hover { transform: scale(1.1); box-shadow: 0 12px 44px rgba(37,211,102,0.55); }
+.wa-float::before {
+  content: ''; position: absolute; inset: -5px; border-radius: 50%;
+  border: 2px solid rgba(37,211,102,0.38); animation: waRing 2.2s ease-out infinite;
+}
+@keyframes waRing { 0% { transform: scale(1); opacity: 0.7; } 100% { transform: scale(1.5); opacity: 0; } }
+
+/* ── FOOTER DEEP MAROON ── */
+#footer { background: #4A0E0E; position: relative; overflow: hidden; border-top: 2px solid #D4AF37; }
+#footer::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='fn'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23fn)' opacity='0.07'/%3E%3C/svg%3E");
+  opacity: 0.45;
+}
+#footer > div { position: relative; z-index: 1; }
+.footer-link { color: rgba(255,255,255,0.48); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; }
+.footer-link:hover { color: #D4AF37; }
+
+/* ── CONSULTATION FORM ── */
+.consult-input {
+  width: 100%; border: 1px solid #E5DED0; padding: 0.72rem 0.9rem;
+  font-size: 0.88rem; background: #FFFEFB; color: #2D2D2D; outline: none;
+  font-family: 'Inter', sans-serif; transition: border-color 0.25s, box-shadow 0.25s;
+  appearance: none; -webkit-appearance: none;
+}
+.consult-input:focus { border-color: rgba(212,175,55,0.65); box-shadow: 0 0 0 3px rgba(212,175,55,0.08); }
+.consult-label {
+  display: block; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.2em;
+  text-transform: uppercase; color: #5A4A4A; margin-bottom: 0.45rem;
+}
+.consult-field { margin-bottom: 1rem; position: relative; }
+.consult-select-wrap { position: relative; }
+.consult-select-wrap::after {
+  content: ''; position: absolute; right: 0.9rem; top: 50%; transform: translateY(-50%);
+  border: 4px solid transparent; border-top-color: #D4AF37; pointer-events: none;
+}
+
+/* ── MOBILE MENU ── */
+#mob-menu { display: none; }
+#mob-menu.open { display: block; }
+section[id] { scroll-margin-top: 80px; }
+
+/* ── MOBILE RESPONSIVE ── */
+@media (max-width: 767px) {
+  .modal-inner { padding: 1.5rem 1.25rem 1.75rem; }
+  .modal-detail-row { flex-direction: column; gap: 0.25rem; }
+  .modal-detail-label { min-width: auto; }
+  .btn-discuss { font-size: 0.78rem; padding: 0.875rem 1.5rem; }
+  .modal-invoc-title { font-size: 1.2rem; }
+  .modal-drop { max-height: 88vh; }
+
+  /* Trust bar — compact horizontal on mobile */
+  .trust-col { padding: 0.5rem 0.35rem !important; }
+  .trust-col .trust-icon { width: 1.75rem !important; height: 1.75rem !important; }
+  .trust-col p:last-child { font-size: 0.58rem !important; letter-spacing: 0.08em !important; line-height: 1.3 !important; }
+  .trust-col .gold-divider { margin-top: 0.35rem !important; margin-bottom: 0.35rem !important; }
+
+  /* Horizontal scroll for path tiles on mobile */
+  .path-scroll-row {
+    display: flex !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 1rem;
+    padding-bottom: 1rem;
+  }
+  .path-scroll-row > .path-tile {
+    min-width: 75%;
+    max-width: 75%;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    padding: 1.5rem;
+  }
+  .path-scroll-row::-webkit-scrollbar { display: none; }
+  .path-scroll-row { scrollbar-width: none; }
+
+  /* Horizontal scroll for service cards on mobile */
+  .services-scroll-row {
+    display: flex !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 1rem;
+    padding-bottom: 1rem;
+  }
+  .services-scroll-row > .service-card {
+    min-width: 78%;
+    max-width: 78%;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+  }
+  .services-scroll-row::-webkit-scrollbar { display: none; }
+  .services-scroll-row { scrollbar-width: none; }
+
+  /* Horizontal scroll for process cards on mobile */
+  .process-scroll-row {
+    display: flex !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 1rem;
+    padding-bottom: 1rem;
+  }
+  .process-scroll-row > .process-card {
+    min-width: 75%;
+    max-width: 75%;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    padding: 1.25rem !important;
+    border: 1px solid rgba(212,175,55,0.15);
+    border-right: 1px solid rgba(212,175,55,0.15) !important;
+  }
+  .process-scroll-row > .process-card .step-num { font-size: 2.5rem; }
+  .process-scroll-row::-webkit-scrollbar { display: none; }
+  .process-scroll-row { scrollbar-width: none; }
+
+  /* Hide vertical dividers between process steps on mobile */
+  .process-mobile-divider { display: none !important; }
+
+  /* Scroll navigation arrows */
+  .scroll-nav-wrapper { position: relative; }
+  .scroll-nav-btn {
+    display: flex;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 32px; height: 32px;
+    align-items: center; justify-content: center;
+    background: rgba(253,251,247,0.92);
+    border: 1px solid rgba(212,175,55,0.4);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: background 0.2s, border-color 0.2s;
+    color: #D4AF37;
+  }
+  .scroll-nav-btn:hover { background: #D4AF37; color: #4A0E0E; border-color: #D4AF37; }
+  .scroll-nav-btn.scroll-left { left: -4px; }
+  .scroll-nav-btn.scroll-right { right: -4px; }
+  .scroll-nav-btn.scroll-hidden { opacity: 0; pointer-events: none; }
+}
+
+/* ── PAY WIZARD ── */
+.pay-stepper { display: flex; align-items: center; justify-content: center; gap: 0.55rem; margin: 0.5rem 0 1.4rem; flex-wrap: wrap; }
+.pay-step-dot {
+  width: 26px; height: 26px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+  font-family: 'Cinzel', serif; font-size: 0.72rem; font-weight: 700;
+  background: #F5EFE6; color: #7A6A6A; border: 1px solid rgba(212,175,55,0.35); transition: all 0.25s;
+}
+.pay-step-dot.active { background: #4A0E0E; color: #D4AF37; border-color: #4A0E0E; }
+.pay-step-dot.done { background: #D4AF37; color: #4A0E0E; border-color: #D4AF37; }
+.pay-step-line { width: 22px; height: 1px; background: rgba(212,175,55,0.35); }
+.pay-step { display: none; }
+.pay-step.active { display: block; animation: payFade 0.28s ease; }
+@keyframes payFade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+.pay-cal-wrap { border: 1px solid rgba(212,175,55,0.25); border-radius: 8px; padding: 1rem; background: #FFFEFB; }
+.pay-cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+.pay-cal-nav button { background: none; border: 1px solid rgba(212,175,55,0.4); cursor: pointer; padding: 0.35rem 0.6rem; font-size: 0.95rem; color: #4A0E0E; border-radius: 4px; line-height: 1; }
+.pay-cal-nav button:disabled { opacity: 0.3; cursor: not-allowed; }
+.pay-cal-nav-title { font-family: 'Cinzel', serif; font-weight: 700; color: #4A0E0E; font-size: 0.95rem; }
+.pay-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.pay-cal-head { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #7A6A6A; text-align: center; padding: 4px 0; }
+.pay-cal-day {
+  aspect-ratio: 1 / 1; border: 1px solid transparent; background: transparent; cursor: pointer;
+  font-family: 'Inter', sans-serif; font-size: 0.85rem; color: #2D2D2D; border-radius: 6px; transition: all 0.18s;
+  display: flex; align-items: center; justify-content: center;
+}
+.pay-cal-day:hover:not(:disabled):not(.selected) { background: rgba(212,175,55,0.15); border-color: rgba(212,175,55,0.4); }
+.pay-cal-day.selected { background: #4A0E0E; color: #D4AF37; border-color: #4A0E0E; font-weight: 700; }
+.pay-cal-day:disabled { color: #C7BFB2; cursor: not-allowed; }
+.pay-cal-day.empty { visibility: hidden; cursor: default; }
+.pay-slot-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); gap: 0.5rem; margin-top: 1rem; }
+.pay-slot-pill {
+  padding: 0.55rem 0.5rem; border: 1px solid rgba(74,14,14,0.25); background: #FFFEFB; border-radius: 999px;
+  font-family: 'Inter', sans-serif; font-size: 0.78rem; color: #4A0E0E; cursor: pointer; text-align: center; transition: all 0.18s;
+}
+.pay-slot-pill:hover:not(.selected) { background: rgba(212,175,55,0.12); }
+.pay-slot-pill.selected { background: #4A0E0E; color: #D4AF37; border-color: #4A0E0E; font-weight: 700; }
+.pay-form-row { margin-bottom: 0.85rem; }
+.pay-form-row label { display: block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #5A4A4A; margin-bottom: 0.35rem; }
+.pay-summary { background: #F9F4EC; border: 1px solid rgba(212,175,55,0.25); border-radius: 8px; padding: 1rem 1.1rem; margin-bottom: 1rem; }
+.pay-summary-row { display: flex; justify-content: space-between; gap: 1rem; padding: 0.4rem 0; font-size: 0.85rem; }
+.pay-summary-row + .pay-summary-row { border-top: 1px dashed rgba(212,175,55,0.25); }
+.pay-summary-row .lbl { color: #7A6A6A; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding-top: 2px; }
+.pay-summary-row .val { color: #2D2D2D; font-weight: 600; text-align: right; }
+.pay-summary-total { font-family: 'Cinzel', serif; font-size: 1.1rem; color: #4A0E0E; font-weight: 700; }
+.pay-actions { display: flex; gap: 0.6rem; margin-top: 1rem; align-items: stretch; }
+.pay-actions .btn-discuss, .pay-actions .btn-align { flex: 1; padding: 0.85rem 0.75rem; font-size: 0.74rem; margin: 0; border-width: 1px; }
+.pay-error { display: none; background: #FDECEC; color: #9B1C1C; border: 1px solid #F5C2C2; padding: 0.7rem 0.9rem; border-radius: 6px; font-size: 0.82rem; margin-bottom: 0.85rem; line-height: 1.5; }
+.pay-error.visible { display: block; }
+.pay-confirm-icon { width: 56px; height: 56px; border-radius: 50%; background: rgba(212,175,55,0.18); color: #4A0E0E; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 1.8rem; }
+.pay-confirm-detail { font-size: 0.85rem; color: #5A4A4A; line-height: 1.7; margin: 0.3rem 0; }
+.pay-confirm-id { font-family: 'Inter', monospace, monospace; font-size: 0.78rem; color: #4A0E0E; background: #F9F4EC; padding: 4px 8px; border-radius: 4px; display: inline-block; }
+
+/* ── LIB CARD (mirrors services.html) ── */
+.lib-card {
+  background: #fff; border: 1px solid #E5DED0; position: relative;
+  overflow: hidden; cursor: pointer;
+  transition: transform 0.5s ease-in-out, box-shadow 0.5s ease-in-out, border-color 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+.lib-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(74,14,14,0.11); border-color: #D4AF37; }
+.lib-card::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 3;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23c)' opacity='0.1'/%3E%3C/svg%3E");
+  opacity: 0.65;
+}
+.lib-card-img { position: relative; height: 195px; overflow: hidden; }
+.lib-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+.lib-card:hover .lib-card-img img { transform: scale(1.06); }
+.lib-card-img::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(74,14,14,0.5) 0%, transparent 60%);
+  pointer-events: none; z-index: 1;
+}
+.lib-cat-badge {
+  position: absolute; top: 12px; left: 12px; z-index: 2;
+  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+  color: #D4AF37; background: rgba(74,14,14,0.85); padding: 4px 10px;
+  backdrop-filter: blur(4px);
+}
+.lib-card-body { padding: 1.3rem 1.45rem 1.5rem; position: relative; z-index: 2; }
+.lib-card-sanskrit {
+  font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 700;
+  color: #4A0E0E; line-height: 1.2; margin-bottom: 0.2rem;
+}
+.lib-card-benefit {
+  font-family: 'Playfair Display', serif; font-size: 0.9rem;
+  color: #D4AF37; font-style: italic; margin-bottom: 0.6rem; line-height: 1.3;
+}
+.lib-card-desc {
+  font-size: 0.8rem; color: #6A5A5A; line-height: 1.65; margin-bottom: 0.9rem;
+  display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.lib-card-dakshina {
+  font-size: 0.67rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  color: #7A6A6A; margin-bottom: 0.85rem; border-top: 1px solid rgba(212,175,55,0.15);
+  padding-top: 0.75rem;
+}
+.lib-card-dakshina-amount {
+  font-family: 'Cinzel', serif; font-size: 1.05rem; font-weight: 700;
+  color: #4A0E0E; letter-spacing: 0.03em;
+}
+.btn-align {
+  display: block; width: 100%; text-align: center;
+  border: 1px solid #4A0E0E; color: #4A0E0E;
+  padding: 0.625rem 1rem; font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  font-family: 'Inter', sans-serif; cursor: pointer;
+  background: transparent; transition: background 0.25s, color 0.25s;
+  position: relative; z-index: 4;
+}
+.btn-align:hover { background: #4A0E0E; color: #D4AF37; }
+
+/* Carousel sizing for lib-cards on landing */
+.carousel-container > .lib-card { flex: 0 0 auto !important; scroll-snap-align: start !important; width: 85% !important; }
+@media (min-width: 768px) {
+  .carousel-container > .lib-card { width: calc(33.333% - 1.34rem) !important; }
+}
+</style>
+
+  <style>
+    /* Robust Carousel CSS */
+    .carousel-container {
+      display: flex !important;
+      overflow-x: auto !important;
+      scroll-snap-type: x mandatory !important;
+      gap: 2rem !important;
+      padding-bottom: 1.5rem !important;
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
+    .carousel-container::-webkit-scrollbar {
+      display: none !important;
+    }
+    .carousel-card {
+      flex: 0 0 auto !important;
+      scroll-snap-align: start !important;
+      width: 85% !important;
+    }
+    @media (min-width: 768px) {
+      .carousel-card {
+        width: calc(33.333% - 1.34rem) !important;
+      }
+    }
+    .filtered-out {
+      display: none !important;
+    }
+    .scroll-nav-wrapper:hover .scroll-nav-btn:not(.scroll-hidden) { opacity: 1 !important; pointer-events: auto !important; }
+    @media (max-width: 767px) {
+      .scroll-nav-wrapper .scroll-nav-btn:not(.scroll-hidden) { opacity: 1 !important; pointer-events: auto !important; width:32px!important; height:32px!important; left:-4px!important; right:-4px!important; }
+    }
+
+    /* Edge-state arrow hiding (works on all viewports) */
+    #services .scroll-nav-btn.scroll-hidden { opacity: 0 !important; pointer-events: none !important; }
+
+    /* Slider position dots */
+    .services-dots {
+      display: flex;
+      justify-content: center;
+      gap: 0.55rem;
+      margin-top: 1.25rem;
+    }
+    .services-dot {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: rgba(74,14,14,0.18);
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      transition: background 0.25s, transform 0.25s, width 0.25s;
+    }
+    .services-dot:hover { background: rgba(74,14,14,0.4); }
+    .services-dot.active {
+      background: #D4AF37;
+      width: 26px;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- =========================================
+     GOLD LOTUS — SCROLL TO TOP
+========================================= -->
+<button id="gold-lotus" data-testid="lotus-scroll-top" aria-label="Back to top">
+  <svg width="24" height="24" viewBox="0 0 30 30" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round">
+    <path d="M15 22 C12 18 12 11 15 8 C18 11 18 18 15 22Z"/>
+    <path d="M15 20 C10 17 8 10 11 7 C11 7 13 12 14 16"/>
+    <path d="M15 20 C20 17 22 10 19 7 C19 7 17 12 16 16"/>
+    <path d="M14 17 C8 15 6 8 9 5 C9 5 12 10 13 14"/>
+    <path d="M16 17 C22 15 24 8 21 5 C21 5 18 10 17 14"/>
+    <path d="M9 24 Q15 27 21 24"/>
+    <line x1="15" y1="22" x2="15" y2="26"/>
+  </svg>
+</button>
+
+<!-- =========================================
+     FLOATING WHATSAPP
+========================================= -->
+<a href="https://wa.me/919667039964?text=I'm%20interested%20in%20finding%20my%20Vedic%20path."
+   target="_blank" rel="noopener noreferrer"
+   class="wa-float" data-testid="whatsapp-float-btn" aria-label="WhatsApp us">
+  <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="white">
+    <path d="M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652c1.746.943 3.71 1.444 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.48-8.45zM12.045 21.785h-.006c-1.773 0-3.513-.474-5.031-1.37l-.361-.213-3.741.977 1.004-3.648-.235-.374a9.716 9.716 0 0 1-1.502-5.163c.002-5.374 4.406-9.744 9.83-9.744 2.626 0 5.092 1.018 6.948 2.865a9.716 9.716 0 0 1 2.883 6.894c-.002 5.374-4.406 9.776-9.789 9.776zm5.362-7.316c-.293-.146-1.736-.852-2.004-.949-.27-.098-.466-.146-.663.146-.196.293-.76.949-.93 1.145-.17.195-.342.22-.636.073-.293-.146-1.24-.455-2.362-1.45-.872-.775-1.462-1.733-1.634-2.027-.17-.293-.018-.452.129-.597.13-.13.293-.342.44-.512.146-.17.195-.293.293-.488.097-.196.049-.367-.024-.513-.073-.146-.663-1.587-.907-2.175-.239-.57-.483-.494-.664-.502-.17-.007-.367-.009-.563-.009s-.513.073-.782.366c-.27.293-1.026.998-1.026 2.43 0 1.432 1.05 2.815 1.196 3.01.146.195 2.063 3.137 5 4.4.699.3 1.245.48 1.67.614.7.224 1.338.193 1.842.117.562-.083 1.73-.704 1.975-1.386.244-.68.244-1.263.17-1.386-.073-.122-.268-.195-.562-.341z"/>
+  </svg>
+</a>
+
+<!-- =========================================
+     NAVIGATION
+========================================= -->
+<nav id="navbar" role="navigation">
+  <div class="max-w-7xl mx-auto px-6 md:px-12">
+    <div class="flex items-center justify-between" style="height:76px;align-items:center;">
+
+      <a href="#" class="nav-logo-text font-cinzel font-bold text-maroon no-underline" style="font-size:1.3rem; letter-spacing:0.04em; transition: color 0.3s;" data-testid="nav-logo">
+        HOME<span style="color:#D4AF37;">PUJAN</span>
+      </a>
+
+      <div class="hidden md:flex items-center gap-10">
+        <a href="#lineage" class="nav-link" data-testid="nav-lineage">Lineage</a>
+        <div class="nav-dropdown" data-testid="nav-services-dropdown">
+          <a href="#services" class="nav-link" style="display:inline-flex;align-items:center;gap:3px;" data-testid="nav-services">
+            Services
+            <svg class="nav-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </a>
+          <div class="nav-dropdown-menu">
+            <a href="services.html" class="nav-dropdown-item" style="color:#D4AF37;font-weight:700;" data-testid="nav-vedic-library">The Vedic Library — All 27</a>
+            <div style="height:1px;background:rgba(212,175,55,0.18);margin:0.2rem 0;"></div>
+            <a href="#find-path" class="nav-dropdown-item" data-testid="nav-browse-purpose">Browse by Purpose</a>
+            <div style="height:1px;background:rgba(212,175,55,0.18);margin:0.2rem 0;"></div>
+            <a href="#services" class="nav-dropdown-item" data-testid="nav-browse-need">Browse by Need</a>
+          </div>
+        </div>
+        <a href="#process" class="nav-link" data-testid="nav-process">Process</a>
+        <a href="#faq" class="nav-link" data-testid="nav-faq">FAQ</a>
+      </div>
+
+      <div class="hidden md:block">
+        <button onclick="openConsultModal('')"
+           class="btn-consult" data-testid="nav-consult-btn">
+          Book Free Consultation
+        </button>
+      </div>
+
+      <button id="menu-btn" class="md:hidden p-2 cursor-pointer" style="background:none;border:none;" aria-label="Menu" data-testid="mobile-menu-toggle">
+        <span class="block w-6 h-0.5 bg-maroon mb-1.5 transition-all" id="h1"></span>
+        <span class="block w-6 h-0.5 bg-maroon mb-1.5 transition-all" id="h2"></span>
+        <span class="block w-6 h-0.5 bg-maroon transition-all" id="h3"></span>
+      </button>
+    </div>
+  </div>
+
+  <div id="mob-menu" style="border-top:1px solid rgba(212,175,55,0.18);background:rgba(253,251,247,0.98);backdrop-filter:blur(20px);">
+    <div class="max-w-7xl mx-auto px-6 py-6 flex flex-col gap-4">
+      <a href="#lineage" class="nav-link py-2" onclick="closeMob()" data-testid="mob-lineage">Lineage</a>
+      <a href="services.html" class="nav-link py-2" style="color:#D4AF37;font-weight:700;" onclick="closeMob()" data-testid="mob-library">The Vedic Library</a>
+      <a href="#find-path" class="nav-link py-2" onclick="closeMob()" data-testid="mob-purpose">Browse by Purpose</a>
+      <a href="#services" class="nav-link py-2" onclick="closeMob()" data-testid="mob-services">Browse by Need</a>
+      <a href="#process" class="nav-link py-2" onclick="closeMob()" data-testid="mob-process">Process</a>
+      <a href="#faq" class="nav-link py-2" onclick="closeMob()" data-testid="mob-faq">FAQ</a>
+      <div style="border-top:1px solid rgba(212,175,55,0.18);padding-top:1rem;">
+        <button onclick="openConsultModal('');closeMob();"
+           class="btn-consult" style="justify-content:center;width:100%;cursor:pointer;" data-testid="mob-consult">Book Free Consultation</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- =========================================
+     HERO
+========================================= -->
+<section id="hero" class="relative overflow-hidden" style="min-height:100vh;padding-top:76px;">
+  <!-- Mandala pattern -->
+  <div class="hero-mandala"></div>
+
+  <!-- Hero image on right -->
+  <div class="hero-image-wrap" data-aos="fade-left" data-aos-duration="1200">
+    <img src="https://images.unsplash.com/photo-1630764883473-e8c2056f0589?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=85&w=1200"
+         alt="Sacred havan fire — HomePujan"
+         loading="eager" decoding="async" data-testid="hero-image"/>
+  </div>
+
+  <!-- Content -->
+  <div class="max-w-7xl mx-auto px-6 md:px-12 relative" style="z-index:5;">
+    <div class="flex items-center" style="min-height:calc(100vh - 76px);padding-top:3rem;padding-bottom:3rem;">
+      <div class="max-w-2xl">
+
+        <h1 class="font-cinzel font-normal leading-tight mb-6"
+            style="font-size:clamp(2.4rem,5.5vw,4.2rem);letter-spacing:0.04em;line-height:1.15;color:#D4AF37;"
+            data-aos="fade-up" data-aos-delay="80">
+          Your Family Pandit,<br>Wherever You Are
+        </h1>
+
+        <p class="leading-relaxed mb-10 max-w-lg"
+           style="font-size:1.05rem;color:rgba(245,239,224,0.8);line-height:1.75;"
+           data-aos="fade-up" data-aos-delay="200">
+          Gurukul-trained pandits who explain every mantra, perform every ritual with meaning.
+        </p>
+
+        <div class="flex flex-wrap gap-4 mb-6" data-aos="fade-up" data-aos-delay="320">
+          <button onclick="openConsultModal('')" class="btn-hero-primary" data-testid="hero-book-call-btn">
+            Book Free Consultation Call
+          </button>
+          <a href="#lineage" class="btn-hero-secondary" data-testid="hero-pedigree-btn">Explore the Lineage</a>
+        </div>
+
+        <p style="font-size:0.82rem;color:rgba(245,239,224,0.65);margin-bottom:2.5rem;display:flex;align-items:center;gap:8px;"
+           data-aos="fade-up" data-aos-delay="400">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Performed exclusively by Certified Gurukul scholars.
+        </p>
+
+        <p style="font-size:0.82rem;color:rgba(245,239,224,0.5);display:flex;align-items:center;gap:0;"
+           data-aos="fade-up" data-aos-delay="480">
+          Free consultation, meet before you book.
+        </p>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================
+     TRUST BAR
+========================================= -->
+<section id="trust" style="background:#F5EFE0;border-top:1px solid rgba(212,175,55,0.22);border-bottom:1px solid rgba(212,175,55,0.22);">
+  <div class="max-w-7xl mx-auto px-6 md:px-12 py-12">
+    <div class="grid grid-cols-3">
+      <div class="trust-col text-center px-6 py-4" data-aos="fade-up" data-aos-delay="0" data-testid="trust-pandits">
+        <div class="trust-icon mx-auto" style="width:clamp(2.4rem,4.5vw,3.2rem);height:clamp(2.4rem,4.5vw,3.2rem);color:#D4AF37;">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:100%;height:100%;">
+            <circle cx="32" cy="24" r="11"/>
+            <path d="M22 32 L18 50 L26 46 L32 52 L38 46 L46 50 L42 32"/>
+            <circle cx="32" cy="24" r="4" fill="currentColor" stroke="none"/>
+          </svg>
+        </div>
+        <div class="gold-divider mx-auto my-3" style="width:36px;"></div>
+        <p style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.15em;color:#5A4A4A;font-weight:600;">Gurukul Certified Pandits</p>
+      </div>
+      <div class="trust-col text-center px-6 py-4" data-aos="fade-up" data-aos-delay="120" data-testid="trust-rituals">
+        <div class="trust-icon mx-auto" style="width:clamp(2.4rem,4.5vw,3.2rem);height:clamp(2.4rem,4.5vw,3.2rem);color:#D4AF37;">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:100%;height:100%;">
+            <path d="M32 6 C 36 16 46 22 46 34 C 46 44 40 52 32 52 C 24 52 18 44 18 34 C 18 26 24 22 26 16 C 28 22 30 24 32 22 C 33 18 32 12 32 6 Z" fill="currentColor" fill-opacity="0.15"/>
+            <path d="M32 26 C 34 32 40 34 40 40 C 40 45 36 49 32 49 C 28 49 24 45 24 40 C 24 36 28 34 30 30 C 31 33 32 33 32 32 Z" fill="currentColor" stroke="none"/>
+          </svg>
+        </div>
+        <div class="gold-divider mx-auto my-3" style="width:36px;"></div>
+        <p style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.15em;color:#5A4A4A;font-weight:600;">10,000+ Rituals Performed</p>
+      </div>
+      <div class="trust-col text-center px-6 py-4" data-aos="fade-up" data-aos-delay="240" data-testid="trust-samagri">
+        <div class="trust-icon mx-auto" style="width:clamp(2.4rem,4.5vw,3.2rem);height:clamp(2.4rem,4.5vw,3.2rem);color:#D4AF37;">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:100%;height:100%;">
+            <path d="M32 54 C 18 54 10 42 12 26 C 24 24 36 28 44 38 C 48 44 48 50 46 54 Z" fill="currentColor" fill-opacity="0.15"/>
+            <path d="M32 54 C 18 54 10 42 12 26 C 24 24 36 28 44 38 C 48 44 48 50 46 54 Z"/>
+            <path d="M14 28 C 26 36 38 46 46 54"/>
+          </svg>
+        </div>
+        <div class="gold-divider mx-auto my-3" style="width:36px;"></div>
+        <p style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.15em;color:#5A4A4A;font-weight:600;">Pure Samagri Guaranteed</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================
+     FIND YOUR PATH (DIAGNOSTIC FUNNEL)
+========================================= -->
+<section id="find-path" class="py-20 bg-parchment" style="border-top:1px solid rgba(212,175,55,0.15);">
+  <div class="max-w-7xl mx-auto px-6 md:px-12">
+
+    <div class="text-center mb-12" data-aos="fade-up">
+      <p class="section-label mb-4">Choose Your Intention</p>
+      <h2 class="font-serif font-bold text-maroon mb-4" style="font-size:clamp(1.8rem,3.5vw,2.8rem);letter-spacing:-0.02em;">Find Your Path</h2>
+      <div class="gold-divider mx-auto mb-5"></div>
+      <p style="font-size:0.93rem;color:#5A4A4A;line-height:1.7;max-width:480px;margin:0 auto;">
+        Every Vedic ritual begins with an intention. Select the chapter that resonates most — and discover your aligned ceremony below.
+      </p>
+    </div>
+
+    <div class="scroll-nav-wrapper">
+      <button class="scroll-nav-btn scroll-left scroll-hidden md:!hidden" onclick="scrollRow(this, -1)" aria-label="Scroll left">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button class="scroll-nav-btn scroll-right md:!hidden" onclick="scrollRow(this, 1)" aria-label="Scroll right">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 6 15 12 9 18"/></svg>
+      </button>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 path-scroll-row">
+
+      <a class="path-tile" href="services.html?category=home" data-testid="path-tile-beginnings">
+        <div class="path-tile-icon">
+          <svg width="34" height="34" viewBox="0 0 38 38" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 20 L19 8 L34 20"/><path d="M8 17 L8 32 L30 32 L30 17"/>
+            <path d="M15 32 L15 24 L23 24 L23 32"/><line x1="19" y1="8" x2="19" y2="4"/>
+            <line x1="16" y1="4" x2="22" y2="4"/>
+          </svg>
+        </div>
+        <h3 class="font-serif font-bold text-maroon mb-1" style="font-size:1.2rem;">New Beginnings</h3>
+        <p style="font-size:0.75rem;color:#D4AF37;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem;">Home / Office</p>
+        <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.65;flex-grow:1;">Griha Pravesh, Vastu Shanti, new office consecration — sanctifying your fresh starts with scholarly precision.</p>
+        <span class="path-tile-cta">Explore Rituals &rarr;</span>
+      </a>
+
+      <a class="path-tile" href="services.html?category=business" data-testid="path-tile-success">
+        <div class="path-tile-icon">
+          <svg width="34" height="34" viewBox="0 0 38 38" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="34" x2="19" y2="20"/>
+            <path d="M19 20 C19 13 12 11 12 11 C12 11 11 18 19 20"/>
+            <path d="M19 20 C19 13 26 11 26 11 C26 11 27 18 19 20"/>
+            <path d="M19 20 C13 16 7 18 7 18 C7 18 9 26 19 23"/>
+            <path d="M19 20 C25 16 31 18 31 18 C31 18 29 26 19 23"/>
+            <path d="M19 11 C19 7 16 5 16 5 C16 5 15 8 19 11"/>
+            <path d="M19 11 C19 7 22 5 22 5 C22 5 23 8 19 11"/>
+          </svg>
+        </div>
+        <h3 class="font-serif font-bold text-maroon mb-1" style="font-size:1.2rem;">Success &amp; Growth</h3>
+        <p style="font-size:0.75rem;color:#D4AF37;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem;">Business / Career</p>
+        <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.65;flex-grow:1;">Lakshmi-Kuber Havan, Saraswati Puja, business invocations — aligning your endeavors with Vedic abundance.</p>
+        <span class="path-tile-cta">Explore Rituals &rarr;</span>
+      </a>
+
+      <a class="path-tile" href="services.html?category=personal" data-testid="path-tile-health">
+        <div class="path-tile-icon">
+          <svg width="34" height="34" viewBox="0 0 38 38" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 5 L31 9 L31 21 C31 28 19 34 19 34 C19 34 7 28 7 21 L7 9 Z"/>
+            <line x1="19" y1="24" x2="19" y2="16"/>
+            <path d="M19 20 C15 16 13 18 13 18 C13 18 15 22 19 22"/>
+            <path d="M19 20 C23 16 25 18 25 18 C25 18 23 22 19 22"/>
+          </svg>
+        </div>
+        <h3 class="font-serif font-bold text-maroon mb-1" style="font-size:1.2rem;">Health &amp; Protection</h3>
+        <p style="font-size:0.75rem;color:#D4AF37;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem;">Wellness / Peace</p>
+        <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.65;flex-grow:1;">Maha Mrityunjaya Havan, Navagraha Shanti, ancestral rites — invoking divine protection and longevity.</p>
+        <span class="path-tile-cta">Explore Rituals &rarr;</span>
+      </a>
+
+    </div>
+    </div>
+
+    <!-- Section footer -->
+    <p class="text-center mt-10" style="font-size:0.88rem;color:#5A4A4A;" data-aos="fade-up" data-aos-delay="300">
+      Not sure which path to choose for yourself?
+      <button onclick="openConsultModal('')"
+         style="background:none;border:none;cursor:pointer;color:#D4AF37;font-weight:600;text-decoration:underline;text-underline-offset:3px;font-size:0.88rem;padding:0;" data-testid="path-consult-link">
+        Book Free Consultation
+      </button>
+    </p>
+
+  </div>
+</section>
+
+<!-- =========================================
+     VEDIC SERVICES (FILTERED GRID)
+========================================= -->
+<section id="services" class="py-24 bg-parchment" style="border-top:1px solid rgba(212,175,55,0.12);">
+  <div class="max-w-7xl mx-auto px-6 md:px-12">
+
+    <div class="text-center mb-16" data-aos="fade-up">
+      <p class="section-label mb-4">Vedic Exchange</p>
+      <h2 class="font-serif font-bold text-maroon mb-4" style="font-size:clamp(2rem,4vw,3rem);letter-spacing:-0.02em;">Sacred Ceremonies</h2>
+      <div class="gold-divider mx-auto mb-5"></div>
+      <p id="filter-label" style="font-size:0.9rem;color:#5A4A4A;line-height:1.7;max-width:500px;margin:0 auto;transition:all 0.3s;">
+        Each ceremony is meticulously designed following Vedic scripture, performed with unadulterated Himalayan materials.
+      </p>
+    </div>
+
+    <div class="scroll-nav-wrapper group" style="position:relative;">
+      <button class="scroll-nav-btn scroll-left scroll-hidden" onclick="scrollRow(this, -1)" aria-label="Scroll left" style="display:flex;position:absolute;top:50%;transform:translateY(-50%);z-index:10;width:44px;height:44px;align-items:center;justify-content:center;background:rgba(253,251,247,0.95);border:1px solid rgba(212,175,55,0.4);border-radius:50%;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.1);color:#D4AF37;left:-18px;transition:all 0.3s;" onmouseover="this.style.background='#D4AF37';this.style.color='#4A0E0E';" onmouseout="this.style.background='rgba(253,251,247,0.95)';this.style.color='#D4AF37';">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button class="scroll-nav-btn scroll-right" onclick="scrollRow(this, 1)" aria-label="Scroll right" style="display:flex;position:absolute;top:50%;transform:translateY(-50%);z-index:10;width:44px;height:44px;align-items:center;justify-content:center;background:rgba(253,251,247,0.95);border:1px solid rgba(212,175,55,0.4);border-radius:50%;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.1);color:#D4AF37;right:-18px;transition:all 0.3s;" onmouseover="this.style.background='#D4AF37';this.style.color='#4A0E0E';" onmouseout="this.style.background='rgba(253,251,247,0.95)';this.style.color='#D4AF37';">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 6 15 12 9 18"/></svg>
+      </button>
+
+    <div class="carousel-container services-scroll-row" id="services-grid">
+      <div class="lib-card carousel-card" data-category="health" data-testid="service-card-maha" onclick="openServiceModal('mrityunjay')">
+        <div class="lib-card-img">
+          <img src="/images/Maha_Mirityunjay_Jaap_202603200700.jpeg" alt="Maha Mrityunjaya Havan" loading="lazy"/>
+          <span class="lib-cat-badge">Health &amp; Protection</span>
+        </div>
+        <div class="lib-card-body">
+          <p class="lib-card-sanskrit">Maha Mrityunjaya Havan</p>
+          <p class="lib-card-benefit">Supreme Vitality &amp; Protecting Life Force</p>
+          <p class="lib-card-desc">The most potent Vedic invocation for health and longevity. 108 Mrityunjaya mantras recited with meticulous phonetic precision, each offering made with specific Himalayan medicinal herbs.</p>
+          <div class="lib-card-dakshina">
+            Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹1,100</span>
+          </div>
+          <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Maha Mrityunjaya Havan')" data-testid="card-maha-consult">Consult for Alignment</button>
+        </div>
+      </div>
+
+      <div class="lib-card carousel-card" data-category="beginnings" data-testid="service-card-satyanarayan" onclick="openServiceModal('satyanarayan')">
+        <div class="lib-card-img">
+          <img src="/images/Satya%20Narayan%20Katha.jpeg" alt="Satya Narayan Katha" loading="lazy"/>
+          <span class="lib-cat-badge">New Beginnings</span>
+        </div>
+        <div class="lib-card-body">
+          <p class="lib-card-sanskrit">Satya Narayan Katha</p>
+          <p class="lib-card-benefit">Sukh Sampatti &amp; Sukh Shanti</p>
+          <p class="lib-card-desc">A sacred narrative recitation invoking Lord Vishnu's blessings for peace, prosperity, and fulfillment of intentions in the household.</p>
+          <div class="lib-card-dakshina">
+            Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹1,100</span>
+          </div>
+          <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Satya Narayan Katha')" data-testid="card-satyanarayan-consult">Consult for Alignment</button>
+        </div>
+      </div>
+
+      <div class="lib-card carousel-card" data-category="beginnings" data-testid="service-card-gayatri" onclick="openServiceModal('gayatri')">
+        <div class="lib-card-img">
+          <img src="/images/Gayatri_Jaap_202603200621.jpeg" alt="Gayatri Jaap" loading="lazy"/>
+          <span class="lib-cat-badge">New Beginnings</span>
+        </div>
+        <div class="lib-card-body">
+          <p class="lib-card-sanskrit">Gayatri Jaap</p>
+          <p class="lib-card-benefit">Spiritual Clarity</p>
+          <p class="lib-card-desc">The most sacred Vedic mantra recited in precise repetitions to invoke divine illumination, peace of mind, and spiritual protection.</p>
+          <div class="lib-card-dakshina">
+            Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹1,100</span>
+          </div>
+          <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Gayatri Jaap')" data-testid="card-gayatri-consult">Consult for Alignment</button>
+        </div>
+      </div>
+
+      <div class="lib-card carousel-card" data-category="health" data-testid="service-card-agnihotra" onclick="openServiceModal('agnihotra')">
+        <div class="lib-card-img">
+          <img src="/images/Agnihotra_202603200659.jpeg" alt="Agnihotra" loading="lazy"/>
+          <span class="lib-cat-badge">Health &amp; Protection</span>
+        </div>
+        <div class="lib-card-body">
+          <p class="lib-card-sanskrit">Agnihotra</p>
+          <p class="lib-card-benefit">Daily Purification</p>
+          <p class="lib-card-desc">An ancient Vedic fire ritual performed at sunrise and sunset, purifying the atmosphere and establishing a daily spiritual discipline.</p>
+          <div class="lib-card-dakshina">
+            Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹1,100</span>
+          </div>
+          <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Agnihotra')" data-testid="card-agnihotra-consult">Consult for Alignment</button>
+        </div>
+      </div>
+
+      <div class="lib-card carousel-card" data-category="beginnings" data-testid="service-card-shaanti" onclick="openServiceModal('shaanti')">
+        <div class="lib-card-img">
+          <img src="/images/Shanti_Havan_in_202603200643-2.jpeg" alt="Shaanti Hawan" loading="lazy"/>
+          <span class="lib-cat-badge">New Beginnings</span>
+        </div>
+        <div class="lib-card-body">
+          <p class="lib-card-sanskrit">Shaanti Hawan</p>
+          <p class="lib-card-benefit">Peace in the Home</p>
+          <p class="lib-card-desc">A purifying fire ceremony designed to restore balance and tranquility to the household, removing negative energies and establishing calm.</p>
+          <div class="lib-card-dakshina">
+            Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹2,100</span>
+          </div>
+          <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Shaanti Hawan')" data-testid="card-shaanti-consult">Consult for Alignment</button>
+        </div>
+      </div>
+
+      <div class="lib-card carousel-card" data-category="success" data-testid="service-card-vyapar" onclick="openServiceModal('vyapar')">
+        <div class="lib-card-img">
+          <img src="/images/Vyapar_Samriddhi_Pooja_202603200656.jpeg" alt="Vyapar Samriddhi Puja" loading="lazy"/>
+          <span class="lib-cat-badge">Success &amp; Growth</span>
+        </div>
+        <div class="lib-card-body">
+          <p class="lib-card-sanskrit">Vyapar Samriddhi Puja</p>
+          <p class="lib-card-benefit">Trade Success</p>
+          <p class="lib-card-desc">Targeted Vedic ceremony for business owners and entrepreneurs to remove trade obstacles and invite momentum into commercial endeavors.</p>
+          <div class="lib-card-dakshina">
+            Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹2,100</span>
+          </div>
+          <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Vyapar Samriddhi Puja')" data-testid="card-vyapar-consult">Consult for Alignment</button>
+        </div>
+      </div>
+
+    </div>
+    </div>
+
+    <div id="services-dots" class="services-dots" role="tablist" aria-label="Service slide indicators"></div>
+
+    <!-- View All Services Button -->
+    <div class="text-center mt-14" data-aos="fade-up" data-aos-delay="300">
+      <a href="services.html" class="btn-primary" data-testid="view-all-services-btn">
+        View All 27 Vedic Ceremonies
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+    <div class="text-center mt-12" data-aos="fade-up" data-aos-delay="350">
+      <p style="font-size:0.85rem;color:#5A4A4A;margin-bottom:1rem;">Have a specific intention not listed here?</p>
+      <a href="#" onclick="openConsultModal('Custom Vedic Ceremony');return false;" class="btn-consult" data-testid="services-custom-btn">Book Free Consultation</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- =========================================
+     SCHOLARLY PARAMPARA (LINEAGE)
+========================================= -->
+<section id="lineage" class="relative overflow-hidden py-24" style="background-color:#4A0E0E;">
+  <div class="pedigree-line-top"></div>
+  <div class="pedigree-line-bottom"></div>
+
+  <!-- Mandala watermark -->
+  <div class="absolute inset-0" style="display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0.05;overflow:hidden;">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-20 -20 440 440" width="700" height="700" fill="none" stroke="white" stroke-width="0.9" overflow="visible">
+      <g transform="translate(200,200)">
+        <circle r="185"/><circle r="135"/><circle r="80"/><circle r="32"/><circle r="7" fill="white" stroke="none"/>
+        <line x1="0" y1="-185" x2="0" y2="185"/>
+        <line x1="0" y1="-185" x2="0" y2="185" transform="rotate(45)"/>
+        <line x1="0" y1="-185" x2="0" y2="185" transform="rotate(90)"/>
+        <line x1="0" y1="-185" x2="0" y2="185" transform="rotate(135)"/>
+        <ellipse rx="26" ry="52" transform="translate(0,-160)"/>
+        <ellipse rx="26" ry="52" transform="rotate(45) translate(0,-160)"/>
+        <ellipse rx="26" ry="52" transform="rotate(90) translate(0,-160)"/>
+        <ellipse rx="26" ry="52" transform="rotate(135) translate(0,-160)"/>
+        <ellipse rx="26" ry="52" transform="rotate(180) translate(0,-160)"/>
+        <ellipse rx="26" ry="52" transform="rotate(225) translate(0,-160)"/>
+        <ellipse rx="26" ry="52" transform="rotate(270) translate(0,-160)"/>
+        <ellipse rx="26" ry="52" transform="rotate(315) translate(0,-160)"/>
+        <ellipse rx="14" ry="30" transform="translate(0,-107)"/>
+        <ellipse rx="14" ry="30" transform="rotate(45) translate(0,-107)"/>
+        <ellipse rx="14" ry="30" transform="rotate(90) translate(0,-107)"/>
+        <ellipse rx="14" ry="30" transform="rotate(135) translate(0,-107)"/>
+        <ellipse rx="14" ry="30" transform="rotate(180) translate(0,-107)"/>
+        <ellipse rx="14" ry="30" transform="rotate(225) translate(0,-107)"/>
+        <ellipse rx="14" ry="30" transform="rotate(270) translate(0,-107)"/>
+        <ellipse rx="14" ry="30" transform="rotate(315) translate(0,-107)"/>
+        <polygon points="0,-57 9,-47 0,-37 -9,-47"/>
+        <polygon points="0,-57 9,-47 0,-37 -9,-47" transform="rotate(45)"/>
+        <polygon points="0,-57 9,-47 0,-37 -9,-47" transform="rotate(90)"/>
+        <polygon points="0,-57 9,-47 0,-37 -9,-47" transform="rotate(135)"/>
+        <polygon points="0,-57 9,-47 0,-37 -9,-47" transform="rotate(180)"/>
+        <polygon points="0,-57 9,-47 0,-37 -9,-47" transform="rotate(225)"/>
+        <polygon points="0,-57 9,-47 0,-37 -9,-47" transform="rotate(270)"/>
+        <polygon points="0,-57 9,-47 0,-37 -9,-47" transform="rotate(315)"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="max-w-4xl mx-auto px-6 md:px-12 relative text-center" style="z-index:1;">
+    <p class="section-label mb-8" style="color:rgba(212,175,55,0.65);" data-aos="fade-up">Scholarly Parampara</p>
+    <div class="font-serif italic font-bold" style="font-size:5.5rem;line-height:0.65;color:rgba(212,175,55,0.1);margin-bottom:0.5rem;" aria-hidden="true" data-aos="fade-up" data-aos-delay="80">"</div>
+    <h2 class="font-serif font-bold mb-6 leading-tight"
+        style="font-size:clamp(1.8rem,4vw,3rem);color:#D4AF37;letter-spacing:-0.02em;"
+        data-aos="fade-up" data-aos-delay="120">
+      The Scholarly Parampara:<br>A 20-Year Lineage.
+    </h2>
+    <div class="gold-divider mx-auto mb-8" data-aos="fade-up" data-aos-delay="200"></div>
+    <p class="leading-relaxed max-w-3xl mx-auto mb-6"
+       style="font-size:1.05rem;color:rgba(253,251,247,0.78);line-height:1.8;"
+       data-aos="fade-up" data-aos-delay="250">
+      HomePujan is not a single-scholar service — it is a carefully curated collective of Gurukul-trained teachers and peers, united by <strong style="color:#D4AF37;">Jaynendra</strong> and bound by a shared commitment to phonetic purity. The scholars within this Parampara have collectively mentored hundreds of students in Vedic recitation, shaping the next generation of traditional practitioners.
+    </p>
+    <p class="leading-relaxed max-w-3xl mx-auto mb-10"
+       style="font-size:1rem;color:rgba(253,251,247,0.6);line-height:1.8;"
+       data-aos="fade-up" data-aos-delay="300">
+      We don't just chant; we invoke with the exact phonetic vibrations mastered over decades of residential study. Every syllable, every tonal accent, every breath pause — delivered with the authority of a living, unbroken tradition.
+    </p>
+    <div class="flex flex-wrap justify-center gap-x-10 gap-y-4" data-aos="fade-up" data-aos-delay="360">
+      <div class="flex items-center gap-2" style="font-size:0.78rem;color:rgba(212,175,55,0.65);letter-spacing:0.08em;">
+        <span style="display:inline-block;width:14px;height:1px;background:rgba(212,175,55,0.4);"></span>
+        Schooled in Traditional Gurukuls for 20 Years
+      </div>
+      <div class="flex items-center gap-2" style="font-size:0.78rem;color:rgba(212,175,55,0.65);letter-spacing:0.08em;">
+        <span style="display:inline-block;width:14px;height:1px;background:rgba(212,175,55,0.4);"></span>
+        Rigveda &amp; Atharvaveda Collective
+      </div>
+      <div class="flex items-center gap-2" style="font-size:0.78rem;color:rgba(212,175,55,0.65);letter-spacing:0.08em;">
+        <span style="display:inline-block;width:14px;height:1px;background:rgba(212,175,55,0.4);"></span>
+        Sanskrit Phonetics Authority
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================
+       GURUKUL PHOTO LIBRARY SLIDER
+  ========================================= -->
+  <div class="mt-20 relative w-full max-w-7xl mx-auto px-6 md:px-12" style="z-index:2;" data-aos="fade-up" data-aos-delay="400">
+    <div class="relative group">
+      <!-- Scroll Buttons (Mobile & Desktop) -->
+      <button onclick="document.getElementById('gurukul-slider').scrollBy({left: -320, behavior: 'smooth'})" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-6 z-10 flex w-9 h-9 md:w-10 md:h-10 items-center justify-center rounded-full border border-[rgba(212,175,55,0.4)] text-[#D4AF37] hover:bg-[#D4AF37] hover:border-[#D4AF37] hover:text-[#4A0E0E] transition-all bg-[#4A0E0E] opacity-100 md:opacity-0 group-hover:opacity-100 shadow-lg cursor-pointer" aria-label="Scroll left">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="md:w-5 md:h-5"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button onclick="document.getElementById('gurukul-slider').scrollBy({left: 320, behavior: 'smooth'})" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-6 z-10 flex w-9 h-9 md:w-10 md:h-10 items-center justify-center rounded-full border border-[rgba(212,175,55,0.4)] text-[#D4AF37] hover:bg-[#D4AF37] hover:border-[#D4AF37] hover:text-[#4A0E0E] transition-all bg-[#4A0E0E] opacity-100 md:opacity-0 group-hover:opacity-100 shadow-lg cursor-pointer" aria-label="Scroll right">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="md:w-5 md:h-5"><polyline points="9 6 15 12 9 18"/></svg>
+      </button>
+
+      <!-- Slider Track -->
+      <div id="gurukul-slider" class="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-6" style="scrollbar-width: none; -ms-overflow-style: none;">
+        <style>#gurukul-slider::-webkit-scrollbar { display: none; }</style>
+
+        <!-- Photo 1 -->
+        <div class="snap-center shrink-0 w-[85%] sm:w-[50%] md:w-[40%] lg:w-[30%]">
+          <div style="background:rgba(212,175,55,0.03); border:1px solid rgba(212,175,55,0.25); padding:12px; transition:border-color 0.3s;" class="hover:border-[#D4AF37]">
+            <div style="aspect-ratio: 4/3; overflow: hidden; position: relative;">
+              <img src="/images/slider-1.jpg" alt="Gurukul Student Life 1" class="w-full h-full object-cover transition-transform duration-700 hover:scale-105" loading="lazy">
+              <div class="absolute inset-0 pointer-events-none" style="background:linear-gradient(to top, rgba(74,14,14,0.4) 0%, transparent 40%); mix-blend-mode: multiply;"></div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Photo 2 -->
+        <div class="snap-center shrink-0 w-[85%] sm:w-[50%] md:w-[40%] lg:w-[30%]">
+          <div style="background:rgba(212,175,55,0.03); border:1px solid rgba(212,175,55,0.25); padding:12px; transition:border-color 0.3s;" class="hover:border-[#D4AF37]">
+            <div style="aspect-ratio: 4/3; overflow: hidden; position: relative;">
+              <img src="/images/slider-2.jpg" alt="Gurukul Student Life 2" class="w-full h-full object-cover transition-transform duration-700 hover:scale-105" loading="lazy">
+              <div class="absolute inset-0 pointer-events-none" style="background:linear-gradient(to top, rgba(74,14,14,0.4) 0%, transparent 40%); mix-blend-mode: multiply;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Photo 3 -->
+        <div class="snap-center shrink-0 w-[85%] sm:w-[50%] md:w-[40%] lg:w-[30%]">
+          <div style="background:rgba(212,175,55,0.03); border:1px solid rgba(212,175,55,0.25); padding:12px; transition:border-color 0.3s;" class="hover:border-[#D4AF37]">
+            <div style="aspect-ratio: 4/3; overflow: hidden; position: relative;">
+              <img src="/images/slider-3.jpg" alt="Gurukul Student Life 3" class="w-full h-full object-cover transition-transform duration-700 hover:scale-105" loading="lazy">
+              <div class="absolute inset-0 pointer-events-none" style="background:linear-gradient(to top, rgba(74,14,14,0.4) 0%, transparent 40%); mix-blend-mode: multiply;"></div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Photo 4 -->
+        <div class="snap-center shrink-0 w-[85%] sm:w-[50%] md:w-[40%] lg:w-[30%]">
+          <div style="background:rgba(212,175,55,0.03); border:1px solid rgba(212,175,55,0.25); padding:12px; transition:border-color 0.3s;" class="hover:border-[#D4AF37]">
+            <div style="aspect-ratio: 4/3; overflow: hidden; position: relative;">
+              <img src="/images/slider-4.jpg" alt="Gurukul Student Life 4" class="w-full h-full object-cover transition-transform duration-700 hover:scale-105" loading="lazy">
+              <div class="absolute inset-0 pointer-events-none" style="background:linear-gradient(to top, rgba(74,14,14,0.4) 0%, transparent 40%); mix-blend-mode: multiply;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Photo 5 -->
+        <div class="snap-center shrink-0 w-[85%] sm:w-[50%] md:w-[40%] lg:w-[30%]">
+          <div style="background:rgba(212,175,55,0.03); border:1px solid rgba(212,175,55,0.25); padding:12px; transition:border-color 0.3s;" class="hover:border-[#D4AF37]">
+            <div style="aspect-ratio: 4/3; overflow: hidden; position: relative;">
+              <img src="/images/slider-5.jpg" alt="Gurukul Student Life 5" class="w-full h-full object-cover transition-transform duration-700 hover:scale-105" loading="lazy">
+              <div class="absolute inset-0 pointer-events-none" style="background:linear-gradient(to top, rgba(74,14,14,0.4) 0%, transparent 40%); mix-blend-mode: multiply;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Photo 6 -->
+        <div class="snap-center shrink-0 w-[85%] sm:w-[50%] md:w-[40%] lg:w-[30%]">
+          <div style="background:rgba(212,175,55,0.03); border:1px solid rgba(212,175,55,0.25); padding:12px; transition:border-color 0.3s;" class="hover:border-[#D4AF37]">
+            <div style="aspect-ratio: 4/3; overflow: hidden; position: relative;">
+              <img src="/images/slider-6.jpg" alt="Gurukul Student Life 6" class="w-full h-full object-cover transition-transform duration-700 hover:scale-105" loading="lazy">
+              <div class="absolute inset-0 pointer-events-none" style="background:linear-gradient(to top, rgba(74,14,14,0.4) 0%, transparent 40%); mix-blend-mode: multiply;"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Pagination Dots -->
+      <div id="gurukul-slider-dots" class="flex justify-center items-center gap-2 mt-6">
+        <button class="w-2.5 h-2.5 rounded-full bg-[#D4AF37] transition-all duration-300" aria-label="Slide 1"></button>
+        <button class="w-2 h-2 rounded-full bg-[rgba(212,175,55,0.3)] transition-all duration-300 hover:bg-[rgba(212,175,55,0.6)] cursor-pointer" aria-label="Slide 2"></button>
+        <button class="w-2 h-2 rounded-full bg-[rgba(212,175,55,0.3)] transition-all duration-300 hover:bg-[rgba(212,175,55,0.6)] cursor-pointer" aria-label="Slide 3"></button>
+        <button class="w-2 h-2 rounded-full bg-[rgba(212,175,55,0.3)] transition-all duration-300 hover:bg-[rgba(212,175,55,0.6)] cursor-pointer" aria-label="Slide 4"></button>
+        <button class="w-2 h-2 rounded-full bg-[rgba(212,175,55,0.3)] transition-all duration-300 hover:bg-[rgba(212,175,55,0.6)] cursor-pointer" aria-label="Slide 5"></button>
+        <button class="w-2 h-2 rounded-full bg-[rgba(212,175,55,0.3)] transition-all duration-300 hover:bg-[rgba(212,175,55,0.6)] cursor-pointer" aria-label="Slide 6"></button>
+      </div>
+
+      <!-- Logic for Pagination Dots -->
+      <script>
+        document.addEventListener("DOMContentLoaded", () => {
+          const slider = document.getElementById('gurukul-slider');
+          const dots = Array.from(document.getElementById('gurukul-slider-dots').querySelectorAll('button'));
+          const slides = Array.from(slider.children).filter(c => c.tagName === 'DIV');
+          
+          if(slider && dots.length > 0 && slides.length > 0) {
+            slider.addEventListener('scroll', () => {
+              const scrollCenter = slider.scrollLeft + slider.clientWidth / 2;
+              let minDiff = Infinity;
+              let activeIndex = 0;
+              
+              slides.forEach((slide, i) => {
+                const slideCenter = slide.offsetLeft + slide.clientWidth / 2;
+                const diff = Math.abs(scrollCenter - slideCenter);
+                if (diff < minDiff) {
+                  minDiff = diff;
+                  activeIndex = i;
+                }
+              });
+              
+              dots.forEach((dot, i) => {
+                if (i === activeIndex) {
+                  dot.className = "w-2.5 h-2.5 rounded-full bg-[#D4AF37] transition-all duration-300";
+                } else {
+                  dot.className = "w-2 h-2 rounded-full bg-[rgba(212,175,55,0.3)] transition-all duration-300 hover:bg-[rgba(212,175,55,0.6)] cursor-pointer";
+                }
+              });
             });
-        </script>
-    </body>
+            
+            dots.forEach((dot, i) => {
+              dot.addEventListener('click', () => {
+                if(slides[i]) {
+                  const scrollPos = slides[i].offsetLeft - (slider.clientWidth - slides[i].clientWidth) / 2;
+                  slider.scrollTo({ left: scrollPos, behavior: 'smooth' });
+                }
+              });
+            });
+          }
+        });
+      </script>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================
+     SACRED PROCESS
+========================================= -->
+<section id="process" class="py-24 bg-parchment">
+  <div class="max-w-7xl mx-auto px-6 md:px-12">
+
+    <div class="text-center mb-16" data-aos="fade-up">
+      <p class="section-label mb-4">How It Works</p>
+      <h2 class="font-serif font-bold text-maroon mb-4" style="font-size:clamp(2rem,4vw,3rem);letter-spacing:-0.02em;">The Sacred Process</h2>
+      <div class="gold-divider mx-auto mb-5"></div>
+      <p style="font-size:0.95rem;color:#5A4A4A;line-height:1.7;max-width:440px;margin:0 auto;">
+        From consultation to ceremony — every step is guided by scholarship, precision, and reverence.
+      </p>
+    </div>
+
+    <div class="scroll-nav-wrapper">
+      <button class="scroll-nav-btn scroll-left scroll-hidden md:!hidden" onclick="scrollRow(this, -1)" aria-label="Scroll left">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button class="scroll-nav-btn scroll-right md:!hidden" onclick="scrollRow(this, 1)" aria-label="Scroll right">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 6 15 12 9 18"/></svg>
+      </button>
+    <div class="grid grid-cols-1 md:grid-cols-3 process-scroll-row">
+
+      <div class="process-card px-8 py-10 relative" style="border-right:1px solid rgba(212,175,55,0.15);" data-aos="fade-up" data-aos-delay="0" data-testid="process-step-1">
+        <div class="process-icon">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round">
+            <circle cx="20" cy="20" r="15"/>
+            <line x1="20" y1="5" x2="20" y2="8"/><line x1="35" y1="20" x2="32" y2="20"/>
+            <line x1="20" y1="35" x2="20" y2="32"/><line x1="5" y1="20" x2="8" y2="20"/>
+            <line x1="30.3" y1="9.7" x2="28.2" y2="11.8"/><line x1="30.3" y1="30.3" x2="28.2" y2="28.2"/>
+            <line x1="9.7" y1="30.3" x2="11.8" y2="28.2"/><line x1="9.7" y1="9.7" x2="11.8" y2="11.8"/>
+            <line x1="20" y1="20" x2="13" y2="11" stroke-width="1.8"/>
+            <line x1="20" y1="20" x2="20" y2="9"/>
+            <circle cx="20" cy="20" r="2" fill="#D4AF37" stroke="none"/>
+          </svg>
+        </div>
+        <span class="step-num block mb-3">01</span>
+        <div style="width:28px;height:2px;background:#D4AF37;margin-bottom:1rem;"></div>
+        <h3 class="font-serif font-bold text-maroon mb-3" style="font-size:1.15rem;">Muhurta Consultation</h3>
+        <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.75;">
+          Our scholars determine the most auspicious date and time for your ritual — aligned with Vedic astrological principles and your household's unique energy signature.
+        </p>
+      </div>
+
+      <div class="flex justify-center md:hidden py-4 process-mobile-divider">
+        <div style="width:1px;height:32px;background:rgba(212,175,55,0.3);"></div>
+      </div>
+
+      <div class="process-card px-8 py-10 relative" style="border-right:1px solid rgba(212,175,55,0.15);" data-aos="fade-up" data-aos-delay="150" data-testid="process-step-2">
+        <div class="process-icon">
+          <!-- Sacred Manuscript / Bhojpatra -->
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Manuscript body (slightly irregular parchment edges) -->
+            <path d="M6 7 Q6 5 9 5 L31 5 Q34 5 34 7 L34 35 Q34 37 31 37 L9 37 Q6 37 6 35 Z"/>
+            <!-- Folded corner (top-left — parchment authenticity) -->
+            <path d="M6 7 Q6 5 9 5 Q9 9 13 9 Q9 9 6 7Z" fill="rgba(212,175,55,0.12)"/>
+            <!-- Sanskrit horizontal text lines (wavy, suggesting script) -->
+            <path d="M11 15 Q15.5 13.5 20 15 Q24.5 16.5 29 15"/>
+            <path d="M11 20 Q15.5 18.5 20 20 Q24.5 21.5 29 20"/>
+            <path d="M11 25 Q15.5 23.5 20 25 Q24.5 26.5 29 25"/>
+            <path d="M11 30 Q14 28.5 17 30"/>
+            <!-- Danda marks (Sanskrit manuscript convention) -->
+            <line x1="11" y1="13" x2="11" y2="17"/>
+            <line x1="29" y1="13" x2="29" y2="17"/>
+          </svg>
+        </div>
+        <span class="step-num block mb-3">02</span>
+        <div style="width:28px;height:2px;background:#D4AF37;margin-bottom:1rem;"></div>
+        <h3 class="font-serif font-bold text-maroon mb-3" style="font-size:1.15rem;">Scholarly Preparation</h3>
+        <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.75;">
+          We source unadulterated ritual ingredients — hand-picked Himalayan herbs, pure Desi ghee, and sacred wood — each verified against Vedic and Ayurvedic botanical texts for purity.
+        </p>
+      </div>
+
+      <div class="flex justify-center md:hidden py-4 process-mobile-divider">
+        <div style="width:1px;height:32px;background:rgba(212,175,55,0.3);"></div>
+      </div>
+
+      <div class="process-card px-8 py-10" data-aos="fade-up" data-aos-delay="300" data-testid="process-step-3">
+        <div class="process-icon">
+          <!-- Havan Kund with Minimalist Flame -->
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Havan Kund (trapezoidal fire pit) -->
+            <path d="M8 35 L13 23 L27 23 L32 35 Z"/>
+            <!-- Base line -->
+            <line x1="6" y1="35" x2="34" y2="35"/>
+            <!-- Kund step line (traditional square kund has steps) -->
+            <line x1="10" y1="29" x2="30" y2="29"/>
+            <!-- Main flame (three-pronged — classic Vedic fire representation) -->
+            <path d="M20 23 C20 19 16 15 18 11 C19 9 21 11 23 9 C25 6 23 4 20 3"/>
+            <path d="M20 23 C20 19 25 16 24 12 C26 14 27 16 25 19"/>
+            <path d="M20 23 C20 20 15 17 16 14 C14 16 13 18 15 21"/>
+            <!-- Inner flame glow -->
+            <path d="M20 21 C20 19 19 17 19.5 15 C20 14 21 15 21 14" stroke-width="0.9" stroke-opacity="0.5"/>
+          </svg>
+        </div>
+        <span class="step-num block mb-3">03</span>
+        <div style="width:28px;height:2px;background:#D4AF37;margin-bottom:1rem;"></div>
+        <h3 class="font-serif font-bold text-maroon mb-3" style="font-size:1.15rem;">Vedic Execution</h3>
+        <p style="font-size:0.87rem;color:#5A4A4A;line-height:1.75;">
+          An immersive, scholar-led ceremony in your home. Every mantra recited with meticulous phonetic precision, every offering made with complete ceremonial awareness and reverence.
+        </p>
+      </div>
+
+    </div>
+    </div>
+
+    <div class="text-center mt-14" data-aos="fade-up" data-aos-delay="400">
+      <button onclick="openConsultModal('Muhurta Consultation')" class="btn-primary" data-testid="process-book-btn">
+        Book Free Consultation
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================
+     FAQ
+========================================= -->
+<section id="faq" class="py-24" style="background:#F5EFE0;">
+  <div class="max-w-3xl mx-auto px-6 md:px-12">
+    <div class="text-center mb-14" data-aos="fade-up">
+      <p class="section-label mb-4">Frequently Asked</p>
+      <h2 class="font-serif font-bold text-maroon mb-4" style="font-size:clamp(2rem,4vw,3rem);letter-spacing:-0.02em;">Questions &amp; Clarity</h2>
+      <div class="gold-divider mx-auto"></div>
+    </div>
+    <div data-aos="fade-up" data-aos-delay="80">
+      <div class="faq-item" data-testid="faq-item-1">
+        <button class="faq-question" onclick="toggleFAQ(this)" aria-expanded="false" data-testid="faq-q1">
+          <span>What guarantees the phonetic accuracy of your mantras?</span><span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer"><p class="faq-answer-text">Our scholars completed a minimum 20-year residential Gurukul program under Shastra-certified Gurus, trained in Vedic phonetics (Shiksha) — where pitch, duration, nasalisation, and syllabic accent are taught orally over decades. Unlike certificate-course priests, our scholars have internalized the Veda through unbroken oral repetition. This is the only method the Vedic tradition recognizes as authentic.</p></div>
+      </div>
+      <div class="faq-item" data-testid="faq-item-2">
+        <button class="faq-question" onclick="toggleFAQ(this)" aria-expanded="false" data-testid="faq-q2">
+          <span>What is included in the stated service price?</span><span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer"><p class="faq-answer-text">All prices include scholar travel (within service area), all Himalayan Samagri, Havan Kund setup and dismantling, post-ritual prasad, and a 15-minute pre-ritual consultation. Optional add-ons are disclosed upfront. No hidden fees.</p></div>
+      </div>
+      <div class="faq-item" data-testid="faq-item-3">
+        <button class="faq-question" onclick="toggleFAQ(this)" aria-expanded="false" data-testid="faq-q3">
+          <span>What makes Himalayan Samagri different from market alternatives?</span><span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer"><p class="faq-answer-text">Commercial Samagri is often adulterated with synthetic fragrances or incorrect plant substitutes. Our Samagri is sourced directly from Himalayan tribal gatherers and Gurukul herb gardens, verified by our scholars against Ayurvedic and Vedic botanical texts. We never use pre-packaged kits.</p></div>
+      </div>
+      <div class="faq-item" data-testid="faq-item-4">
+        <button class="faq-question" onclick="toggleFAQ(this)" aria-expanded="false" data-testid="faq-q4">
+          <span>How do I book and what is the typical lead time?</span><span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer"><p class="faq-answer-text">All bookings begin with a WhatsApp consultation. Our scholar will understand your Sankalpa and recommend the appropriate ceremony. Bookings require 5–7 days for Muhurta selection and Samagri sourcing. A nominal advance confirms your slot; balance on the day of service.</p></div>
+      </div>
+      <div class="faq-item" data-testid="faq-item-5">
+        <button class="faq-question" onclick="toggleFAQ(this)" aria-expanded="false" data-testid="faq-q5">
+          <span>Which cities do you currently serve?</span><span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer"><p class="faq-answer-text">Delhi NCR (Delhi, Gurugram, Noida, Faridabad, Ghaziabad), Jaipur, and Lucknow. Expanding to Mumbai and Bengaluru. For other locations, we offer remote Sankalpa ceremonies or can arrange scholar travel for premium bookings.</p></div>
+      </div>
+      <div class="faq-item" data-testid="faq-item-6">
+        <button class="faq-question" onclick="toggleFAQ(this)" aria-expanded="false" data-testid="faq-q6">
+          <span>Can ceremonies be customized for specific intentions?</span><span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer"><p class="faq-answer-text">Yes. Every ceremony begins with a Sankalpa — a formal declaration of intent — uniquely tailored to your family and purpose. Our scholars can adapt the Ahuti sequence and mantra selection for Griha Pravesh, business commencement, health recovery, or Pitru Tarpan — all within Vedic Shastra.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================
+     FOOTER
+========================================= -->
+<footer id="footer" data-testid="footer">
+  <div class="max-w-7xl mx-auto px-6 md:px-12 py-16">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+      <div>
+        <p class="font-cinzel font-bold" style="font-size:1.65rem;color:#D4AF37;">HOMEPUJAN</p>
+        <p style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.18em;color:rgba(255,255,255,0.3);margin:0.5rem 0 1.25rem;">Preserving Tradition. Serving Modernity.</p>
+        <div style="width:40px;height:1px;background:rgba(212,175,55,0.35);margin-bottom:1.25rem;"></div>
+        <p style="font-size:0.85rem;color:rgba(255,255,255,0.35);line-height:1.7;">A collective of lifelong Gurukul scholars bringing uncompromised Vedic precision to your home.</p>
+      </div>
+      <div>
+        <p style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.18em;color:rgba(212,175,55,0.55);font-weight:600;margin-bottom:1.25rem;">Navigate</p>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:0.75rem;">
+          <li><a href="#lineage" class="footer-link" data-testid="footer-lineage-link">The Parampara</a></li>
+          <li><a href="#find-path" class="footer-link" data-testid="footer-path-link">Find Your Path</a></li>
+          <li><a href="#services" class="footer-link" data-testid="footer-services-link">Sacred Ceremonies</a></li>
+          <li><a href="#process" class="footer-link" data-testid="footer-process-link">The Sacred Process</a></li>
+          <li><a href="#faq" class="footer-link" data-testid="footer-faq-link">Questions &amp; Clarity</a></li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.18em;color:rgba(212,175,55,0.55);font-weight:600;margin-bottom:1.25rem;">Connect with a Scholar</p>
+        <p style="font-size:0.85rem;color:rgba(255,255,255,0.35);line-height:1.7;margin-bottom:1.25rem;">Ready to begin? Consult directly with a Gurukul scholar to find your Vedic path.</p>
+        <a href="https://wa.me/919667039964?text=I'm%20interested%20in%20finding%20my%20Vedic%20path."
+           target="_blank" rel="noopener noreferrer"
+           style="display:inline-flex;align-items:center;gap:0.6rem;padding:0.75rem 1.5rem;font-size:0.78rem;font-weight:500;text-transform:uppercase;letter-spacing:0.1em;color:#D4AF37;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.25);text-decoration:none;transition:all 0.25s;"
+           onmouseover="this.style.background='rgba(212,175,55,0.16)';this.style.borderColor='rgba(212,175,55,0.5)'"
+           onmouseout="this.style.background='rgba(212,175,55,0.08)';this.style.borderColor='rgba(212,175,55,0.25)'"
+           data-testid="footer-whatsapp-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652c1.746.943 3.71 1.444 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.48-8.45z"/></svg>
+          WhatsApp a Scholar
+        </a>
+        <p style="margin-top:1rem;font-size:0.82rem;color:rgba(255,255,255,0.28);">+91 96670 39964</p>
+      </div>
+    </div>
+    <div style="margin-top:3rem;padding-top:2rem;border-top:1px solid rgba(212,175,55,0.1);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.5rem;text-align:center;">
+      <p style="font-size:0.72rem;color:rgba(255,255,255,0.18);">&copy; 2025 HomePujan. All rights reserved.</p>
+      <p style="font-size:0.62rem;text-transform:uppercase;letter-spacing:0.18em;color:rgba(212,175,55,0.2);">Preserving Tradition. Serving Modernity.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- =========================================
+     MODALS
+========================================= -->
+
+<!-- CONSULTATION / ALIGNMENT CALL MODAL -->
+<div id="modal-consult" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Book Free Consultation" data-testid="modal-consult">
+  <div class="modal-drop" style="max-width:720px;">
+    <div class="modal-paper">
+      <button class="modal-close" onclick="closeModal('consult')" data-testid="modal-consult-close" aria-label="Close">&times;</button>
+      <div class="modal-inner" style="padding:1.5rem 1.5rem 0;">
+
+        <div class="modal-section" style="margin-bottom:1rem;">
+          <p class="modal-section-lbl">Scholar's Desk</p>
+          <p class="modal-invoc-title">Book Free Consultation</p>
+          <p class="modal-invoc-sub">A 15-minute scholarly consultation — no sales, only guidance</p>
+        </div>
+
+        <!-- Cal.com Embed -->
+        <div style="width:100%;height:480px;overflow:auto;border-radius:8px;" id="my-cal-inline-15min"></div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Vastu Shanti -->
+<div id="modal-vastu" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Vastu Shanti Havan details" data-testid="modal-vastu">
+  <div class="modal-drop">
+    <div class="modal-paper">
+      <button class="modal-close" onclick="closeModal('vastu')" data-testid="modal-vastu-close" aria-label="Close">&times;</button>
+      <div class="modal-inner">
+        <div style="margin-bottom:1rem;">
+          <span class="modal-tag">New Beginnings</span>
+          <span class="modal-tag">Home</span>
+          <span class="modal-tag">Office</span>
+        </div>
+
+        <!-- THE INVOCATION -->
+        <div class="modal-section">
+          <p class="modal-section-lbl">The Invocation</p>
+          <p class="modal-invoc-title">Vāstu Śānti Homa</p>
+          <p class="modal-invoc-sub">The Recalibration of Sacred Space</p>
+        </div>
+        <div class="gold-divider mb-4" style="width:36px;"></div>
+
+        <!-- THE VEDIC INTENT -->
+        <div class="modal-section">
+          <p class="modal-section-lbl">The Vedic Intent</p>
+          <p class="modal-section-body">Every physical space accumulates energetic residue — from arguments, illness, financial stress, and ancestral patterns. The Vāstu Śānti addresses panchabhuta (five-element) disharmony, restoring the natural flow of positive forces through your living environment. It is prescribed at the time of new possession, after significant life disruptions, or when the household feels persistently heavy or blocked.</p>
+        </div>
+
+        <!-- THE SCHOLARLY EDGE -->
+        <div class="modal-section">
+          <p class="modal-section-lbl">The Scholarly Edge</p>
+          <div class="modal-edge-block">
+            This ceremony requires the scholar to map your home's directional axes against 32 specific Vedic energy fields (Marmasthana). The mantra sequences are calibrated to each cardinal direction with distinct pitch and tonal variation — a form of Vedic spatial acoustics taught only in the 15th to 20th year of Gurukul study, when the student has achieved complete tonal mastery and breath control.
+          </div>
+        </div>
+
+        <!-- THE ELEMENTS -->
+        <div class="modal-section" style="margin-bottom:1.5rem;">
+          <p class="modal-section-lbl">The Elements</p>
+          <div style="background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);padding:1.25rem;">
+            <div class="modal-detail-row"><span class="modal-detail-label">Duration</span><span class="modal-detail-val">3–4 Hours</span></div>
+            <div class="modal-detail-row"><span class="modal-detail-label">Scholars</span><span class="modal-detail-val">Gurukul Trained Scholars</span></div>
+            <div class="modal-detail-row"><span class="modal-detail-label">Samagri</span><span class="modal-detail-val">100% Shastra-Compliant Elements: A2 Gir Cow Ghee, hand-ground Himalayan herbs, sacred Peepal wood. No market-adulterated substitutes.</span></div>
+            <div class="modal-detail-row" style="margin-bottom:0;">
+              <span class="modal-detail-label">Dakshina</span>
+              <span class="modal-detail-val font-serif font-bold text-maroon" style="font-size:1.15rem;">From ₹15,000 <span style="font-size:0.72rem;font-weight:400;color:#7A6A6A;font-family:'Inter',sans-serif;">— does not include the cost of Samagri</span></span>
+            </div>
+          </div>
+        </div>
+
+        <button onclick="closeModal('vastu');openConsultModal('Vastu Shanti Havan')" class="btn-discuss" data-testid="modal-vastu-discuss-btn">
+          Book Free Consultation
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Lakshmi-Kuber -->
+<div id="modal-lakshmi" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Lakshmi-Kuber Havan details" data-testid="modal-lakshmi">
+  <div class="modal-drop">
+    <div class="modal-paper">
+      <button class="modal-close" onclick="closeModal('lakshmi')" data-testid="modal-lakshmi-close" aria-label="Close">&times;</button>
+      <div class="modal-inner">
+        <div style="margin-bottom:1rem;">
+          <span class="modal-tag">Success &amp; Growth</span>
+          <span class="modal-tag">Business</span>
+          <span class="modal-tag">Career</span>
+        </div>
+
+        <!-- THE INVOCATION -->
+        <div class="modal-section">
+          <p class="modal-section-lbl">The Invocation</p>
+          <p class="modal-invoc-title">Śrī Lakṣmī-Kubera Homa</p>
+          <p class="modal-invoc-sub">The Dual Invocation of Abundance</p>
+        </div>
+        <div class="gold-divider mb-4" style="width:36px;"></div>
+
+        <!-- THE VEDIC INTENT -->
+        <div class="modal-section">
+          <p class="modal-section-lbl">The Vedic Intent</p>
+          <p class="modal-section-body">This ceremony addresses two distinct layers of material blockage: the karmic restrictions on incoming prosperity (Lakshmi's domain) and the structural obstructions in wealth retention and business growth (Kubera's domain). It is prescribed when financial momentum has inexplicably stalled, when career growth has plateaued despite effort, or at the commencement of a new business venture requiring Vedic blessing.</p>
+        </div>
+
+        <!-- THE SCHOLARLY EDGE -->
+        <div class="modal-section">
+          <p class="modal-section-lbl">The Scholarly Edge</p>
+          <div class="modal-edge-block">
+            The dual-deity simultaneous invocation is among the most technically demanding in Vedic practice. Each deity requires a distinct mantra frequency, Ahuti sequence, and tonal mode — Lakshmi's mantras in Madhyama Svara, Kubera's in Tara Svara. Incorrect tonal separation creates energetic interference that can invert the ceremony's intent entirely. Mastering this dual-frequency discipline requires the final stages of Gurukul phonetic training — typically the 18th to 20th year of study.
+          </div>
+        </div>
+
+        <!-- THE ELEMENTS -->
+        <div class="modal-section" style="margin-bottom:1.5rem;">
+          <p class="modal-section-lbl">The Elements</p>
+          <div style="background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);padding:1.25rem;">
+            <div class="modal-detail-row"><span class="modal-detail-label">Duration</span><span class="modal-detail-val">2 Hours</span></div>
+            <div class="modal-detail-row"><span class="modal-detail-label">Scholars</span><span class="modal-detail-val">Gurukul Trained Scholars</span></div>
+            <div class="modal-detail-row"><span class="modal-detail-label">Samagri</span><span class="modal-detail-val">100% Shastra-Compliant Elements: A2 Gir Cow Ghee, hand-ground Himalayan herbs, pure Navagraha woods. No market-adulterated substitutes.</span></div>
+            <div class="modal-detail-row" style="margin-bottom:0;">
+              <span class="modal-detail-label">Dakshina</span>
+              <span class="modal-detail-val font-serif font-bold text-maroon" style="font-size:1.15rem;">From ₹5,100 <span style="font-size:0.72rem;font-weight:400;color:#7A6A6A;font-family:'Inter',sans-serif;">— does not include the cost of Samagri</span></span>
+            </div>
+          </div>
+        </div>
+
+        <button onclick="closeModal('lakshmi');openConsultModal('Lakshmi-Kuber Havan')" class="btn-discuss" data-testid="modal-lakshmi-discuss-btn">
+          Book Free Consultation
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Maha Mrityunjaya -->
+<div id="modal-maha" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Maha Mrityunjaya Havan details" data-testid="modal-maha">
+  <div class="modal-drop">
+    <div class="modal-paper">
+      <button class="modal-close" onclick="closeModal('maha')" data-testid="modal-maha-close" aria-label="Close">&times;</button>
+      <div class="modal-inner">
+        <div style="margin-bottom:1rem;">
+          <span class="modal-tag">Health &amp; Protection</span>
+          <span class="modal-tag">Wellness</span>
+          <span class="modal-tag">Longevity</span>
+        </div>
+
+        <!-- THE INVOCATION -->
+        <div class="modal-section">
+          <p class="modal-section-lbl">The Invocation</p>
+          <p class="modal-invoc-title">Mahā Mṛtyuñjaya Homa</p>
+          <p class="modal-invoc-sub">The Supreme Invocation Against Mortality</p>
+        </div>
+        <div class="gold-divider mb-4" style="width:36px;"></div>
+
+        <!-- THE VEDIC INTENT -->
+        <div class="modal-section">
+          <p class="modal-section-lbl">The Vedic Intent</p>
+          <p class="modal-section-body">The Maha Mrityunjaya is invoked when life force is under direct threat — through chronic illness, an unfavorable astrological period (Mrityubhaga), or deep ancestral karmic debt. It is the Rigveda's most powerful single mantra for health restoration and longevity. Its vibrations address the Prana Vayu directly — the vital air governing life itself. It is prescribed for recovery, prevention, and the restoration of a depleted life force.</p>
+        </div>
+
+        <!-- THE SCHOLARLY EDGE -->
+        <div class="modal-section">
+          <p class="modal-section-lbl">The Scholarly Edge</p>
+          <div class="modal-edge-block">
+            The Maha Mrityunjaya mantra contains 32 Sanskrit syllables with precisely defined pitch (Svaras), duration (Matra), and nasal resonance (Anunasika). The Rigvedic tradition holds that a single phonetic error does not merely reduce the ceremony's efficacy — it inverts the invocation entirely, creating what the Vedas call a "Vipareeta Phala." For this reason, our senior scholars hold that a 20-year Gurukul minimum is not merely preferred — it is the ethical threshold for performing this ceremony on behalf of another person's life.
+          </div>
+        </div>
+
+        <!-- THE ELEMENTS -->
+        <div class="modal-section" style="margin-bottom:1.5rem;">
+          <p class="modal-section-lbl">The Elements</p>
+          <div style="background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);padding:1.25rem;">
+            <div class="modal-detail-row"><span class="modal-detail-label">Duration</span><span class="modal-detail-val">2 Hours</span></div>
+            <div class="modal-detail-row"><span class="modal-detail-label">Scholars</span><span class="modal-detail-val">Gurukul Trained Scholars</span></div>
+            <div class="modal-detail-row"><span class="modal-detail-label">Samagri</span><span class="modal-detail-val">100% Shastra-Compliant Elements: 108 Himalayan medicinal herbs, A2 Gir Cow Ghee, Bilva leaves, Badri wood — verified against Ayurvedic texts. No market-adulterated substitutes.</span></div>
+            <div class="modal-detail-row" style="margin-bottom:0;">
+              <span class="modal-detail-label">Dakshina</span>
+              <span class="modal-detail-val font-serif font-bold text-maroon" style="font-size:1.15rem;">From ₹1,100 <span style="font-size:0.72rem;font-weight:400;color:#7A6A6A;font-family:'Inter',sans-serif;">— does not include the cost of Samagri</span></span>
+            </div>
+          </div>
+        </div>
+
+        <button onclick="closeModal('maha');openConsultModal('Maha Mrityunjaya Havan')" class="btn-discuss" data-testid="modal-maha-discuss-btn">
+          Book Free Consultation
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SERVICE DETAIL MODAL (DYNAMIC) ===================== -->
+<div id="modal-service" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Service Details" data-testid="modal-service">
+  <div class="modal-drop">
+    <div class="modal-paper">
+      <button class="modal-close" onclick="closeModal('service')" data-testid="modal-service-close" aria-label="Close">&times;</button>
+      <div class="modal-inner" id="service-modal-content">
+        <!-- Content populated dynamically -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAYMENT MODAL ===================== -->
+<div id="modal-pay" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Pay & Schedule Service" data-testid="modal-pay">
+  <div class="modal-drop" style="max-width:680px;">
+    <div class="modal-paper">
+      <button class="modal-close" onclick="closeModal('pay')" data-testid="modal-pay-close" aria-label="Close">&times;</button>
+      <div class="modal-inner">
+        <div class="modal-section" style="margin-bottom:0.5rem;">
+          <p class="modal-section-lbl">Direct Booking</p>
+          <p class="modal-invoc-title" id="pay-service-title">Service</p>
+          <p class="modal-invoc-sub" id="pay-service-subtitle">Schedule your ceremony</p>
+        </div>
+
+        <div class="pay-stepper" id="pay-stepper">
+          <span class="pay-step-dot active" data-step-dot="1">1</span>
+          <span class="pay-step-line"></span>
+          <span class="pay-step-dot" data-step-dot="2">2</span>
+          <span class="pay-step-line"></span>
+          <span class="pay-step-dot" data-step-dot="3">3</span>
+          <span class="pay-step-line"></span>
+          <span class="pay-step-dot" data-step-dot="4">4</span>
+        </div>
+
+        <div class="pay-error" id="pay-error" role="alert"></div>
+
+        <!-- STEP 1: Date + Time -->
+        <div class="pay-step active" data-step="1">
+          <p class="modal-section-lbl" style="margin-bottom:0.7rem;">Select Date &amp; Time</p>
+          <div class="pay-cal-wrap">
+            <div class="pay-cal-nav">
+              <button type="button" id="pay-cal-prev" aria-label="Previous month">&lsaquo;</button>
+              <div class="pay-cal-nav-title" id="pay-cal-title"></div>
+              <button type="button" id="pay-cal-next" aria-label="Next month">&rsaquo;</button>
+            </div>
+            <div class="pay-cal-grid" id="pay-cal-grid"></div>
+          </div>
+          <div id="pay-slot-section" style="display:none;">
+            <p class="modal-section-lbl" style="margin:1.2rem 0 0.55rem;">Time Slot</p>
+            <div class="pay-slot-list" id="pay-slot-list"></div>
+            <p style="font-size:0.7rem;color:#7A6A6A;margin-top:0.6rem;line-height:1.55;">Scholar will confirm the most auspicious muhurta within your selected slot.</p>
+          </div>
+          <div class="pay-actions">
+            <button type="button" class="btn-discuss" id="pay-next-1" disabled style="opacity:0.45;cursor:not-allowed;">Continue</button>
+          </div>
+        </div>
+
+        <!-- STEP 2: Customer -->
+        <div class="pay-step" data-step="2">
+          <p class="modal-section-lbl" style="margin-bottom:0.7rem;">Your Details</p>
+          <div class="pay-form-row">
+            <label for="pay-name">Full Name</label>
+            <input type="text" id="pay-name" class="consult-input" autocomplete="name" placeholder="Yajamana name"/>
+          </div>
+          <div class="pay-form-row">
+            <label for="pay-email">Email</label>
+            <input type="email" id="pay-email" class="consult-input" autocomplete="email" placeholder="you@example.com"/>
+          </div>
+          <div class="pay-form-row">
+            <label for="pay-phone">Phone (WhatsApp)</label>
+            <input type="tel" id="pay-phone" class="consult-input" autocomplete="tel" placeholder="10-digit Indian mobile"/>
+          </div>
+          <div class="pay-actions">
+            <button type="button" class="btn-align" onclick="payGoTo(1)">Back</button>
+            <button type="button" class="btn-discuss" id="pay-next-2">Review &amp; Pay</button>
+          </div>
+        </div>
+
+        <!-- STEP 3: Summary + Pay -->
+        <div class="pay-step" data-step="3">
+          <p class="modal-section-lbl" style="margin-bottom:0.7rem;">Review</p>
+          <div class="pay-summary">
+            <div class="pay-summary-row"><span class="lbl">Ceremony</span><span class="val" id="pay-sum-service">—</span></div>
+            <div class="pay-summary-row"><span class="lbl">Slot</span><span class="val" id="pay-sum-slot">—</span></div>
+            <div class="pay-summary-row"><span class="lbl">Yajamana</span><span class="val" id="pay-sum-name">—</span></div>
+            <div class="pay-summary-row"><span class="lbl">Contact</span><span class="val" id="pay-sum-contact">—</span></div>
+            <div class="pay-summary-row"><span class="lbl">Dakshina</span><span class="val pay-summary-total" id="pay-sum-amount">—</span></div>
+          </div>
+          <p style="font-size:0.72rem;color:#7A6A6A;line-height:1.6;margin-bottom:0.9rem;">Dakshina does not include the cost of Samagri. You will be redirected to Razorpay's secure checkout.</p>
+          <div class="pay-actions">
+            <button type="button" class="btn-align" onclick="payGoTo(2)">Back</button>
+            <button type="button" class="btn-discuss" id="pay-do-pay">Pay Now</button>
+          </div>
+        </div>
+
+        <!-- STEP 4: Confirmation -->
+        <div class="pay-step" data-step="4">
+          <div style="text-align:center;padding:0.5rem 0 0.25rem;">
+            <div class="pay-confirm-icon">✓</div>
+            <p class="modal-invoc-title" style="font-size:1.25rem;">Booking Confirmed</p>
+            <p class="modal-invoc-sub">Scholar will reach out on WhatsApp shortly</p>
+          </div>
+          <div class="pay-summary" style="margin-top:1.1rem;">
+            <div class="pay-summary-row"><span class="lbl">Booking ID</span><span class="val"><span class="pay-confirm-id" id="pay-confirm-id">—</span></span></div>
+            <div class="pay-summary-row"><span class="lbl">Ceremony</span><span class="val" id="pay-confirm-service">—</span></div>
+            <div class="pay-summary-row"><span class="lbl">Slot</span><span class="val" id="pay-confirm-slot">—</span></div>
+            <div class="pay-summary-row"><span class="lbl">Paid</span><span class="val" id="pay-confirm-amount">—</span></div>
+          </div>
+          <p class="pay-confirm-detail" style="text-align:center;">A scholar will confirm the auspicious muhurta and Samagri list with you.</p>
+          <div class="pay-actions">
+            <a id="pay-confirm-wa" href="#" target="_blank" rel="noopener" class="btn-discuss" style="flex:1;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;">Message on WhatsApp</a>
+          </div>
+          <div class="pay-actions" style="margin-top:0.5rem;">
+            <button type="button" class="btn-align" onclick="closeModal('pay')">Close</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AOS -->
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
+<!-- Razorpay Checkout -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<!-- Cal.com Embed Script -->
+<script type="text/javascript">
+  (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+  Cal("init", "15min", {origin:"https://app.cal.com"});
+</script>
+
+<script>
+  AOS.init({ duration: 720, easing: 'ease-out-cubic', once: true, offset: 55 });
+
+  // ── NAVBAR ──
+  const navbar = document.getElementById('navbar');
+  const lotus  = document.getElementById('gold-lotus');
+  window.addEventListener('scroll', () => {
+    const s = window.scrollY > 24;
+    navbar.classList.toggle('scrolled', s);
+    lotus.classList.toggle('visible', window.scrollY > 350);
+  }, { passive: true });
+
+  // ── LOTUS SCROLL TO TOP ──
+  lotus.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  // ── MOBILE MENU ──
+  const menuBtn = document.getElementById('menu-btn');
+  const mobMenu = document.getElementById('mob-menu');
+  menuBtn.addEventListener('click', () => mobMenu.classList.toggle('open'));
+  function closeMob() { mobMenu.classList.remove('open'); }
+  document.addEventListener('click', e => { if (!navbar.contains(e.target)) closeMob(); });
+
+  // ── FAQ ACCORDION ──
+  function toggleFAQ(btn) {
+    const ans  = btn.nextElementSibling;
+    const icon = btn.querySelector('.faq-icon');
+    const open = ans.classList.contains('open');
+    document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
+    document.querySelectorAll('.faq-icon').forEach(i => { i.textContent = '+'; i.classList.remove('rotated'); });
+    document.querySelectorAll('.faq-question').forEach(q => q.setAttribute('aria-expanded', 'false'));
+    if (!open) { ans.classList.add('open'); icon.textContent = '+'; icon.classList.add('rotated'); btn.setAttribute('aria-expanded', 'true'); }
+  }
+
+  // ── FILTER SYSTEM (400ms opacity fade) ──
+  let activeFilter = null;
+  function filterServices(category) {
+    const tiles = document.querySelectorAll('[data-filter]');
+    const cards = document.querySelectorAll('[data-category]');
+    const label = document.getElementById('filter-label');
+    const labels = {
+      beginnings: 'Showing ceremonies for <strong>New Beginnings</strong> — home, office &amp; space harmonization.',
+      success:    'Showing ceremonies for <strong>Success &amp; Growth</strong> — prosperity, business &amp; career.',
+      health:     'Showing ceremonies for <strong>Health &amp; Protection</strong> — vitality, wellness &amp; longevity.'
+    };
+    if (activeFilter === category) {
+      activeFilter = null;
+      tiles.forEach(t => t.classList.remove('active'));
+      cards.forEach(c => { c.style.display = ''; c.style.opacity = '1'; c.style.transform = ''; c.style.pointerEvents = 'auto'; c.classList.remove('filtered-out','filtered-in'); });
+      label.innerHTML = 'Each ceremony is meticulously designed following Vedic scripture, performed with unadulterated Himalayan materials.';
+      
+      const grid = document.getElementById('services-grid');
+      if (grid) {
+        if (window.innerWidth < 768) {
+          grid.scrollTo({ left: 0, behavior: 'smooth' });
+        }
+        if (typeof updateScrollArrows === 'function') setTimeout(() => updateScrollArrows(grid), 100);
+      }
+      return;
+    }
+    
+    activeFilter = category;
+    let firstMatchedCard = null;
+    
+    tiles.forEach(t => t.classList.toggle('active', t.dataset.filter === category));
+    cards.forEach(c => {
+      if (c.dataset.category === category) {
+        if (!firstMatchedCard) firstMatchedCard = c;
+        c.style.opacity = '1'; c.style.transform = 'scale(1)'; c.style.pointerEvents = 'auto';
+        c.classList.remove('filtered-out'); c.classList.add('filtered-in');
+      } else {
+        c.style.opacity = '1'; c.style.transform = 'scale(1)'; c.style.pointerEvents = 'auto';
+        c.classList.remove('filtered-in'); c.classList.add('filtered-out');
+      }
+    });
+    label.innerHTML = labels[category] || '';
+    
+    setTimeout(() => {
+      document.getElementById('services').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const grid = document.getElementById('services-grid');
+      if (grid) {
+        // Scroll horizontal grid on mobile
+        if (firstMatchedCard && window.innerWidth < 768) {
+          const cardRect = firstMatchedCard.getBoundingClientRect();
+          const gridRect = grid.getBoundingClientRect();
+          // Scroll the grid horizontally by the distance from grid's left to card's left, minus some padding
+          grid.scrollBy({ left: cardRect.left - gridRect.left - 16, behavior: 'smooth' });
+        }
+        if (typeof updateScrollArrows === 'function') setTimeout(() => updateScrollArrows(grid), 100);
+      }
+    }, 120);
+  }
+
+  // ── KEYBOARD ACCESSIBILITY FOR TILES ──
+  document.querySelectorAll('[data-filter]').forEach(tile => {
+    tile.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); filterServices(tile.dataset.filter); } });
+  });
+
+  // ── MODAL SYSTEM ──
+  function openModal(id) {
+    const m = document.getElementById('modal-' + id);
+    if (!m) return;
+    m.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => requestAnimationFrame(() => m.classList.add('visible')));
+  }
+  function closeModal(id) {
+    const m = document.getElementById('modal-' + id);
+    if (!m) return;
+    m.classList.remove('visible');
+    setTimeout(() => { m.style.display = 'none'; document.body.style.overflow = ''; }, 320);
+  }
+  // Close on backdrop click
+  document.querySelectorAll('.modal-overlay').forEach(m => {
+    m.addEventListener('click', e => { if (e.target === m) closeModal(m.id.replace('modal-', '')); });
+  });
+  // Close on Escape
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.visible').forEach(m => closeModal(m.id.replace('modal-', '')));
+  });
+
+  // Cal.com initialized flag
+  let calInitialized = false;
+
+  function openConsultModal(service) {
+    openModal('consult');
+    // Initialize Cal.com widget when modal opens (only once)
+    if (!calInitialized && typeof Cal !== 'undefined') {
+      Cal.ns["15min"]("inline", {
+        elementOrSelector:"#my-cal-inline-15min",
+        config: {"layout":"month_view","useSlotsViewOnSmallScreen":"true","theme":"auto"},
+        calLink: "homepujan/15min",
+      });
+      Cal.ns["15min"]("ui", {"cssVarsPerTheme":{"light":{"cal-brand":"#4b1110"},"dark":{"cal-brand":"#d4af39"}},"hideEventTypeDetails":false,"layout":"month_view"});
+      calInitialized = true;
+    }
+  }
+
+  // ── SCROLL NAVIGATION ARROWS ──
+  function scrollRow(btn, direction) {
+    const wrapper = btn.closest('.scroll-nav-wrapper');
+    const row = wrapper.querySelector('.path-scroll-row, .services-scroll-row, .process-scroll-row');
+    if (!row) return;
+    const cardWidth = row.querySelector(':scope > *:not(.process-mobile-divider)')?.offsetWidth || 280;
+    row.scrollBy({ left: direction * (cardWidth + 16), behavior: 'smooth' });
+  }
+
+  // Update arrow visibility on scroll
+  function updateScrollArrows(row) {
+    const wrapper = row.closest('.scroll-nav-wrapper');
+    if (!wrapper) return;
+    const leftBtn = wrapper.querySelector('.scroll-left');
+    const rightBtn = wrapper.querySelector('.scroll-right');
+    if (leftBtn) leftBtn.classList.toggle('scroll-hidden', row.scrollLeft <= 8);
+    if (rightBtn) rightBtn.classList.toggle('scroll-hidden', row.scrollLeft + row.clientWidth >= row.scrollWidth - 8);
+  }
+
+  document.querySelectorAll('.path-scroll-row, .services-scroll-row, .process-scroll-row').forEach(row => {
+    row.addEventListener('scroll', () => updateScrollArrows(row), { passive: true });
+    // Initial check
+    setTimeout(() => updateScrollArrows(row), 500);
+  });
+
+  // ── SERVICES SLIDER POSITION DOTS ──
+  (function initServiceDots() {
+    const slider = document.getElementById('services-grid');
+    const dotsBox = document.getElementById('services-dots');
+    if (!slider || !dotsBox) return;
+    const cards = slider.querySelectorAll(':scope > .carousel-card');
+    if (!cards.length) return;
+
+    cards.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.className = 'services-dot' + (i === 0 ? ' active' : '');
+      b.type = 'button';
+      b.setAttribute('role', 'tab');
+      b.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+      b.addEventListener('click', () => {
+        cards[i].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+      });
+      dotsBox.appendChild(b);
+    });
+
+    const dots = dotsBox.querySelectorAll('.services-dot');
+    function syncDots() {
+      const sLeft = slider.scrollLeft;
+      let nearestIdx = 0;
+      let nearestDist = Infinity;
+      cards.forEach((card, i) => {
+        const dist = Math.abs(card.offsetLeft - sLeft);
+        if (dist < nearestDist) { nearestDist = dist; nearestIdx = i; }
+      });
+      dots.forEach((d, i) => d.classList.toggle('active', i === nearestIdx));
+    }
+    slider.addEventListener('scroll', () => {
+      window.requestAnimationFrame(syncDots);
+    }, { passive: true });
+    window.addEventListener('resize', syncDots);
+    setTimeout(syncDots, 300);
+  })();
+
+</script>
+
+<!-- ============ PAY WIZARD (landing) ============ -->
+<script>
+  // Subset of services featured on landing. serviceId must match a key in
+  // the backend SERVICE_CATALOG (see backend/server.py). Landing's "maha" card
+  // points at backend 'mrityunjay' (Maha Mrityunjay Jaap, ₹1,100).
+  const serviceData = {
+    mrityunjay: {
+      serviceId: 'mrityunjay',
+      name: 'Maha Mrityunjaya Havan',
+      subtitle: 'Supreme Vitality & Protecting Life Force',
+      category: 'Health & Protection',
+      description: 'The most potent Vedic invocation for health and longevity. 108 Mrityunjaya mantras recited with meticulous phonetic precision, each offering made with specific Himalayan medicinal herbs to invoke Lord Shiva’s grace against untimely afflictions.',
+      scholarly: 'The scholar selects the herbs and ratio of ghee, samidha and havan dravya specific to the family’s constitution and intent — never a generic mix.',
+      duration: '3-4 Hours',
+      dakshina: 'From ₹1,100',
+      priceInr: 1100,
+    },
+    satyanarayan: {
+      serviceId: 'satyanarayan',
+      name: 'Satya Narayan Katha',
+      subtitle: 'Sukh Sampatti & Sukh Shanti',
+      category: 'New Beginnings',
+      description: 'A sacred narrative recitation invoking Lord Vishnu’s blessings for peace, prosperity, and the fulfillment of intentions in the household. Performed traditionally on Purnima and at the onset of new ventures.',
+      scholarly: 'The scholar guides the yajamana through every sankalpa and ensures the five chapters of the katha are recited with the proper svara and pause.',
+      duration: '2-3 Hours',
+      dakshina: 'From ₹1,100',
+      priceInr: 1100,
+    },
+    gayatri: {
+      serviceId: 'gayatri',
+      name: 'Gayatri Jaap',
+      subtitle: 'Spiritual Clarity',
+      category: 'New Beginnings',
+      description: 'The most sacred Vedic mantra recited in precise repetitions to invoke divine illumination, peace of mind, and spiritual protection. A practice that calibrates the inner instrument of perception.',
+      scholarly: 'The scholar enforces correct ucchaarana and counts the jaapa on a tulsi or rudraksha maala — never approximated, never abbreviated.',
+      duration: '2-3 Hours',
+      dakshina: 'From ₹1,100',
+      priceInr: 1100,
+    },
+    agnihotra: {
+      serviceId: 'agnihotra',
+      name: 'Agnihotra',
+      subtitle: 'Daily Purification',
+      category: 'Health & Protection',
+      description: 'An ancient Vedic fire ritual performed at sunrise and sunset, purifying the atmosphere and establishing a daily spiritual discipline. The ritual offerings are timed to the precise solar transition.',
+      scholarly: 'The scholar will set up your home agnihotra patra and train the householder so the ritual continues daily after the inaugural offering.',
+      duration: '1-2 Hours',
+      dakshina: 'From ₹1,100',
+      priceInr: 1100,
+    },
+    shaanti: {
+      serviceId: 'shaanti',
+      name: 'Shaanti Hawan',
+      subtitle: 'Peace in the Home',
+      category: 'New Beginnings',
+      description: 'A purifying fire ceremony designed to restore balance and tranquility to the household, removing negative energies and establishing calm before a new chapter — a move, a marriage, a baby, a venture.',
+      scholarly: 'The scholar diagnoses the underlying disturbance (vastu, graha, ancestral) and shapes the ahuti list and sankalpa around the correct root cause.',
+      duration: '2-3 Hours',
+      dakshina: 'From ₹2,100',
+      priceInr: 2100,
+    },
+    vyapar: {
+      serviceId: 'vyapar',
+      name: 'Vyapar Samriddhi Puja',
+      subtitle: 'Trade Success',
+      category: 'Success & Growth',
+      description: 'A targeted Vedic ceremony for business owners and entrepreneurs to remove trade obstacles and invite momentum into commercial endeavors. Aligns the workplace and intent before a launch, expansion or recovery.',
+      scholarly: 'The scholar performs the puja at the place of business (or its symbolic representation) and prescribes the daily upasana to sustain the momentum.',
+      duration: '2-3 Hours',
+      dakshina: 'From ₹2,100',
+      priceInr: 2100,
+    },
+  };
+
+  function openServiceModal(serviceId) {
+    const data = serviceData[serviceId];
+    if (!data) return;
+
+    const content = document.getElementById('service-modal-content');
+    content.innerHTML = `
+      <div style="margin-bottom:1rem;">
+        <span class="modal-tag">${data.category}</span>
+      </div>
+      <div class="modal-section">
+        <p class="modal-section-lbl">The Invocation</p>
+        <p class="modal-invoc-title">${data.name}</p>
+        <p class="modal-invoc-sub">${data.subtitle}</p>
+      </div>
+      <div style="width:36px;height:2px;background:#D4AF37;margin-bottom:1.25rem;"></div>
+      <div class="modal-section">
+        <p class="modal-section-lbl">The Vedic Intent</p>
+        <p class="modal-section-body">${data.description}</p>
+      </div>
+      <div class="modal-section">
+        <p class="modal-section-lbl">The Scholarly Edge</p>
+        <div class="modal-edge-block">${data.scholarly}</div>
+      </div>
+      <div class="modal-section">
+        <p class="modal-section-lbl">The Elements</p>
+        <div class="modal-detail-row">
+          <span class="modal-detail-label">Duration</span>
+          <span class="modal-detail-val">${data.duration}</span>
+        </div>
+        <div class="modal-detail-row">
+          <span class="modal-detail-label">Scholars</span>
+          <span class="modal-detail-val">Gurukul Trained Scholars</span>
+        </div>
+        <div class="modal-detail-row">
+          <span class="modal-detail-label">Dakshina</span>
+          <span class="modal-detail-val" style="font-family:'Cinzel',serif;font-weight:700;color:#4A0E0E;">${data.dakshina} <span style="font-size:0.72rem;font-weight:400;color:#7A6A6A;font-family:'Inter',sans-serif;">— does not include the cost of Samagri</span></span>
+        </div>
+      </div>
+      ${data.priceInr ? `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;align-items:stretch;">
+          <button onclick="closeModal('service');openConsultModal('${data.name}')" class="btn-align" style="padding:1rem 0.75rem;font-size:0.72rem;margin:0;" data-testid="modal-service-consult-btn">
+            Book Free Consultation
+          </button>
+          <button onclick="closeModal('service');openPayModal('${data.serviceId}')" class="btn-discuss" style="padding:1rem 0.75rem;font-size:0.72rem;letter-spacing:0.1em;margin:0;border-width:1px;" data-testid="modal-service-pay-btn">
+            Pay ₹${data.priceInr.toLocaleString('en-IN')} &amp; Schedule
+          </button>
+        </div>
+        <p style="margin-top:0.85rem;font-size:0.7rem;color:#7A6A6A;text-align:center;line-height:1.55;">
+          Direct booking includes scholar dispatch &amp; ceremony scheduling.<br/>Not sure? Consult first — it's free.
+        </p>
+      ` : `
+        <button onclick="closeModal('service');openConsultModal('${data.name}')" class="btn-discuss" data-testid="modal-service-discuss-btn">
+          Book Free Consultation
+        </button>
+      `}
+    `;
+    openModal('service');
+  }
+
+  const PAY_API_BASE = (function () {
+    if (window.__API_BASE__) return window.__API_BASE__ + '/api';
+    const h = (window.location && window.location.hostname) || '';
+    const isLocal = h === 'localhost' || h === '127.0.0.1' || h === '0.0.0.0';
+    if (isLocal) return 'http://localhost:8000/api';
+    // Production backend on Railway. Change once api.homepujan.com is wired up.
+    return 'https://hpujan-production.up.railway.app/api';
+  })();
+  const PAY_TIME_SLOTS = [
+    '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00',
+    '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'
+  ];
+  const PAY_MAX_DAYS_AHEAD = 90;
+  const PAY_WHATSAPP_NUMBER = '919667039964';
+
+  const payState = {
+    serviceId: null, service: null, selectedDate: null, selectedSlot: null,
+    bookingId: null, orderId: null, amountPaise: null, serviceName: null,
+    rzpKeyId: null, calMonth: null, step: 1,
+  };
+
+  function payShowError(msg) {
+    const el = document.getElementById('pay-error');
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add('visible');
+  }
+  function payClearError() {
+    const el = document.getElementById('pay-error');
+    if (!el) return;
+    el.textContent = '';
+    el.classList.remove('visible');
+  }
+
+  function payGoTo(step) {
+    payClearError();
+    payState.step = step;
+    document.querySelectorAll('#modal-pay .pay-step').forEach(s => s.classList.toggle('active', Number(s.dataset.step) === step));
+    document.querySelectorAll('#modal-pay .pay-step-dot').forEach(d => {
+      const n = Number(d.dataset.stepDot);
+      d.classList.toggle('active', n === step);
+      d.classList.toggle('done', n < step);
+    });
+    if (step === 3) payRenderSummary();
+  }
+
+  function paySameDay(a, b) {
+    return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+  }
+  function payStartOfDay(d) { const x = new Date(d); x.setHours(0,0,0,0); return x; }
+  function payFormatMonth(d) { return d.toLocaleString('en-IN', { month: 'long', year: 'numeric' }); }
+  function payFormatDate(d) { return d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }); }
+
+  function payRenderCalendar() {
+    const month = payState.calMonth;
+    const grid = document.getElementById('pay-cal-grid');
+    if (!grid || !month) return;
+    document.getElementById('pay-cal-title').textContent = payFormatMonth(month);
+
+    const today = payStartOfDay(new Date());
+    const maxDate = new Date(today);
+    maxDate.setDate(maxDate.getDate() + PAY_MAX_DAYS_AHEAD);
+
+    const firstOfThisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    document.getElementById('pay-cal-prev').disabled =
+      month.getFullYear() === firstOfThisMonth.getFullYear() && month.getMonth() === firstOfThisMonth.getMonth();
+    const firstOfNextShown = new Date(month.getFullYear(), month.getMonth() + 1, 1);
+    document.getElementById('pay-cal-next').disabled = firstOfNextShown > maxDate;
+
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    let html = days.map(d => `<div class="pay-cal-head">${d}</div>`).join('');
+
+    const firstDay = new Date(month.getFullYear(), month.getMonth(), 1);
+    const startWeekday = firstDay.getDay();
+    const daysInMonth = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate();
+    for (let i = 0; i < startWeekday; i++) {
+      html += '<button type="button" class="pay-cal-day empty" disabled></button>';
+    }
+    for (let day = 1; day <= daysInMonth; day++) {
+      const d = new Date(month.getFullYear(), month.getMonth(), day);
+      const disabled = d < today || d > maxDate;
+      const selected = payState.selectedDate && paySameDay(d, payState.selectedDate);
+      html += `<button type="button" class="pay-cal-day${selected ? ' selected' : ''}" ${disabled ? 'disabled' : ''} data-day="${day}">${day}</button>`;
+    }
+    grid.innerHTML = html;
+
+    grid.querySelectorAll('.pay-cal-day[data-day]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const day = Number(btn.dataset.day);
+        paySelectDate(new Date(month.getFullYear(), month.getMonth(), day));
+      });
+    });
+  }
+
+  function paySelectDate(d) {
+    payState.selectedDate = d;
+    payState.selectedSlot = null;
+    payRenderCalendar();
+    payRenderSlots();
+    payUpdateContinue1();
+  }
+
+  function payRenderSlots() {
+    const sec = document.getElementById('pay-slot-section');
+    const list = document.getElementById('pay-slot-list');
+    if (!payState.selectedDate) { sec.style.display = 'none'; return; }
+    sec.style.display = 'block';
+    list.innerHTML = PAY_TIME_SLOTS.map(t =>
+      `<button type="button" class="pay-slot-pill${payState.selectedSlot === t ? ' selected' : ''}" data-slot="${t}">${t}</button>`
+    ).join('');
+    list.querySelectorAll('.pay-slot-pill').forEach(p => {
+      p.addEventListener('click', () => {
+        payState.selectedSlot = p.dataset.slot;
+        payRenderSlots();
+        payUpdateContinue1();
+      });
+    });
+  }
+
+  function payUpdateContinue1() {
+    const btn = document.getElementById('pay-next-1');
+    const ready = payState.selectedDate && payState.selectedSlot;
+    btn.disabled = !ready;
+    btn.style.opacity = ready ? '1' : '0.45';
+    btn.style.cursor = ready ? 'pointer' : 'not-allowed';
+  }
+
+  function payValidateCustomer() {
+    const name = document.getElementById('pay-name').value.trim();
+    const email = document.getElementById('pay-email').value.trim();
+    const phone = document.getElementById('pay-phone').value.trim();
+    if (name.length < 2) return { ok: false, msg: 'Please enter your full name.' };
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { ok: false, msg: 'Please enter a valid email address.' };
+    const phoneDigits = phone.replace(/\D/g, '');
+    if (phoneDigits.length < 10 || phoneDigits.length > 13) return { ok: false, msg: 'Please enter a valid phone number (10 digits, with or without country code).' };
+    return { ok: true, customer: { name, email, phone } };
+  }
+
+  function paySlotIso() {
+    const d = new Date(payState.selectedDate);
+    const [h, m] = payState.selectedSlot.split(':').map(Number);
+    d.setHours(h, m, 0, 0);
+    return d.toISOString();
+  }
+
+  function payRenderSummary() {
+    const v = payValidateCustomer();
+    if (!v.ok) { payGoTo(2); payShowError(v.msg); return; }
+    document.getElementById('pay-sum-service').textContent = payState.service.name;
+    const dt = new Date(paySlotIso());
+    document.getElementById('pay-sum-slot').textContent = `${payFormatDate(dt)} at ${payState.selectedSlot}`;
+    document.getElementById('pay-sum-name').textContent = v.customer.name;
+    document.getElementById('pay-sum-contact').textContent = `${v.customer.email} · ${v.customer.phone}`;
+    document.getElementById('pay-sum-amount').textContent = `₹${payState.service.priceInr.toLocaleString('en-IN')}`;
+  }
+
+  async function payFetchConfig() {
+    if (payState.rzpKeyId) return payState.rzpKeyId;
+    const r = await fetch(`${PAY_API_BASE}/payments/config`);
+    if (!r.ok) throw new Error('Payment configuration unavailable.');
+    const j = await r.json();
+    if (!j.key_id) throw new Error('Payment key missing.');
+    payState.rzpKeyId = j.key_id;
+    return j.key_id;
+  }
+
+  async function payDoPay() {
+    payClearError();
+    const v = payValidateCustomer();
+    if (!v.ok) { payGoTo(2); payShowError(v.msg); return; }
+
+    const payBtn = document.getElementById('pay-do-pay');
+    payBtn.disabled = true;
+    const originalLabel = payBtn.textContent;
+    payBtn.textContent = 'Preparing payment…';
+
+    try {
+      const keyId = await payFetchConfig();
+
+      const orderRes = await fetch(`${PAY_API_BASE}/payments/create-order`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          service_id: payState.service.serviceId,
+          slot_iso: paySlotIso(),
+          customer: v.customer,
+        }),
+      });
+      if (!orderRes.ok) {
+        const errBody = await orderRes.json().catch(() => ({}));
+        throw new Error(errBody.detail || 'Failed to create payment order.');
+      }
+      const order = await orderRes.json();
+      payState.bookingId = order.booking_id;
+      payState.orderId = order.order_id;
+      payState.amountPaise = order.amount;
+      payState.serviceName = order.service_name;
+
+      if (typeof window.Razorpay === 'undefined') {
+        throw new Error('Payment library failed to load. Please refresh and try again.');
+      }
+
+      const rzp = new window.Razorpay({
+        key: keyId,
+        amount: order.amount,
+        currency: order.currency,
+        name: 'HomePujan',
+        description: `${order.service_name} — Direct Booking`,
+        order_id: order.order_id,
+        prefill: { name: v.customer.name, email: v.customer.email, contact: v.customer.phone },
+        notes: { booking_id: order.booking_id, service_id: payState.service.serviceId, slot_iso: paySlotIso() },
+        theme: { color: '#4A0E0E' },
+        handler: function (resp) { payOnSuccess(resp); },
+        modal: {
+          ondismiss: function () {
+            payShowError('Payment was cancelled. You can try again or pick a different slot.');
+            payBtn.disabled = false;
+            payBtn.textContent = originalLabel;
+          },
+        },
+      });
+      rzp.on('payment.failed', function (resp) {
+        const desc = (resp && resp.error && resp.error.description) || 'Payment failed. Please try again.';
+        payShowError(desc);
+        payBtn.disabled = false;
+        payBtn.textContent = originalLabel;
+      });
+      rzp.open();
+    } catch (e) {
+      payShowError(e.message || 'Something went wrong. Please try again.');
+      payBtn.disabled = false;
+      payBtn.textContent = originalLabel;
+    }
+  }
+
+  async function payOnSuccess(resp) {
+    try {
+      const verifyRes = await fetch(`${PAY_API_BASE}/payments/verify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          booking_id: payState.bookingId,
+          razorpay_order_id: resp.razorpay_order_id,
+          razorpay_payment_id: resp.razorpay_payment_id,
+          razorpay_signature: resp.razorpay_signature,
+        }),
+      });
+      if (!verifyRes.ok) {
+        const errBody = await verifyRes.json().catch(() => ({}));
+        throw new Error(errBody.detail || 'Payment captured but verification failed. Please contact us.');
+      }
+      payRenderConfirmation();
+      payGoTo(4);
+    } catch (e) {
+      payShowError(e.message);
+      const payBtn = document.getElementById('pay-do-pay');
+      if (payBtn) { payBtn.disabled = false; payBtn.textContent = 'Pay Now'; }
+    }
+  }
+
+  function payRenderConfirmation() {
+    const dt = new Date(paySlotIso());
+    document.getElementById('pay-confirm-id').textContent = payState.bookingId;
+    document.getElementById('pay-confirm-service').textContent = payState.serviceName || payState.service.name;
+    document.getElementById('pay-confirm-slot').textContent = `${payFormatDate(dt)} at ${payState.selectedSlot}`;
+    document.getElementById('pay-confirm-amount').textContent = `₹${(payState.amountPaise / 100).toLocaleString('en-IN')}`;
+    const msg = encodeURIComponent(`Namaste, I've completed booking for ${payState.service.name} (Ref: ${payState.bookingId}) on ${payFormatDate(dt)} at ${payState.selectedSlot}. Please confirm the muhurta and Samagri list.`);
+    document.getElementById('pay-confirm-wa').href = `https://wa.me/${PAY_WHATSAPP_NUMBER}?text=${msg}`;
+  }
+
+  function openPayModal(key) {
+    const data = serviceData[key];
+    if (!data || !data.priceInr) return;
+    payState.serviceId = data.serviceId;
+    payState.service = data;
+    payState.selectedDate = null;
+    payState.selectedSlot = null;
+    payState.bookingId = null;
+    payState.orderId = null;
+    payState.amountPaise = null;
+    payState.serviceName = null;
+    payState.calMonth = new Date();
+    payState.calMonth.setDate(1);
+    payState.step = 1;
+
+    document.getElementById('pay-service-title').textContent = data.name;
+    document.getElementById('pay-service-subtitle').textContent = data.subtitle || 'Schedule your ceremony';
+    document.getElementById('pay-name').value = '';
+    document.getElementById('pay-email').value = '';
+    document.getElementById('pay-phone').value = '';
+    payClearError();
+    payGoTo(1);
+    payRenderCalendar();
+    payRenderSlots();
+    payUpdateContinue1();
+    openModal('pay');
+
+    payFetchConfig().catch(() => { /* swallow; surface later if user clicks pay */ });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const prev = document.getElementById('pay-cal-prev');
+    const next = document.getElementById('pay-cal-next');
+    if (prev) prev.addEventListener('click', () => {
+      payState.calMonth = new Date(payState.calMonth.getFullYear(), payState.calMonth.getMonth() - 1, 1);
+      payRenderCalendar();
+    });
+    if (next) next.addEventListener('click', () => {
+      payState.calMonth = new Date(payState.calMonth.getFullYear(), payState.calMonth.getMonth() + 1, 1);
+      payRenderCalendar();
+    });
+    const n1 = document.getElementById('pay-next-1');
+    if (n1) n1.addEventListener('click', () => {
+      if (!payState.selectedDate || !payState.selectedSlot) return;
+      payGoTo(2);
+    });
+    const n2 = document.getElementById('pay-next-2');
+    if (n2) n2.addEventListener('click', () => {
+      const v = payValidateCustomer();
+      if (!v.ok) { payShowError(v.msg); return; }
+      payGoTo(3);
+    });
+    const doPay = document.getElementById('pay-do-pay');
+    if (doPay) doPay.addEventListener('click', payDoPay);
+  });
+</script>
+
+</body>
 </html>
