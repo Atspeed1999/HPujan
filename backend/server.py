@@ -16,6 +16,7 @@ from requests.auth import HTTPBasicAuth
 from pathlib import Path
 from pydantic import BaseModel, ConfigDict, EmailStr
 import uuid
+from urllib.parse import quote
 from datetime import datetime, timezone
 
 
@@ -171,6 +172,28 @@ def db_mark_paid_by_order_id(order_id: str, payment_id: str) -> str:
     return 'already_paid'
 
 
+def db_mark_paid_manual(booking_id: str) -> str:
+    """Admin-triggered transition from pending_upi → paid (UPI stopgap flow).
+    Refuses to flip any other status. Returns: 'updated' | 'already_paid' | 'not_found' | 'bad_state'."""
+    paid_at = datetime.now(timezone.utc).isoformat()
+    with _conn() as c:
+        cur = c.execute(
+            """UPDATE bookings
+               SET status = 'paid', paid_at = ?
+               WHERE id = ? AND status = 'pending_upi'""",
+            (paid_at, booking_id),
+        )
+        if cur.rowcount > 0:
+            logger.info("[ADMIN MARK PAID] %s", booking_id)
+            return 'updated'
+        row = c.execute("SELECT status FROM bookings WHERE id = ?", (booking_id,)).fetchone()
+    if row is None:
+        return 'not_found'
+    if row['status'] == 'paid':
+        return 'already_paid'
+    return 'bad_state'
+
+
 def db_mark_failed_by_order_id(order_id: str, payment_id: str | None, reason: str | None) -> str:
     """Mark booking 'failed'. Refuses to downgrade an already 'paid' booking.
     Returns: 'updated' | 'paid_kept' | 'not_found'."""
@@ -214,6 +237,16 @@ async def health():
     except Exception as e:
         raise HTTPException(status_code=503, detail=f"DB unreachable: {e}")
 
+
+# ── PAYMENT MODE SWITCH ──
+# 'razorpay' = full gateway flow. 'upi_qr' = stopgap UPI QR flow (manual mark-paid via /admin).
+# Used while waiting for a category-friendly gateway (Cashfree/Instamojo) to approve.
+PAYMENT_MODE = os.environ.get('PAYMENT_MODE', 'razorpay').strip().lower()
+
+# ── UPI STOPGAP CONFIG ──
+UPI_VPA = os.environ.get('UPI_VPA', '').strip()
+UPI_PAYEE_NAME = os.environ.get('UPI_PAYEE_NAME', 'HomePujan').strip()
+WHATSAPP_NUMBER = os.environ.get('WHATSAPP_NUMBER', '').strip()
 
 # ── RAZORPAY PAYMENT INTEGRATION ──
 RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID', '')
@@ -273,11 +306,31 @@ class VerifyRequest(BaseModel):
     razorpay_signature: str
 
 
+class UpiIntentRequest(BaseModel):
+    service_id: str
+    slot_iso: str
+    customer: Customer
+
+
 @api_router.get("/payments/config")
 async def payments_config():
+    """Frontend reads this to decide which checkout flow to render.
+    Returns mode + the fields that mode needs (Razorpay key, or UPI VPA/payee/whatsapp)."""
+    if PAYMENT_MODE == 'upi_qr':
+        if not (UPI_VPA and WHATSAPP_NUMBER):
+            raise HTTPException(status_code=500, detail="UPI stopgap not fully configured (UPI_VPA / WHATSAPP_NUMBER)")
+        return {
+            "mode": "upi_qr",
+            "upi": {
+                "vpa": UPI_VPA,
+                "payee_name": UPI_PAYEE_NAME,
+                "whatsapp_number": WHATSAPP_NUMBER,
+            },
+        }
+    # default: razorpay
     if not RAZORPAY_KEY_ID:
         raise HTTPException(status_code=500, detail="Razorpay key id not configured")
-    return {"key_id": RAZORPAY_KEY_ID}
+    return {"mode": "razorpay", "key_id": RAZORPAY_KEY_ID}
 
 
 @api_router.post("/payments/create-order")
@@ -379,6 +432,68 @@ async def verify_payment(req: VerifyRequest):
         raise HTTPException(status_code=404, detail="Booking not found for this order")
 
     return {"status": "ok", "booking_id": req.booking_id}
+
+
+@api_router.post("/payments/upi-intent")
+async def create_upi_intent(req: UpiIntentRequest):
+    """Stopgap path while a category-friendly gateway is pending KYC.
+    Creates a booking row with status 'pending_upi' and returns a UPI deep-link URI
+    the frontend renders as a QR. Customer pays via any UPI app, then notifies us
+    over WhatsApp; we manually mark the row 'paid' from /admin."""
+    if PAYMENT_MODE != 'upi_qr':
+        raise HTTPException(status_code=400, detail="UPI stopgap not enabled")
+    if not (UPI_VPA and WHATSAPP_NUMBER):
+        raise HTTPException(status_code=500, detail="UPI stopgap not configured")
+
+    service = SERVICE_CATALOG.get(req.service_id)
+    if not service:
+        raise HTTPException(status_code=400, detail="Unknown service_id")
+
+    amount_paise = service['price_paise']
+    amount_inr = amount_paise / 100
+    booking_id = str(uuid.uuid4())
+    reference = f"HP-{booking_id[:6].upper()}"
+    # Stuff a unique value into razorpay_order_id to satisfy NOT NULL UNIQUE.
+    # Column name is legacy; treat it as "payment order id" generally.
+    order_id = f"upi_{booking_id}"
+
+    txn_note = f"{reference} {service['name']}"[:50]
+    upi_uri = (
+        f"upi://pay?pa={quote(UPI_VPA)}"
+        f"&pn={quote(UPI_PAYEE_NAME)}"
+        f"&am={amount_inr:.2f}"
+        f"&tn={quote(txn_note)}"
+        f"&cu=INR"
+    )
+
+    booking_doc = {
+        "id": booking_id,
+        "service_id": req.service_id,
+        "service_name": service['name'],
+        "amount_paise": amount_paise,
+        "currency": "INR",
+        "slot_iso": req.slot_iso,
+        "customer": req.customer.model_dump(),
+        "razorpay_order_id": order_id,
+        "razorpay_payment_id": None,
+        "status": "pending_upi",
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "paid_at": None,
+    }
+    db_save_booking(booking_doc)
+    logger.info("[UPI INTENT] %s | ref=%s | ₹%.0f", booking_id, reference, amount_inr)
+
+    return {
+        "booking_id": booking_id,
+        "reference": reference,
+        "upi_uri": upi_uri,
+        "vpa": UPI_VPA,
+        "payee_name": UPI_PAYEE_NAME,
+        "amount_paise": amount_paise,
+        "currency": "INR",
+        "service_name": service['name'],
+        "whatsapp_number": WHATSAPP_NUMBER,
+    }
 
 
 @api_router.get("/payments/bookings")
@@ -551,12 +666,20 @@ _ADMIN_HTML = """<!DOCTYPE html>
   .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
   .pill.paid { background: #E2F5E8; color: #1E7F3E; }
   .pill.created { background: #FFF4D8; color: #8A6300; }
+  .pill.pending_upi { background: #FFEDD5; color: #9A3412; }
   .pill.failed { background: #FDECEC; color: #9B1C1C; }
   .pill.signature_mismatch { background: #FDECEC; color: #9B1C1C; }
   .empty { text-align: center; padding: 3rem; color: #7A6A6A; }
   small.muted { color: #7A6A6A; }
   .wa { color: #25D366; text-decoration: none; }
   .wa:hover { text-decoration: underline; }
+  .mark-paid-form { display: inline; margin: 0; }
+  .mark-paid-btn { padding: 4px 10px; background: #1E7F3E; color: white; border: none; border-radius: 4px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; font-family: inherit; }
+  .mark-paid-btn:hover { background: #176430; }
+  .mark-paid-btn:disabled { opacity: 0.5; cursor: wait; }
+  .flash { background: #E2F5E8; color: #1E7F3E; border: 1px solid #B7E0C4; padding: 0.65rem 1rem; border-radius: 6px; margin-bottom: 1rem; font-size: 0.85rem; }
+  .flash.err { background: #FDECEC; color: #9B1C1C; border-color: #F0C5C5; }
+  .stat.pending_upi .val { color: #9A3412; }
 </style>
 </head>
 <body>
@@ -565,15 +688,17 @@ _ADMIN_HTML = """<!DOCTYPE html>
   <div class="meta">__COUNT__ rows · DB: __DB__</div>
 </header>
 <main>
+  __FLASH__
   <div class="stats">__STATS__</div>
   <div class="filters">
     <form method="get" action="/admin">
       <input type="search" name="q" placeholder="Search name, email, phone or service…" value="__Q__" autofocus/>
       <select name="status">
         <option value="">All statuses</option>
-        <option value="paid"     __SEL_PAID__>Paid</option>
-        <option value="created"  __SEL_CREATED__>Created (not yet paid)</option>
-        <option value="failed"   __SEL_FAILED__>Failed</option>
+        <option value="paid"        __SEL_PAID__>Paid</option>
+        <option value="pending_upi" __SEL_PENDING_UPI__>Pending UPI</option>
+        <option value="created"     __SEL_CREATED__>Created (not yet paid)</option>
+        <option value="failed"      __SEL_FAILED__>Failed</option>
         <option value="signature_mismatch" __SEL_SIG__>Signature mismatch</option>
       </select>
       <button type="submit">Apply</button>
@@ -604,12 +729,13 @@ def _wa_link(phone: str) -> str:
     return f"https://wa.me/{digits}"
 
 
-def _render_admin(bookings: list[dict], q: str, status: str) -> str:
+def _render_admin(bookings: list[dict], q: str, status: str, flash: str = '', flash_kind: str = 'ok') -> str:
     counts = db_status_counts()
     total = sum(counts.values())
     stat_cards = [
         ('Total', total, ''),
         ('Paid', counts.get('paid', 0), 'paid'),
+        ('Pending UPI', counts.get('pending_upi', 0), 'pending_upi'),
         ('Created', counts.get('created', 0), 'created'),
         ('Failed', counts.get('failed', 0) + counts.get('signature_mismatch', 0), 'failed'),
     ]
@@ -629,6 +755,19 @@ def _render_admin(bookings: list[dict], q: str, status: str) -> str:
             created = _fmt_dt(b['created_at'])
             paid = _fmt_dt(b['paid_at']) if b['paid_at'] else '—'
             status_class = b['status']
+            # Show "Mark Paid" button for pending_upi rows; ref code in payment-id column.
+            if b['status'] == 'pending_upi':
+                action_html = (
+                    f'<form class="mark-paid-form" method="POST" action="/admin/mark-paid/{b["id"]}">'
+                    f'<button class="mark-paid-btn" type="submit" '
+                    f'onclick="this.disabled=true;this.textContent=\'…\';this.form.submit();">Mark Paid</button>'
+                    f'</form>'
+                )
+                ref = f"HP-{b['id'][:6].upper()}"
+                payment_cell = f'<small class="muted">{ref}</small>'
+            else:
+                action_html = ''
+                payment_cell = f'<span class="id" title="{b["razorpay_payment_id"] or "—"}">{(b["razorpay_payment_id"] or "—")[:14]}</span>'
             rows_html.append(f"""
                 <tr>
                   <td class="id" title="{b['id']}">{b['id'][:8]}</td>
@@ -636,17 +775,17 @@ def _render_admin(bookings: list[dict], q: str, status: str) -> str:
                   <td>{cust['name']}<br/><small class="muted">{cust['email']}</small><br/><a class="wa" href="{wa}" target="_blank" rel="noopener">{cust['phone']} ↗</a></td>
                   <td>{slot}</td>
                   <td class="amt">₹{b['amount_paise']/100:,.0f}</td>
-                  <td><span class="pill {status_class}">{b['status'].replace('_', ' ')}</span></td>
+                  <td><span class="pill {status_class}">{b['status'].replace('_', ' ')}</span>{(' ' + action_html) if action_html else ''}</td>
                   <td><small class="muted">{created}</small></td>
                   <td><small class="muted">{paid}</small></td>
-                  <td class="id" title="{b['razorpay_payment_id'] or '—'}">{(b['razorpay_payment_id'] or '—')[:14]}</td>
+                  <td>{payment_cell}</td>
                 </tr>
             """)
         table_html = f"""
         <table>
           <thead><tr>
             <th>ID</th><th>Ceremony</th><th>Yajamana</th><th>Slot</th>
-            <th>Dakshina</th><th>Status</th><th>Created</th><th>Paid</th><th>Payment ID</th>
+            <th>Dakshina</th><th>Status</th><th>Created</th><th>Paid</th><th>Payment ID / Ref</th>
           </tr></thead>
           <tbody>{''.join(rows_html)}</tbody>
         </table>"""
@@ -656,16 +795,23 @@ def _render_admin(bookings: list[dict], q: str, status: str) -> str:
     if status: qs_parts.append(f"status={status}")
     qs = ('?' + '&'.join(qs_parts)) if qs_parts else ''
 
+    flash_html = ''
+    if flash:
+        cls = 'flash' + (' err' if flash_kind == 'err' else '')
+        flash_html = f'<div class="{cls}">{flash}</div>'
+
     return (_ADMIN_HTML
         .replace('__COUNT__', str(len(bookings)))
         .replace('__DB__', 'sqlite')
+        .replace('__FLASH__', flash_html)
         .replace('__STATS__', stats_html)
         .replace('__TABLE__', table_html)
         .replace('__Q__', q.replace('"', '&quot;') if q else '')
-        .replace('__SEL_PAID__',    'selected' if status == 'paid' else '')
-        .replace('__SEL_CREATED__', 'selected' if status == 'created' else '')
-        .replace('__SEL_FAILED__',  'selected' if status == 'failed' else '')
-        .replace('__SEL_SIG__',     'selected' if status == 'signature_mismatch' else '')
+        .replace('__SEL_PAID__',        'selected' if status == 'paid' else '')
+        .replace('__SEL_PENDING_UPI__', 'selected' if status == 'pending_upi' else '')
+        .replace('__SEL_CREATED__',     'selected' if status == 'created' else '')
+        .replace('__SEL_FAILED__',      'selected' if status == 'failed' else '')
+        .replace('__SEL_SIG__',         'selected' if status == 'signature_mismatch' else '')
         .replace('__QS__', qs))
 
 
@@ -674,9 +820,42 @@ async def admin_dashboard(
     _user: str = Depends(require_admin),
     q: str = Query('', max_length=120),
     status: str = Query('', max_length=32),
+    flash: str = Query('', max_length=120),
+    flash_kind: str = Query('ok', max_length=10),
 ):
     bookings = db_query_bookings(status=status or None, q=q or None)
-    return HTMLResponse(_render_admin(bookings, q, status))
+    return HTMLResponse(_render_admin(bookings, q, status, flash=flash, flash_kind=flash_kind))
+
+
+@app.post("/admin/mark-paid/{booking_id}")
+async def admin_mark_paid(
+    booking_id: str,
+    request: Request,
+    _user: str = Depends(require_admin),
+):
+    """UPI-stopgap workflow: admin clicks button on a pending_upi row to flip it
+    to paid after manually verifying the bank/UPI transaction."""
+    from fastapi.responses import RedirectResponse
+    result = db_mark_paid_manual(booking_id)
+    msg_map = {
+        'updated':      ('Marked paid.', 'ok'),
+        'already_paid': ('Already paid.', 'ok'),
+        'not_found':    ('Booking not found.', 'err'),
+        'bad_state':    ('Cannot mark paid — booking is not in pending_upi state.', 'err'),
+    }
+    msg, kind = msg_map.get(result, ('Unknown result.', 'err'))
+    # Preserve filters when bouncing back, but only honour Referer if it points
+    # at our own /admin (defends against open-redirect via a forged Referer).
+    referer = request.headers.get('referer', '')
+    from urllib.parse import urlparse
+    parsed = urlparse(referer)
+    if parsed.path == '/admin':
+        path_and_query = '/admin' + (f'?{parsed.query}' if parsed.query else '')
+    else:
+        path_and_query = '/admin'
+    sep = '&' if '?' in path_and_query else '?'
+    redirect_url = f"{path_and_query}{sep}flash={quote(msg)}&flash_kind={kind}"
+    return RedirectResponse(url=redirect_url, status_code=303)
 
 
 @app.get("/admin/export.csv", response_class=PlainTextResponse)
