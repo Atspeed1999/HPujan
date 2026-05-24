@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="description" content="HomePujan — Gurukul scholars bringing 20 years of Vedic precision to your home. Vastu Shanti, Lakshmi-Kuber Havan, Maha Mrityunjaya."/>
   <title>HomePujan — Ancient Precision. Modern Peace.</title>
+  <link rel="icon" type="image/png" href="images/logo.png">
+  <link rel="apple-touch-icon" href="images/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
@@ -65,6 +67,10 @@ body::after {
 #navbar:not(.scrolled) .btn-consult { color: #D4AF37; border-color: #D4AF37; }
 #navbar:not(.scrolled) .btn-consult:hover { background: #D4AF37; color: #2A0A0A; }
 #navbar:not(.scrolled) #menu-btn span { background: rgba(255,255,255,0.85); }
+/* Mobile dropdown sits on a cream panel — force dark ink regardless of #navbar.scrolled state.
+   Two-id selector beats #navbar:not(.scrolled) .nav-link without needing !important. */
+#navbar #mob-menu .nav-link { color: #2D2D2D; }
+#navbar #mob-menu .nav-link:hover { color: #4A0E0E; }
 .nav-link {
   color: #5A4A4A; font-size: 0.78rem; font-weight: 500;
   letter-spacing: 0.09em; text-transform: uppercase; text-decoration: none;
@@ -348,6 +354,8 @@ body::after {
   transition: transform 0.3s, box-shadow 0.3s;
 }
 .wa-float:hover { transform: scale(1.1); box-shadow: 0 12px 44px rgba(37,211,102,0.55); }
+/* Hide floating buttons behind modal overlay so they don't overlap the widget. */
+body.modal-open .wa-float, body.modal-open #gold-lotus { opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
 .wa-float::before {
   content: ''; position: absolute; inset: -5px; border-radius: 50%;
   border: 2px solid rgba(37,211,102,0.38); animation: waRing 2.2s ease-out infinite;
@@ -391,12 +399,21 @@ section[id] { scroll-margin-top: 80px; }
 
 /* ── MOBILE RESPONSIVE ── */
 @media (max-width: 767px) {
-  .modal-inner { padding: 1.5rem 1.25rem 1.75rem; }
+  /* Full-screen modal on phones — no side gap, no torn-paper zigzag (would clip
+     against the screen edges), no drop-shadow (irrelevant when edge-to-edge). */
+  .modal-overlay { padding: 0; align-items: stretch; justify-content: stretch; overscroll-behavior: contain; }
+  .modal-drop { max-width: 100%; max-height: 100vh; max-height: 100dvh; width: 100%; height: 100vh; height: 100dvh; filter: none; }
+  .modal-paper { clip-path: none; border-radius: 0; }
+  .modal-inner { padding: 1.25rem 1.25rem 2rem; overscroll-behavior: contain; }
+  .modal-close { top: 0.875rem; right: 1rem; }
+  /* Consult modal only: let the Cal.com inline embed stretch to fill the
+     full-screen modal instead of leaving an empty cream tail under it. */
+  #modal-consult .modal-inner { display: flex; flex-direction: column; }
+  #modal-consult #my-cal-inline-15min { flex: 1; min-height: 480px; height: auto !important; }
   .modal-detail-row { flex-direction: column; gap: 0.25rem; }
   .modal-detail-label { min-width: auto; }
   .btn-discuss { font-size: 0.78rem; padding: 0.875rem 1.5rem; }
   .modal-invoc-title { font-size: 1.2rem; }
-  .modal-drop { max-height: 88vh; }
 
   /* Trust bar — compact horizontal on mobile */
   .trust-col { padding: 0.5rem 0.35rem !important; }
@@ -715,8 +732,9 @@ section[id] { scroll-margin-top: 80px; }
   <div class="max-w-7xl mx-auto px-6 md:px-12">
     <div class="flex items-center justify-between" style="height:76px;align-items:center;">
 
-      <a href="#" class="nav-logo-text font-cinzel font-bold text-maroon no-underline" style="font-size:1.3rem; letter-spacing:0.04em; transition: color 0.3s;" data-testid="nav-logo">
-        HOME<span style="color:#D4AF37;">PUJAN</span>
+      <a href="#" class="nav-logo-text font-cinzel font-bold text-maroon no-underline" style="font-size:1.3rem; letter-spacing:0.04em; transition: color 0.3s; display:inline-flex; align-items:center; gap:0.55rem;" data-testid="nav-logo">
+        <img src="images/logo.png" alt="" aria-hidden="true" style="height:38px; width:auto; display:block; flex-shrink:0;">
+        <span>HOME<span style="color:#D4AF37;">PUJAN</span></span>
       </a>
 
       <div class="hidden md:flex items-center gap-10">
@@ -1007,19 +1025,35 @@ section[id] { scroll-margin-top: 80px; }
         </div>
       </div>
 
-      <div class="lib-card carousel-card" data-category="beginnings" data-testid="service-card-gayatri" onclick="openServiceModal('gayatri')">
+      <div class="lib-card carousel-card" data-category="beginnings" data-testid="service-card-grahpravesh" onclick="openServiceModal('grahpravesh')">
         <div class="lib-card-img">
-          <img src="/images/Gayatri_Jaap_202603200621.jpeg" alt="Gayatri Jaap" loading="lazy"/>
+          <img src="/images/Grah_Pravesh.jpeg" alt="Grah Pravesh" loading="lazy" onerror="this.onerror=null;this.src='/images/logo.png';this.style.objectFit='contain';this.style.background='#FFFEFB';"/>
           <span class="lib-cat-badge">New Beginnings</span>
         </div>
         <div class="lib-card-body">
-          <p class="lib-card-sanskrit">Gayatri Jaap</p>
-          <p class="lib-card-benefit">Spiritual Clarity</p>
-          <p class="lib-card-desc">The most sacred Vedic mantra recited in precise repetitions to invoke divine illumination, peace of mind, and spiritual protection.</p>
+          <p class="lib-card-sanskrit">Grah Pravesh</p>
+          <p class="lib-card-benefit">Blessing the New Home</p>
+          <p class="lib-card-desc">The traditional housewarming ceremony performed before moving into a new home — invoking peace, prosperity and divine protection over the dwelling and its inhabitants.</p>
           <div class="lib-card-dakshina">
-            Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹1,100</span>
+            Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹2,100</span>
           </div>
-          <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Gayatri Jaap')" data-testid="card-gayatri-consult">Consult for Alignment</button>
+          <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Grah Pravesh')" data-testid="card-grahpravesh-consult">Consult for Alignment</button>
+        </div>
+      </div>
+
+      <div class="lib-card carousel-card" data-category="beginnings" data-testid="service-card-bhoomipujan" onclick="openServiceModal('bhoomipujan')">
+        <div class="lib-card-img">
+          <img src="/images/Bhoomi_Pujan.jpeg" alt="Bhoomi Pujan" loading="lazy" onerror="this.onerror=null;this.src='/images/logo.png';this.style.objectFit='contain';this.style.background='#FFFEFB';"/>
+          <span class="lib-cat-badge">New Beginnings</span>
+        </div>
+        <div class="lib-card-body">
+          <p class="lib-card-sanskrit">Bhoomi Pujan</p>
+          <p class="lib-card-benefit">Sanctifying the Land</p>
+          <p class="lib-card-desc">The ground-breaking ceremony performed before construction begins — seeking permission from the earth element and consecrating the site for what is built upon it.</p>
+          <div class="lib-card-dakshina">
+            Dakshina Starting — <span class="lib-card-dakshina-amount">From ₹2,100</span>
+          </div>
+          <button class="btn-align" onclick="event.stopPropagation();openConsultModal('Bhoomi Pujan')" data-testid="card-bhoomipujan-consult">Consult for Alignment</button>
         </div>
       </div>
 
@@ -1480,7 +1514,10 @@ section[id] { scroll-margin-top: 80px; }
   <div class="max-w-7xl mx-auto px-6 md:px-12 py-16">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
       <div>
-        <p class="font-cinzel font-bold" style="font-size:1.65rem;color:#D4AF37;">HOMEPUJAN</p>
+        <div style="display:flex; align-items:center; gap:0.75rem;">
+          <img src="images/logo.png" alt="HomePujan logo" style="height:52px; width:auto; display:block;">
+          <p class="font-cinzel font-bold" style="font-size:1.65rem;color:#D4AF37;margin:0;">HOMEPUJAN</p>
+        </div>
         <p style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.18em;color:rgba(255,255,255,0.3);margin:0.5rem 0 1.25rem;">Preserving Tradition. Serving Modernity.</p>
         <div style="width:40px;height:1px;background:rgba(212,175,55,0.35);margin-bottom:1.25rem;"></div>
         <p style="font-size:0.85rem;color:rgba(255,255,255,0.35);line-height:1.7;">A collective of lifelong Gurukul scholars bringing uncompromised Vedic precision to your home.</p>
@@ -1984,18 +2021,51 @@ section[id] { scroll-margin-top: 80px; }
   });
 
   // ── MODAL SYSTEM ──
+  // iOS Safari ignores body{overflow:hidden}; lock by pinning the body
+  // at position:fixed top:-scrollY, then restore scrollY on close. Counter
+  // keeps the lock through modal→modal transitions (e.g. service → consult).
+  let _modalOpenCount = 0;
+  function _lockBodyScroll() {
+    if (_modalOpenCount > 0) return;
+    const scrollY = window.scrollY;
+    document.body.dataset.lockedScrollY = String(scrollY);
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.width = '100%';
+    document.body.style.overflow = 'hidden';
+    document.body.classList.add('modal-open');
+  }
+  function _unlockBodyScroll() {
+    if (_modalOpenCount > 0) return;
+    const scrollY = parseInt(document.body.dataset.lockedScrollY || '0', 10);
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    document.body.style.width = '';
+    document.body.style.overflow = '';
+    document.body.classList.remove('modal-open');
+    window.scrollTo(0, scrollY);
+  }
   function openModal(id) {
     const m = document.getElementById('modal-' + id);
     if (!m) return;
     m.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
+    _lockBodyScroll();
+    _modalOpenCount++;
     requestAnimationFrame(() => requestAnimationFrame(() => m.classList.add('visible')));
   }
   function closeModal(id) {
     const m = document.getElementById('modal-' + id);
     if (!m) return;
     m.classList.remove('visible');
-    setTimeout(() => { m.style.display = 'none'; document.body.style.overflow = ''; }, 320);
+    setTimeout(() => {
+      m.style.display = 'none';
+      _modalOpenCount = Math.max(0, _modalOpenCount - 1);
+      _unlockBodyScroll();
+    }, 320);
   }
   // Close on backdrop click
   document.querySelectorAll('.modal-overlay').forEach(m => {
@@ -2116,16 +2186,27 @@ section[id] { scroll-margin-top: 80px; }
       dakshina: 'From ₹1,100',
       priceInr: 1100,
     },
-    gayatri: {
-      serviceId: 'gayatri',
-      name: 'Gayatri Jaap',
-      subtitle: 'Spiritual Clarity',
+    grahpravesh: {
+      serviceId: 'grahpravesh',
+      name: 'Grah Pravesh',
+      subtitle: 'Blessing the New Home',
       category: 'New Beginnings',
-      description: 'The most sacred Vedic mantra recited in precise repetitions to invoke divine illumination, peace of mind, and spiritual protection. A practice that calibrates the inner instrument of perception.',
-      scholarly: 'The scholar enforces correct ucchaarana and counts the jaapa on a tulsi or rudraksha maala — never approximated, never abbreviated.',
+      description: 'The traditional housewarming ceremony performed before moving into a new home — invoking peace, prosperity and divine protection over the dwelling and its inhabitants. Marks the transition from "a house" to "a sanctified residence."',
+      scholarly: 'The scholar selects an auspicious muhurta for the move, performs the threshold sankalpa, and aligns the ceremony with the Vastu of the new dwelling — never a one-size-fits-all script.',
+      duration: '3-4 Hours',
+      dakshina: 'From ₹2,100',
+      priceInr: 2100,
+    },
+    bhoomipujan: {
+      serviceId: 'bhoomipujan',
+      name: 'Bhoomi Pujan',
+      subtitle: 'Sanctifying the Land',
+      category: 'New Beginnings',
+      description: 'The ground-breaking ceremony performed before construction begins — seeking permission from the earth element and consecrating the site so that whatever is built upon it is blessed from its foundation.',
+      scholarly: 'The scholar identifies the auspicious direction and muhurta, invokes the Vastu Purusha at the precise marma point of the plot, and performs the first symbolic ground offering with the family.',
       duration: '2-3 Hours',
-      dakshina: 'From ₹1,100',
-      priceInr: 1100,
+      dakshina: 'From ₹2,100',
+      priceInr: 2100,
     },
     agnihotra: {
       serviceId: 'agnihotra',

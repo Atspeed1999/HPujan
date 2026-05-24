@@ -283,6 +283,8 @@ SERVICE_CATALOG = {
     'vedaarambh':    {'name': 'Ved Aarambh',                   'price_paise': 1100000},
     'pitrapujan':    {'name': 'Pitra Dosh / Pitra Pujan',      'price_paise':  510000},
     'antiyeshti':    {'name': 'Antiyeshti',                    'price_paise':  110000},
+    'grahpravesh':   {'name': 'Grah Pravesh',                  'price_paise':  210000},
+    'bhoomipujan':   {'name': 'Bhoomi Pujan',                  'price_paise':  210000},
 }
 
 
