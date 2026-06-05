@@ -2,6 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5P29RNWC');</script>
+  <!-- End Google Tag Manager -->
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-HV6EFQRBXL"></script>
   <script>
@@ -10,6 +17,21 @@
     gtag('js', new Date());
 
     gtag('config', 'G-HV6EFQRBXL');
+  </script>
+  <!-- Google Ads conversion event helper -->
+  <script>
+    function gtagSendEvent(url) {
+      var callback = function () {
+        if (typeof url === 'string') {
+          window.location = url;
+        }
+      };
+      gtag('event', 'conversion_event_contact', {
+        'event_callback': callback,
+        'event_timeout': 2000,
+      });
+      return false;
+    }
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="description" content="HomePujan — Gurukul scholars bringing 20 years of Vedic precision to your home. Vastu Shanti, Lakshmi-Kuber Havan, Maha Mrityunjaya."/>
@@ -707,6 +729,10 @@ section[id] { scroll-margin-top: 80px; }
   </style>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5P29RNWC"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 
 <!-- =========================================
      GOLD LOTUS — SCROLL TO TOP
@@ -728,6 +754,7 @@ section[id] { scroll-margin-top: 80px; }
 ========================================= -->
 <a href="https://wa.me/919667039964?text=I'm%20interested%20in%20finding%20my%20Vedic%20path."
    target="_blank" rel="noopener noreferrer"
+   onclick="gtagSendEvent(); return true;"
    class="wa-float" data-testid="whatsapp-float-btn" aria-label="WhatsApp us">
   <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="white">
     <path d="M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652c1.746.943 3.71 1.444 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.48-8.45zM12.045 21.785h-.006c-1.773 0-3.513-.474-5.031-1.37l-.361-.213-3.741.977 1.004-3.648-.235-.374a9.716 9.716 0 0 1-1.502-5.163c.002-5.374 4.406-9.744 9.83-9.744 2.626 0 5.092 1.018 6.948 2.865a9.716 9.716 0 0 1 2.883 6.894c-.002 5.374-4.406 9.776-9.789 9.776zm5.362-7.316c-.293-.146-1.736-.852-2.004-.949-.27-.098-.466-.146-.663.146-.196.293-.76.949-.93 1.145-.17.195-.342.22-.636.073-.293-.146-1.24-.455-2.362-1.45-.872-.775-1.462-1.733-1.634-2.027-.17-.293-.018-.452.129-.597.13-.13.293-.342.44-.512.146-.17.195-.293.293-.488.097-.196.049-.367-.024-.513-.073-.146-.663-1.587-.907-2.175-.239-.57-.483-.494-.664-.502-.17-.007-.367-.009-.563-.009s-.513.073-.782.366c-.27.293-1.026.998-1.026 2.43 0 1.432 1.05 2.815 1.196 3.01.146.195 2.063 3.137 5 4.4.699.3 1.245.48 1.67.614.7.224 1.338.193 1.842.117.562-.083 1.73-.704 1.975-1.386.244-.68.244-1.263.17-1.386-.073-.122-.268-.195-.562-.341z"/>
@@ -1546,6 +1573,7 @@ section[id] { scroll-margin-top: 80px; }
         <p style="font-size:0.85rem;color:rgba(255,255,255,0.35);line-height:1.7;margin-bottom:1.25rem;">Ready to begin? Consult directly with a Gurukul scholar to find your Vedic path.</p>
         <a href="https://wa.me/919667039964?text=I'm%20interested%20in%20finding%20my%20Vedic%20path."
            target="_blank" rel="noopener noreferrer"
+           onclick="gtagSendEvent(); return true;"
            style="display:inline-flex;align-items:center;gap:0.6rem;padding:0.75rem 1.5rem;font-size:0.78rem;font-weight:500;text-transform:uppercase;letter-spacing:0.1em;color:#D4AF37;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.25);text-decoration:none;transition:all 0.25s;"
            onmouseover="this.style.background='rgba(212,175,55,0.16)';this.style.borderColor='rgba(212,175,55,0.5)'"
            onmouseout="this.style.background='rgba(212,175,55,0.08)';this.style.borderColor='rgba(212,175,55,0.25)'"

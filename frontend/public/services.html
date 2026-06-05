@@ -2,6 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5P29RNWC');</script>
+  <!-- End Google Tag Manager -->
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-HV6EFQRBXL"></script>
   <script>
@@ -10,6 +17,21 @@
     gtag('js', new Date());
 
     gtag('config', 'G-HV6EFQRBXL');
+  </script>
+  <!-- Google Ads conversion event helper -->
+  <script>
+    function gtagSendEvent(url) {
+      var callback = function () {
+        if (typeof url === 'string') {
+          window.location = url;
+        }
+      };
+      gtag('event', 'conversion_event_contact', {
+        'event_callback': callback,
+        'event_timeout': 2000,
+      });
+      return false;
+    }
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>The Vedic Library — HomePujan.com</title>
@@ -452,6 +474,10 @@
   </style>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5P29RNWC"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 
 <!-- ===================== NAVBAR ===================== -->
 <nav id="navbar" role="navigation" aria-label="Main navigation" data-testid="navbar">
@@ -1058,7 +1084,7 @@
           <span>Home<span style="color:#D4AF37;">Pujan</span></span>
         </a>
         <p style="font-size:0.825rem;color:rgba(255,255,255,0.6);line-height:1.75;max-width:280px;">Ancient Vedic ceremonies performed by Gurukul-trained scholars. 20 years of unbroken scholarly lineage.</p>
-        <a href="https://wa.me/919667039964" target="_blank" style="display:inline-flex;align-items:center;gap:0.5rem;margin-top:1.25rem;font-size:0.75rem;color:#D4AF37;font-weight:600;letter-spacing:0.08em;text-decoration:none;">
+        <a href="https://wa.me/919667039964" target="_blank" onclick="gtagSendEvent(); return true;" style="display:inline-flex;align-items:center;gap:0.5rem;margin-top:1.25rem;font-size:0.75rem;color:#D4AF37;font-weight:600;letter-spacing:0.08em;text-decoration:none;">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="#D4AF37"><path d="M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652c1.746.943 3.71 1.444 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.48-8.45z"/></svg>
           +91 96670 39964
         </a>
@@ -1102,7 +1128,7 @@
   </svg>
 </button>
 
-<a id="wa-float" href="https://wa.me/919667039964?text=I'm%20interested%20in%20finding%20my%20Vedic%20path." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" data-testid="wa-float-btn">
+<a id="wa-float" href="https://wa.me/919667039964?text=I'm%20interested%20in%20finding%20my%20Vedic%20path." target="_blank" rel="noopener noreferrer" onclick="gtagSendEvent(); return true;" aria-label="WhatsApp" data-testid="wa-float-btn">
   <div class="wa-pulse"></div>
   <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
     <path d="M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652c1.746.943 3.71 1.444 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.48-8.45z"/>
