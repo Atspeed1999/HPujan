@@ -463,6 +463,26 @@ def send_email(to: str, subject: str, html: str, text: str | None = None) -> boo
         return False
 
 
+def _schedule_email(fn, *args) -> None:
+    """Run a blocking email send OFF the request path. SMTP (SSL handshake +
+    login + send to the cPanel mail server) can take several seconds; Cal.com
+    expects a fast 200 or it retries. So we fire-and-forget on a worker thread
+    and let the webhook return immediately."""
+    async def _runner():
+        try:
+            await asyncio.to_thread(fn, *args)
+        except Exception:
+            logger.exception("[EMAIL TASK] %s failed", getattr(fn, '__name__', fn))
+    try:
+        asyncio.get_running_loop().create_task(_runner())
+    except RuntimeError:
+        # No running loop (called outside async context) — send inline.
+        try:
+            fn(*args)
+        except Exception:
+            logger.exception("[EMAIL] %s failed (sync fallback)", getattr(fn, '__name__', fn))
+
+
 def _fmt_ist(iso: str | None) -> str:
     if not iso:
         return 'your scheduled time'
@@ -991,7 +1011,7 @@ async def cal_webhook(request: Request):
     if trigger == 'BOOKING_CREATED':
         is_new = db_create_consultation(fields)
         if is_new:
-            _email_owner_new_consult(fields)
+            _schedule_email(_email_owner_new_consult, fields)
         return {"status": "ok", "event": trigger, "new": is_new}
 
     if trigger == 'BOOKING_RESCHEDULED':
@@ -1014,9 +1034,9 @@ async def cal_webhook(request: Request):
             db_update_consultation_by_uid(uid, {"status": "no_show"})
             # Prefer stored contact details; fill any gaps from this payload.
             target = {**existing, **{k: v for k, v in fields.items() if v}}
-            _email_customer_no_show(target)
-            _email_owner_no_show(target)
-            logger.info("[CAL WEBHOOK] no-show recovery sent uid=%s", uid)
+            _schedule_email(_email_customer_no_show, target)
+            _schedule_email(_email_owner_no_show, target)
+            logger.info("[CAL WEBHOOK] no-show recovery queued uid=%s", uid)
         return {"status": "ok", "event": trigger}
 
     logger.info("[CAL WEBHOOK] ignored event=%s", trigger)
@@ -1473,7 +1493,7 @@ async def _reminder_loop():
                     if not c.get('email'):
                         db_mark_reminder_sent(c['id'])  # nothing to send to; don't retry
                         continue
-                    if _email_customer_reminder(c):
+                    if await asyncio.to_thread(_email_customer_reminder, c):
                         db_mark_reminder_sent(c['id'])
         except Exception:
             logger.exception("[REMINDER LOOP] iteration failed")
