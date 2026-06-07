@@ -1040,44 +1040,6 @@ async def cal_webhook(request: Request):
     return {"status": "ignored", "event": trigger}
 
 
-@api_router.get("/email-diag")
-async def email_diag():
-    """TEMPORARY diagnostic: send a real test email to OWNER_EMAIL via Brevo and
-    return Brevo's exact HTTP status + body (e.g. 201 = queued; 401 = bad key;
-    400 = sender not verified). Never returns the API key. Remove after debugging."""
-    info = {"from": SMTP_FROM, "owner": OWNER_EMAIL, "brevo_key_set": bool(BREVO_API_KEY)}
-    if not _email_ready():
-        info["error"] = "Brevo not configured (BREVO_API_KEY / SMTP_FROM missing)"
-        return info
-    if not OWNER_EMAIL:
-        info["error"] = "OWNER_EMAIL not set"
-        return info
-
-    def _send():
-        payload = {
-            "sender": {"name": BRAND_NAME, "email": SMTP_FROM},
-            "to": [{"email": OWNER_EMAIL}],
-            "subject": "HomePujan email test",
-            "htmlContent": _email_shell(
-                "Email test",
-                "<p>If you can read this, Brevo email delivery is working. 🎉</p>"),
-        }
-        try:
-            r = requests.post(
-                BREVO_API_URL, json=payload,
-                headers={"api-key": BREVO_API_KEY, "accept": "application/json",
-                         "content-type": "application/json"},
-                timeout=20,
-            )
-            info["brevo_status"] = r.status_code
-            info["brevo_body"] = r.text[:400]
-        except Exception as e:
-            info["error"] = f"{type(e).__name__}: {e}"
-
-    await asyncio.to_thread(_send)
-    return info
-
-
 # ── ADMIN DASHBOARD ──
 # HTTP Basic auth. Browser shows native login popup. Credentials kept in .env
 # so they're never committed; refresh requires server restart.
