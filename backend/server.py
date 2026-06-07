@@ -1043,6 +1043,45 @@ async def cal_webhook(request: Request):
     return {"status": "ignored", "event": trigger}
 
 
+@api_router.get("/smtp-diag")
+async def smtp_diag():
+    """TEMPORARY diagnostic: test the SMTP connection + auth and report the exact
+    outcome. Sends no email and never returns the password — only host/port and
+    pass/fail with the error class, so we can tell 'connection blocked' (timeout)
+    apart from 'wrong password' (auth error). Remove after debugging."""
+    info = {"host": SMTP_HOST, "port": SMTP_PORT,
+            "user_set": bool(SMTP_USER), "pass_set": bool(SMTP_PASS),
+            "from_set": bool(SMTP_FROM)}
+    if not _smtp_ready():
+        info["error"] = "SMTP not configured (SMTP_HOST/SMTP_FROM missing)"
+        return info
+
+    def _probe():
+        try:
+            if SMTP_PORT == 465:
+                s = smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, timeout=10)
+            else:
+                s = smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=10)
+                s.starttls()
+            info["connect"] = "ok"
+            try:
+                s.login(SMTP_USER, SMTP_PASS)
+                info["login"] = "ok"
+            except Exception as e:
+                info["login"] = "fail"
+                info["login_error"] = f"{type(e).__name__}: {e}"
+            try:
+                s.quit()
+            except Exception:
+                pass
+        except Exception as e:
+            info["connect"] = "fail"
+            info["error"] = f"{type(e).__name__}: {e}"
+
+    await asyncio.to_thread(_probe)
+    return info
+
+
 # ── ADMIN DASHBOARD ──
 # HTTP Basic auth. Browser shows native login popup. Credentials kept in .env
 # so they're never committed; refresh requires server restart.
