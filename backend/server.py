@@ -12,7 +12,6 @@ import hmac
 import hashlib
 import sqlite3
 import asyncio
-import smtplib
 import requests
 from requests.auth import HTTPBasicAuth
 from pathlib import Path
@@ -20,8 +19,6 @@ from pydantic import BaseModel, ConfigDict, EmailStr
 import uuid
 from urllib.parse import quote
 from datetime import datetime, timezone, timedelta
-from email.message import EmailMessage
-from email.utils import formataddr
 from zoneinfo import ZoneInfo
 
 
@@ -416,9 +413,9 @@ def _guest_no_show(payload: dict) -> bool:
     return False
 
 
-# ── CONSULTATIONS: email (SMTP) ──
-def _smtp_ready() -> bool:
-    return bool(SMTP_HOST and SMTP_FROM)
+# ── CONSULTATIONS: email (Brevo HTTP API) ──
+def _email_ready() -> bool:
+    return bool(BREVO_API_KEY and SMTP_FROM)
 
 
 def _strip_html(html: str) -> str:
@@ -430,34 +427,35 @@ def _strip_html(html: str) -> str:
 
 
 def send_email(to: str, subject: str, html: str, text: str | None = None) -> bool:
-    """Send one HTML email. Never raises — logs and returns False on failure so a
-    webhook handler always returns 200 to Cal.com regardless of mail outcome."""
-    if not _smtp_ready():
-        logger.warning("[EMAIL SKIPPED] SMTP not configured; would send '%s' to %s", subject, to)
+    """Send one HTML email via Brevo's HTTP API. Never raises — logs and returns
+    False on failure so a webhook handler always returns 200 to Cal.com
+    regardless of mail outcome. (Railway blocks SMTP, so HTTP API it is.)"""
+    if not _email_ready():
+        logger.warning("[EMAIL SKIPPED] Brevo not configured; would send '%s' to %s", subject, to)
         return False
     if not to:
         logger.warning("[EMAIL SKIPPED] no recipient for '%s'", subject)
         return False
-    msg = EmailMessage()
-    msg['Subject'] = subject
-    msg['From'] = formataddr((BRAND_NAME, SMTP_FROM))
-    msg['To'] = to
-    msg.set_content(text or _strip_html(html))
-    msg.add_alternative(html, subtype='html')
+    payload = {
+        "sender": {"name": BRAND_NAME, "email": SMTP_FROM},
+        "to": [{"email": to}],
+        "subject": subject,
+        "htmlContent": html,
+        "textContent": text or _strip_html(html),
+    }
     try:
-        if SMTP_PORT == 465:
-            with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, timeout=20) as s:
-                if SMTP_USER:
-                    s.login(SMTP_USER, SMTP_PASS)
-                s.send_message(msg)
-        else:
-            with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=20) as s:
-                s.starttls()
-                if SMTP_USER:
-                    s.login(SMTP_USER, SMTP_PASS)
-                s.send_message(msg)
-        logger.info("[EMAIL SENT] '%s' -> %s", subject, to)
-        return True
+        r = requests.post(
+            BREVO_API_URL, json=payload,
+            headers={"api-key": BREVO_API_KEY, "accept": "application/json",
+                     "content-type": "application/json"},
+            timeout=20,
+        )
+        if r.status_code in (200, 201):
+            logger.info("[EMAIL SENT] '%s' -> %s (brevo %s)", subject, to, r.status_code)
+            return True
+        logger.error("[EMAIL FAILED] '%s' -> %s | brevo %s: %s",
+                     subject, to, r.status_code, r.text[:300])
+        return False
     except Exception:
         logger.exception("[EMAIL FAILED] '%s' -> %s", subject, to)
         return False
@@ -620,12 +618,11 @@ CAL_WEBHOOK_SECRET = os.environ.get('CAL_WEBHOOK_SECRET', '')
 # Public booking page customers are sent back to when they no-show.
 CAL_REBOOK_URL = os.environ.get('CAL_REBOOK_URL', 'https://cal.com/homepujan/15min')
 
-# SMTP — outbound email (owner alerts, customer reminder + no-show recovery).
-SMTP_HOST = os.environ.get('SMTP_HOST', '').strip()
-SMTP_PORT = int(os.environ.get('SMTP_PORT', '587') or '587')
-SMTP_USER = os.environ.get('SMTP_USER', '').strip()
-SMTP_PASS = os.environ.get('SMTP_PASS', '')
-SMTP_FROM = os.environ.get('SMTP_FROM', SMTP_USER).strip()
+# Outbound email. Railway blocks all outbound SMTP ports, so we send via Brevo's
+# HTTP API (over HTTPS/443). SMTP_FROM is reused as the verified sender address.
+BREVO_API_KEY = os.environ.get('BREVO_API_KEY', '').strip()
+BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email'
+SMTP_FROM = os.environ.get('SMTP_FROM', os.environ.get('SMTP_USER', '')).strip()
 OWNER_EMAIL = os.environ.get('OWNER_EMAIL', '').strip()
 BRAND_NAME = 'HomePujan'
 
@@ -1043,48 +1040,41 @@ async def cal_webhook(request: Request):
     return {"status": "ignored", "event": trigger}
 
 
-@api_router.get("/smtp-diag")
-async def smtp_diag():
-    """TEMPORARY diagnostic: test the SMTP connection + auth and report the exact
-    outcome. Sends no email and never returns the password — only host/port and
-    pass/fail with the error class, so we can tell 'connection blocked' (timeout)
-    apart from 'wrong password' (auth error). Remove after debugging."""
-    import socket
-    info = {"host": SMTP_HOST, "port": SMTP_PORT,
-            "user_set": bool(SMTP_USER), "pass_set": bool(SMTP_PASS),
-            "from_set": bool(SMTP_FROM)}
+@api_router.get("/email-diag")
+async def email_diag():
+    """TEMPORARY diagnostic: send a real test email to OWNER_EMAIL via Brevo and
+    return Brevo's exact HTTP status + body (e.g. 201 = queued; 401 = bad key;
+    400 = sender not verified). Never returns the API key. Remove after debugging."""
+    info = {"from": SMTP_FROM, "owner": OWNER_EMAIL, "brevo_key_set": bool(BREVO_API_KEY)}
+    if not _email_ready():
+        info["error"] = "Brevo not configured (BREVO_API_KEY / SMTP_FROM missing)"
+        return info
+    if not OWNER_EMAIL:
+        info["error"] = "OWNER_EMAIL not set"
+        return info
 
-    # Raw TCP reachability to several mail endpoints. If the public relays are
-    # reachable but the cPanel host isn't -> host firewalls Railway. If NOTHING
-    # is reachable -> Railway blocks outbound SMTP entirely (use an HTTP API).
-    targets = [
-        ("mail.homepujan.com", 465),
-        ("mail.homepujan.com", 587),
-        ("smtp-relay.brevo.com", 587),
-        ("smtp.gmail.com", 587),
-    ]
+    def _send():
+        payload = {
+            "sender": {"name": BRAND_NAME, "email": SMTP_FROM},
+            "to": [{"email": OWNER_EMAIL}],
+            "subject": "HomePujan email test",
+            "htmlContent": _email_shell(
+                "Email test",
+                "<p>If you can read this, Brevo email delivery is working. 🎉</p>"),
+        }
+        try:
+            r = requests.post(
+                BREVO_API_URL, json=payload,
+                headers={"api-key": BREVO_API_KEY, "accept": "application/json",
+                         "content-type": "application/json"},
+                timeout=20,
+            )
+            info["brevo_status"] = r.status_code
+            info["brevo_body"] = r.text[:400]
+        except Exception as e:
+            info["error"] = f"{type(e).__name__}: {e}"
 
-    def _probe():
-        tcp = {}
-        for h, p in targets:
-            try:
-                s = socket.create_connection((h, p), timeout=8)
-                s.close()
-                tcp[f"{h}:{p}"] = "open"
-            except Exception as e:
-                tcp[f"{h}:{p}"] = f"{type(e).__name__}: {e}"
-        info["tcp"] = tcp
-        # If the cPanel server is reachable on 465, also test the actual login.
-        if tcp.get("mail.homepujan.com:465") == "open" and _smtp_ready():
-            try:
-                sm = smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, timeout=8)
-                sm.login(SMTP_USER, SMTP_PASS)
-                sm.quit()
-                info["cpanel_login"] = "ok"
-            except Exception as e:
-                info["cpanel_login"] = f"{type(e).__name__}: {e}"
-
-    await asyncio.to_thread(_probe)
+    await asyncio.to_thread(_send)
     return info
 
 
@@ -1533,7 +1523,7 @@ async def _reminder_loop():
     Runs in-process (no extra cron). Skips entirely when SMTP is unconfigured."""
     while True:
         try:
-            if _smtp_ready():
+            if _email_ready():
                 for c in db_due_reminders():
                     if not c.get('email'):
                         db_mark_reminder_sent(c['id'])  # nothing to send to; don't retry
@@ -1562,5 +1552,5 @@ async def on_startup():
     init_db()
     logger.info("SQLite ready at %s", DB_PATH)
     asyncio.create_task(_reminder_loop())
-    logger.info("Consultation reminder loop started (lead=%dm, poll=%ds, smtp=%s)",
-                REMINDER_LEAD_MINUTES, REMINDER_POLL_SECONDS, "on" if _smtp_ready() else "off")
+    logger.info("Consultation reminder loop started (lead=%dm, poll=%ds, email=%s)",
+                REMINDER_LEAD_MINUTES, REMINDER_POLL_SECONDS, "on" if _email_ready() else "off")
