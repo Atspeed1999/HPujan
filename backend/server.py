@@ -11,13 +11,18 @@ import logging
 import hmac
 import hashlib
 import sqlite3
+import asyncio
+import smtplib
 import requests
 from requests.auth import HTTPBasicAuth
 from pathlib import Path
 from pydantic import BaseModel, ConfigDict, EmailStr
 import uuid
 from urllib.parse import quote
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
+from email.message import EmailMessage
+from email.utils import formataddr
+from zoneinfo import ZoneInfo
 
 
 ROOT_DIR = Path(__file__).parent
@@ -64,6 +69,25 @@ def init_db() -> None:
             CREATE INDEX IF NOT EXISTS idx_bookings_status     ON bookings(status);
             CREATE INDEX IF NOT EXISTS idx_bookings_created_at ON bookings(created_at);
             CREATE INDEX IF NOT EXISTS idx_bookings_order_id   ON bookings(razorpay_order_id);
+
+            -- Free consultation leads from Cal.com (separate from paid puja bookings).
+            -- Populated by the Cal.com webhook; cal_uid is the idempotency key.
+            CREATE TABLE IF NOT EXISTS consultations (
+                id            TEXT PRIMARY KEY,
+                cal_uid       TEXT NOT NULL UNIQUE,
+                name          TEXT,
+                email         TEXT,
+                phone         TEXT,
+                ceremony      TEXT,
+                start_iso     TEXT,
+                status        TEXT NOT NULL,   -- booked | rescheduled | cancelled | no_show
+                reminder_sent INTEGER NOT NULL DEFAULT 0,
+                created_at    TEXT NOT NULL,
+                updated_at    TEXT
+            );
+            CREATE INDEX IF NOT EXISTS idx_consult_status    ON consultations(status);
+            CREATE INDEX IF NOT EXISTS idx_consult_start     ON consultations(start_iso);
+            CREATE INDEX IF NOT EXISTS idx_consult_cal_uid   ON consultations(cal_uid);
         """)
 
 
@@ -218,6 +242,321 @@ def db_mark_failed_by_order_id(order_id: str, payment_id: str | None, reason: st
     return 'updated'
 
 
+# ── CONSULTATIONS: persistence ──
+IST = ZoneInfo("Asia/Kolkata")
+
+
+def _consult_row_to_dict(row: sqlite3.Row) -> dict:
+    return {
+        "id": row["id"],
+        "cal_uid": row["cal_uid"],
+        "name": row["name"],
+        "email": row["email"],
+        "phone": row["phone"],
+        "ceremony": row["ceremony"],
+        "start_iso": row["start_iso"],
+        "status": row["status"],
+        "reminder_sent": row["reminder_sent"],
+        "created_at": row["created_at"],
+        "updated_at": row["updated_at"],
+    }
+
+
+def db_create_consultation(doc: dict) -> bool:
+    """Insert a consultation. If cal_uid already exists (webhook retry), refresh
+    the mutable fields instead and keep reminder_sent. Returns True only when a
+    brand-new row was inserted — so the owner alert fires exactly once."""
+    now = datetime.now(timezone.utc).isoformat()
+    with _conn() as c:
+        try:
+            c.execute(
+                """INSERT INTO consultations
+                   (id, cal_uid, name, email, phone, ceremony, start_iso,
+                    status, reminder_sent, created_at, updated_at)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)""",
+                (str(uuid.uuid4()), doc['cal_uid'], doc.get('name'), doc.get('email'),
+                 doc.get('phone'), doc.get('ceremony'), doc.get('start_iso'),
+                 doc.get('status', 'booked'), now, now),
+            )
+            logger.info("[CONSULT NEW] uid=%s %s <%s> ph=%s",
+                        doc['cal_uid'], doc.get('name'), doc.get('email'), doc.get('phone'))
+            return True
+        except sqlite3.IntegrityError:
+            c.execute(
+                """UPDATE consultations
+                   SET name=?, email=?, phone=?, ceremony=?, start_iso=?, status=?, updated_at=?
+                   WHERE cal_uid=?""",
+                (doc.get('name'), doc.get('email'), doc.get('phone'), doc.get('ceremony'),
+                 doc.get('start_iso'), doc.get('status', 'booked'), now, doc['cal_uid']),
+            )
+            return False
+
+
+def db_get_consultation_by_uid(cal_uid: str) -> dict | None:
+    with _conn() as c:
+        row = c.execute("SELECT * FROM consultations WHERE cal_uid = ?", (cal_uid,)).fetchone()
+    return _consult_row_to_dict(row) if row else None
+
+
+def db_update_consultation_by_uid(cal_uid: str, updates: dict) -> bool:
+    updates = {**updates, 'updated_at': datetime.now(timezone.utc).isoformat()}
+    cols = ', '.join(f"{k} = ?" for k in updates)
+    vals = list(updates.values()) + [cal_uid]
+    with _conn() as c:
+        cur = c.execute(f"UPDATE consultations SET {cols} WHERE cal_uid = ?", vals)
+        matched = cur.rowcount > 0
+    if matched:
+        logger.info("[CONSULT UPDATE] uid=%s %s", cal_uid,
+                    {k: v for k, v in updates.items() if k != 'updated_at'})
+    return matched
+
+
+def db_due_reminders() -> list[dict]:
+    """Booked consults starting within the reminder window that haven't been
+    reminded yet. start_iso is stored normalised to UTC (+00:00) so string
+    comparison against now is safe."""
+    now = datetime.now(timezone.utc)
+    lower = now.isoformat()
+    upper = (now + timedelta(minutes=REMINDER_LEAD_MINUTES)).isoformat()
+    with _conn() as c:
+        rows = c.execute(
+            """SELECT * FROM consultations
+               WHERE status = 'booked' AND reminder_sent = 0
+                 AND start_iso IS NOT NULL AND start_iso > ? AND start_iso <= ?
+               ORDER BY start_iso ASC""",
+            (lower, upper),
+        ).fetchall()
+    return [_consult_row_to_dict(r) for r in rows]
+
+
+def db_mark_reminder_sent(consult_id: str) -> None:
+    with _conn() as c:
+        c.execute("UPDATE consultations SET reminder_sent = 1 WHERE id = ?", (consult_id,))
+
+
+def db_query_consultations(status: str | None = None, q: str | None = None, limit: int = 1000) -> list[dict]:
+    where, vals = [], []
+    if status:
+        where.append("status = ?"); vals.append(status)
+    if q:
+        like = f"%{q}%"
+        where.append("(name LIKE ? OR email LIKE ? OR phone LIKE ? OR ceremony LIKE ?)")
+        vals.extend([like, like, like, like])
+    sql = "SELECT * FROM consultations"
+    if where:
+        sql += " WHERE " + " AND ".join(where)
+    sql += " ORDER BY start_iso DESC LIMIT ?"
+    vals.append(limit)
+    with _conn() as c:
+        rows = c.execute(sql, vals).fetchall()
+    return [_consult_row_to_dict(r) for r in rows]
+
+
+def db_consult_status_counts() -> dict[str, int]:
+    with _conn() as c:
+        rows = c.execute("SELECT status, COUNT(*) AS n FROM consultations GROUP BY status").fetchall()
+    return {r['status']: r['n'] for r in rows}
+
+
+# ── CONSULTATIONS: Cal.com payload parsing ──
+def _parse_iso_to_utc(s: str | None) -> str | None:
+    """Normalise any ISO timestamp (Cal sends '...Z' or with an offset) to a
+    consistent UTC '+00:00' string so range comparisons are reliable."""
+    if not s:
+        return None
+    try:
+        return datetime.fromisoformat(s.replace('Z', '+00:00')).astimezone(timezone.utc).isoformat()
+    except Exception:
+        return s
+
+
+def parse_cal_booking(payload: dict) -> dict:
+    """Pull the fields we care about out of a Cal.com webhook 'payload'. Cal's
+    'responses' values can be plain strings or {'value': ...} objects; attendees
+    carry name/email/phone too. We probe both shapes."""
+    responses = payload.get('responses') or {}
+    attendees = payload.get('attendees') or []
+    att0 = attendees[0] if attendees else {}
+
+    def rv(key):
+        v = responses.get(key)
+        return v.get('value') if isinstance(v, dict) else v
+
+    name = rv('name') or att0.get('name')
+    email = rv('email') or att0.get('email')
+
+    phone = rv('phone') or rv('attendeePhoneNumber') or rv('smsReminderNumber') or att0.get('phoneNumber')
+    if not phone:
+        for k, v in responses.items():
+            if 'phone' in k.lower():
+                phone = v.get('value') if isinstance(v, dict) else v
+                if phone:
+                    break
+
+    notes = rv('notes') or payload.get('additionalNotes') or ''
+    ceremony = notes.strip() if isinstance(notes, str) and notes.strip() else None
+
+    uid = payload.get('uid') or payload.get('bookingId') or payload.get('id')
+
+    return {
+        'cal_uid': str(uid) if uid is not None else None,
+        'name': name,
+        'email': email,
+        'phone': str(phone) if phone else None,
+        'ceremony': ceremony,
+        'start_iso': _parse_iso_to_utc(payload.get('startTime')),
+    }
+
+
+def _guest_no_show(payload: dict) -> bool:
+    """True when any attendee (the guest) is flagged no-show in the payload."""
+    for a in (payload.get('attendees') or []):
+        if a.get('noShow') is True:
+            return True
+    return False
+
+
+# ── CONSULTATIONS: email (SMTP) ──
+def _smtp_ready() -> bool:
+    return bool(SMTP_HOST and SMTP_FROM)
+
+
+def _strip_html(html: str) -> str:
+    import re
+    text = re.sub(r'<br\s*/?>', '\n', html)
+    text = re.sub(r'</p>', '\n\n', text)
+    text = re.sub(r'<[^>]+>', '', text)
+    return re.sub(r'\n{3,}', '\n\n', text).strip()
+
+
+def send_email(to: str, subject: str, html: str, text: str | None = None) -> bool:
+    """Send one HTML email. Never raises — logs and returns False on failure so a
+    webhook handler always returns 200 to Cal.com regardless of mail outcome."""
+    if not _smtp_ready():
+        logger.warning("[EMAIL SKIPPED] SMTP not configured; would send '%s' to %s", subject, to)
+        return False
+    if not to:
+        logger.warning("[EMAIL SKIPPED] no recipient for '%s'", subject)
+        return False
+    msg = EmailMessage()
+    msg['Subject'] = subject
+    msg['From'] = formataddr((BRAND_NAME, SMTP_FROM))
+    msg['To'] = to
+    msg.set_content(text or _strip_html(html))
+    msg.add_alternative(html, subtype='html')
+    try:
+        if SMTP_PORT == 465:
+            with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, timeout=20) as s:
+                if SMTP_USER:
+                    s.login(SMTP_USER, SMTP_PASS)
+                s.send_message(msg)
+        else:
+            with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=20) as s:
+                s.starttls()
+                if SMTP_USER:
+                    s.login(SMTP_USER, SMTP_PASS)
+                s.send_message(msg)
+        logger.info("[EMAIL SENT] '%s' -> %s", subject, to)
+        return True
+    except Exception:
+        logger.exception("[EMAIL FAILED] '%s' -> %s", subject, to)
+        return False
+
+
+def _fmt_ist(iso: str | None) -> str:
+    if not iso:
+        return 'your scheduled time'
+    try:
+        dt = datetime.fromisoformat(iso.replace('Z', '+00:00')).astimezone(IST)
+        return dt.strftime('%d %b %Y, %I:%M %p IST').lstrip('0')
+    except Exception:
+        return iso
+
+
+def _email_shell(heading: str, body_html: str) -> str:
+    return f"""<div style="font-family:Georgia,'Times New Roman',serif;max-width:560px;margin:0 auto;color:#2D2D2D">
+  <div style="background:#4A0E0E;color:#D4AF37;padding:18px 24px;border-radius:8px 8px 0 0">
+    <h1 style="margin:0;font-size:18px;letter-spacing:.06em">{BRAND_NAME}</h1>
+  </div>
+  <div style="border:1px solid #E5DED0;border-top:none;border-radius:0 0 8px 8px;padding:24px;line-height:1.6">
+    <h2 style="color:#4A0E0E;font-size:16px;margin:0 0 14px">{heading}</h2>
+    {body_html}
+  </div>
+</div>"""
+
+
+def _owner_detail_table(c: dict) -> str:
+    phone = c.get('phone') or '—'
+    wa = f'<a href="{_wa_link(phone)}" style="color:#25D366">{phone}</a>' if c.get('phone') else '—'
+    def row(label, value):
+        return (f'<tr><td style="padding:4px 12px 4px 0;color:#7A6A6A">{label}</td>'
+                f'<td style="padding:4px 0"><b>{value}</b></td></tr>')
+    return ('<table style="font-size:14px;margin:6px 0 16px">'
+            + row('Name', c.get('name') or '—')
+            + row('Phone', wa)
+            + row('Email', c.get('email') or '—')
+            + row('Note', c.get('ceremony') or '—')
+            + row('When', _fmt_ist(c.get('start_iso')))
+            + '</table>')
+
+
+def _email_owner_new_consult(c: dict) -> None:
+    if not OWNER_EMAIL:
+        return
+    body = (
+        "<p>A new free consultation has just been booked.</p>"
+        + _owner_detail_table(c)
+        + f"<p style='font-size:13px;color:#7A6A6A'>A reminder email goes to the guest "
+        f"~{REMINDER_LEAD_MINUTES} min before. If they don't show, mark them no-show in "
+        f"Cal.com to auto-send the reschedule email.</p>"
+    )
+    send_email(OWNER_EMAIL, "New consultation booked", _email_shell("New consultation booked", body))
+
+
+def _email_customer_reminder(c: dict) -> bool:
+    name = c.get('name') or 'ji'
+    when = _fmt_ist(c.get('start_iso'))
+    body = (
+        f"<p>Namaste {name},</p>"
+        f"<p>This is a gentle reminder of your free 15-minute consultation with a "
+        f"{BRAND_NAME} scholar at <b>{when}</b>.</p>"
+        f"<p>Please join by video using the link in your original confirmation email.</p>"
+        f"<p>If the timing no longer suits you, you may reschedule any time here:<br>"
+        f"<a href='{CAL_REBOOK_URL}' style='color:#4A0E0E'>{CAL_REBOOK_URL}</a></p>"
+        f"<p>We look forward to guiding you.</p>"
+    )
+    return send_email(c.get('email'), f"Reminder: your {BRAND_NAME} consultation is coming up",
+                      _email_shell("Your consultation is coming up", body))
+
+
+def _email_customer_no_show(c: dict) -> bool:
+    name = c.get('name') or 'ji'
+    when = _fmt_ist(c.get('start_iso'))
+    body = (
+        f"<p>Namaste {name},</p>"
+        f"<p>We were looking forward to your free consultation, but it seems we "
+        f"couldn't connect at {when}. No worries at all — it happens.</p>"
+        f"<p>We'd be glad to find a new time that suits you. You can rebook in just a few taps:</p>"
+        f"<p><a href='{CAL_REBOOK_URL}' style='display:inline-block;background:#4A0E0E;"
+        f"color:#D4AF37;padding:11px 20px;border-radius:6px;text-decoration:none;font-weight:700'>"
+        f"Reschedule my consultation</a></p>"
+        f"<p>Or simply reply to this email and we'll help you personally.</p>"
+    )
+    return send_email(c.get('email'), f"We missed you — let's reschedule your consultation",
+                      _email_shell("We missed you — let's reschedule", body))
+
+
+def _email_owner_no_show(c: dict) -> None:
+    if not OWNER_EMAIL:
+        return
+    body = (
+        "<p>A guest was marked <b>no-show</b>. A reschedule email has been sent to them automatically.</p>"
+        + _owner_detail_table(c)
+    )
+    send_email(OWNER_EMAIL, "Consultation no-show (reschedule email sent)",
+               _email_shell("Guest no-show", body))
+
+
 # ── App ──
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
@@ -253,6 +592,26 @@ RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID', '')
 RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET', '')
 RAZORPAY_WEBHOOK_SECRET = os.environ.get('RAZORPAY_WEBHOOK_SECRET', '')
 RAZORPAY_API_BASE = 'https://api.razorpay.com/v1'
+
+# ── CONSULTATION (Cal.com webhook + email) INTEGRATION ──
+# Cal.com signs each webhook with HMAC-SHA256 over the raw body using this shared
+# secret (set the same value in Cal.com → Settings → Webhooks).
+CAL_WEBHOOK_SECRET = os.environ.get('CAL_WEBHOOK_SECRET', '')
+# Public booking page customers are sent back to when they no-show.
+CAL_REBOOK_URL = os.environ.get('CAL_REBOOK_URL', 'https://cal.com/homepujan/15min')
+
+# SMTP — outbound email (owner alerts, customer reminder + no-show recovery).
+SMTP_HOST = os.environ.get('SMTP_HOST', '').strip()
+SMTP_PORT = int(os.environ.get('SMTP_PORT', '587') or '587')
+SMTP_USER = os.environ.get('SMTP_USER', '').strip()
+SMTP_PASS = os.environ.get('SMTP_PASS', '')
+SMTP_FROM = os.environ.get('SMTP_FROM', SMTP_USER).strip()
+OWNER_EMAIL = os.environ.get('OWNER_EMAIL', '').strip()
+BRAND_NAME = 'HomePujan'
+
+# Pre-call reminder: fire when a booked consult starts within this many minutes.
+REMINDER_LEAD_MINUTES = int(os.environ.get('REMINDER_LEAD_MINUTES', '60') or '60')
+REMINDER_POLL_SECONDS = int(os.environ.get('REMINDER_POLL_SECONDS', '600') or '600')
 
 # Backend-authoritative price table. Frontend sends service_id only; amount lives here.
 SERVICE_CATALOG = {
@@ -583,6 +942,87 @@ async def razorpay_webhook(request: Request):
     return {"status": "ignored", "event": event}
 
 
+@api_router.post("/cal/webhook")
+async def cal_webhook(request: Request):
+    """Server-to-server callback from Cal.com for the free consultation event.
+
+    Cal signs the raw body with HMAC-SHA256 using the shared secret, sent in the
+    X-Cal-Signature-256 header (set the same secret in Cal.com → Settings →
+    Webhooks). We verify against the raw body and reject mismatches — same defence
+    as the Razorpay webhook above.
+
+    Handled triggers (subscribe to these in Cal.com):
+      BOOKING_CREATED        → store lead + email owner (once)
+      BOOKING_RESCHEDULED    → update time, re-arm the reminder
+      BOOKING_CANCELLED      → mark cancelled (drops out of reminders)
+      BOOKING_NO_SHOW_UPDATED→ when the pundit marks the guest no-show, email the
+                               customer a reschedule note + alert the owner
+    Idempotent: owner alert only fires on a fresh insert; the no-show email only
+    fires on the first transition into 'no_show'.
+    """
+    raw_body = await request.body()
+    received_sig = request.headers.get('X-Cal-Signature-256', '')
+
+    if not CAL_WEBHOOK_SECRET:
+        logger.error("Cal webhook received but CAL_WEBHOOK_SECRET is not configured")
+        raise HTTPException(status_code=500, detail="Cal webhook secret not configured")
+    if not received_sig:
+        raise HTTPException(status_code=400, detail="Missing X-Cal-Signature-256 header")
+
+    expected_sig = hmac.new(CAL_WEBHOOK_SECRET.encode(), raw_body, hashlib.sha256).hexdigest()
+    if not hmac.compare_digest(expected_sig, received_sig):
+        logger.warning("Cal webhook signature mismatch — rejecting")
+        raise HTTPException(status_code=400, detail="Invalid webhook signature")
+
+    try:
+        body = json.loads(raw_body)
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=400, detail="Invalid JSON")
+
+    trigger = body.get('triggerEvent', '')
+    payload = body.get('payload', {}) or {}
+    fields = parse_cal_booking(payload)
+    uid = fields.get('cal_uid')
+
+    if not uid:
+        logger.info("[CAL WEBHOOK] %s ignored — no booking uid", trigger)
+        return {"status": "ignored", "reason": "no uid"}
+
+    if trigger == 'BOOKING_CREATED':
+        is_new = db_create_consultation(fields)
+        if is_new:
+            _email_owner_new_consult(fields)
+        return {"status": "ok", "event": trigger, "new": is_new}
+
+    if trigger == 'BOOKING_RESCHEDULED':
+        updated = db_update_consultation_by_uid(
+            uid, {"start_iso": fields['start_iso'], "status": "booked", "reminder_sent": 0}
+        )
+        if not updated:
+            db_create_consultation(fields)
+        return {"status": "ok", "event": trigger}
+
+    if trigger == 'BOOKING_CANCELLED':
+        db_update_consultation_by_uid(uid, {"status": "cancelled"})
+        return {"status": "ok", "event": trigger}
+
+    if trigger == 'BOOKING_NO_SHOW_UPDATED':
+        if not _guest_no_show(payload):
+            return {"status": "ok", "event": trigger, "note": "not a guest no-show"}
+        existing = db_get_consultation_by_uid(uid)
+        if existing and existing['status'] != 'no_show':
+            db_update_consultation_by_uid(uid, {"status": "no_show"})
+            # Prefer stored contact details; fill any gaps from this payload.
+            target = {**existing, **{k: v for k, v in fields.items() if v}}
+            _email_customer_no_show(target)
+            _email_owner_no_show(target)
+            logger.info("[CAL WEBHOOK] no-show recovery sent uid=%s", uid)
+        return {"status": "ok", "event": trigger}
+
+    logger.info("[CAL WEBHOOK] ignored event=%s", trigger)
+    return {"status": "ignored", "event": trigger}
+
+
 # ── ADMIN DASHBOARD ──
 # HTTP Basic auth. Browser shows native login popup. Credentials kept in .env
 # so they're never committed; refresh requires server restart.
@@ -687,7 +1127,7 @@ _ADMIN_HTML = """<!DOCTYPE html>
 <body>
 <header>
   <h1>HomePujan — Bookings</h1>
-  <div class="meta">__COUNT__ rows · DB: __DB__</div>
+  <div class="meta"><a href="/admin/consultations" style="color:#D4AF37;text-decoration:underline;margin-right:1rem">Consultations →</a>__COUNT__ rows · DB: __DB__</div>
 </header>
 <main>
   __FLASH__
@@ -891,6 +1331,155 @@ async def admin_export_csv(
     )
 
 
+# ── ADMIN: CONSULTATIONS ──
+_CONSULT_HTML = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>HomePujan — Consultations</title>
+<style>
+  :root { --maroon: #4A0E0E; --gold: #D4AF37; --line: #E5DED0; --ink: #2D2D2D; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif; margin: 0; background: #F9F4EC; color: var(--ink); }
+  header { background: var(--maroon); color: var(--gold); padding: 1.1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+  header h1 { font-family: 'Cinzel', Georgia, serif; font-size: 1.15rem; margin: 0; letter-spacing: 0.06em; }
+  header .meta a { color: var(--gold); text-decoration: underline; }
+  main { max-width: 1180px; margin: 1.5rem auto; padding: 0 1.5rem; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem; }
+  .stat { background: white; border: 1px solid var(--line); border-radius: 8px; padding: 0.85rem 1rem; }
+  .stat .lbl { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; color: #7A6A6A; font-weight: 600; }
+  .stat .val { font-family: 'Cinzel', Georgia, serif; font-size: 1.5rem; font-weight: 700; color: var(--maroon); margin-top: 4px; }
+  .stat.no_show .val { color: #9B1C1C; }
+  .stat.booked .val { color: #1E7F3E; }
+  .filters { background: white; border: 1px solid var(--line); border-radius: 8px; padding: 0.85rem 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; margin-bottom: 1rem; }
+  .filters input, .filters select { padding: 0.5rem 0.7rem; border: 1px solid var(--line); border-radius: 6px; font-size: 0.85rem; font-family: inherit; }
+  .filters input[type=search] { flex: 1; min-width: 200px; }
+  .filters button { padding: 0.5rem 1rem; border: 1px solid var(--maroon); background: var(--maroon); color: var(--gold); font-weight: 600; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
+  .filters a.clear { font-size: 0.78rem; color: #7A6A6A; text-decoration: underline; }
+  table { width: 100%; border-collapse: collapse; background: white; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; font-size: 0.85rem; }
+  th, td { padding: 0.65rem 0.85rem; text-align: left; vertical-align: top; border-bottom: 1px solid #F0E9DE; }
+  th { background: #F9F4EC; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: #5A4A4A; font-weight: 700; }
+  tbody tr:hover { background: #FAF6EE; }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+  .pill.booked { background: #E2F5E8; color: #1E7F3E; }
+  .pill.no_show { background: #FDECEC; color: #9B1C1C; }
+  .pill.cancelled { background: #ECECEC; color: #555; }
+  .pill.rescheduled { background: #E6EEFB; color: #1D4ED8; }
+  .wa { color: #25D366; text-decoration: none; }
+  .wa:hover { text-decoration: underline; }
+  small.muted { color: #7A6A6A; }
+  .empty { text-align: center; padding: 3rem; color: #7A6A6A; }
+</style>
+</head>
+<body>
+<header>
+  <h1>HomePujan — Consultations</h1>
+  <div class="meta"><a href="/admin">← Bookings</a> · __COUNT__ rows</div>
+</header>
+<main>
+  <div class="stats">__STATS__</div>
+  <div class="filters">
+    <form method="get" action="/admin/consultations" style="display:flex;gap:0.5rem;flex-wrap:wrap;flex:1;align-items:center">
+      <input type="search" name="q" placeholder="Search name, email, phone or note…" value="__Q__" autofocus/>
+      <select name="status">
+        <option value="">All statuses</option>
+        <option value="booked"      __SEL_BOOKED__>Booked</option>
+        <option value="no_show"     __SEL_NOSHOW__>No-show</option>
+        <option value="cancelled"   __SEL_CANCELLED__>Cancelled</option>
+        <option value="rescheduled" __SEL_RESCHED__>Rescheduled</option>
+      </select>
+      <button type="submit">Apply</button>
+      <a class="clear" href="/admin/consultations">Clear</a>
+    </form>
+  </div>
+  __TABLE__
+</main>
+</body>
+</html>"""
+
+
+def _render_consultations(consults: list[dict], q: str, status: str) -> str:
+    counts = db_consult_status_counts()
+    total = sum(counts.values())
+    cards = [
+        ('Total', total, ''),
+        ('Booked', counts.get('booked', 0), 'booked'),
+        ('No-show', counts.get('no_show', 0), 'no_show'),
+        ('Cancelled', counts.get('cancelled', 0), 'cancelled'),
+        ('Rescheduled', counts.get('rescheduled', 0), 'rescheduled'),
+    ]
+    stats_html = ''.join(
+        f'<div class="stat {cls}"><div class="lbl">{lbl}</div><div class="val">{val}</div></div>'
+        for lbl, val, cls in cards
+    )
+
+    if not consults:
+        table_html = '<div class="empty">No consultations match your filter.</div>'
+    else:
+        rows = []
+        for c in consults:
+            phone = c.get('phone') or ''
+            contact_phone = (f'<a class="wa" href="{_wa_link(phone)}" target="_blank" rel="noopener">{phone} ↗</a>'
+                             if phone else '<small class="muted">no phone</small>')
+            reminded = '✓' if c.get('reminder_sent') else '—'
+            rows.append(f"""
+                <tr>
+                  <td>{c.get('name') or '—'}<br/><small class="muted">{c.get('email') or '—'}</small><br/>{contact_phone}</td>
+                  <td>{c.get('ceremony') or '<small class="muted">—</small>'}</td>
+                  <td>{_fmt_ist(c.get('start_iso'))}</td>
+                  <td><span class="pill {c.get('status')}">{(c.get('status') or '').replace('_', ' ')}</span></td>
+                  <td style="text-align:center">{reminded}</td>
+                  <td><small class="muted">{_fmt_dt(c.get('created_at'))}</small></td>
+                </tr>
+            """)
+        table_html = f"""
+        <table>
+          <thead><tr>
+            <th>Guest</th><th>Note</th><th>Slot</th><th>Status</th><th>Reminded</th><th>Booked</th>
+          </tr></thead>
+          <tbody>{''.join(rows)}</tbody>
+        </table>"""
+
+    return (_CONSULT_HTML
+        .replace('__COUNT__', str(len(consults)))
+        .replace('__STATS__', stats_html)
+        .replace('__TABLE__', table_html)
+        .replace('__Q__', q.replace('"', '&quot;') if q else '')
+        .replace('__SEL_BOOKED__',    'selected' if status == 'booked' else '')
+        .replace('__SEL_NOSHOW__',    'selected' if status == 'no_show' else '')
+        .replace('__SEL_CANCELLED__', 'selected' if status == 'cancelled' else '')
+        .replace('__SEL_RESCHED__',   'selected' if status == 'rescheduled' else ''))
+
+
+@app.get("/admin/consultations", response_class=HTMLResponse)
+async def admin_consultations(
+    _user: str = Depends(require_admin),
+    q: str = Query('', max_length=120),
+    status: str = Query('', max_length=32),
+):
+    consults = db_query_consultations(status=status or None, q=q or None)
+    return HTMLResponse(_render_consultations(consults, q, status))
+
+
+# ── PRE-CALL REMINDER LOOP ──
+async def _reminder_loop():
+    """Background task: periodically email guests whose consultation starts soon.
+    Runs in-process (no extra cron). Skips entirely when SMTP is unconfigured."""
+    while True:
+        try:
+            if _smtp_ready():
+                for c in db_due_reminders():
+                    if not c.get('email'):
+                        db_mark_reminder_sent(c['id'])  # nothing to send to; don't retry
+                        continue
+                    if _email_customer_reminder(c):
+                        db_mark_reminder_sent(c['id'])
+        except Exception:
+            logger.exception("[REMINDER LOOP] iteration failed")
+        await asyncio.sleep(REMINDER_POLL_SECONDS)
+
+
 # Mount router + CORS + startup
 app.include_router(api_router)
 
@@ -907,3 +1496,6 @@ app.add_middleware(
 async def on_startup():
     init_db()
     logger.info("SQLite ready at %s", DB_PATH)
+    asyncio.create_task(_reminder_loop())
+    logger.info("Consultation reminder loop started (lead=%dm, poll=%ds, smtp=%s)",
+                REMINDER_LEAD_MINUTES, REMINDER_POLL_SECONDS, "on" if _smtp_ready() else "off")

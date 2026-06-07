@@ -2102,20 +2102,28 @@ section[id] { scroll-margin-top: 80px; }
     if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.visible').forEach(m => closeModal(m.id.replace('modal-', '')));
   });
 
-  // Cal.com initialized flag
-  let calInitialized = false;
+  // Tracks which ceremony the embed is currently rendered for, so we only
+  // re-render when the context changes (avoids stacking embeds on repeat opens).
+  let calRenderedFor = null;
 
   function openConsultModal(service) {
     openModal('consult');
-    // Initialize Cal.com widget when modal opens (only once)
-    if (!calInitialized && typeof Cal !== 'undefined') {
+    if (typeof Cal === 'undefined') return;
+    // Re-render the Cal.com embed whenever the ceremony changes, prefilling the
+    // booking notes with it — so each booking records WHICH ceremony the lead
+    // wants (this context was previously dropped and never reached Cal.com).
+    if (calRenderedFor !== service) {
+      const el = document.querySelector('#my-cal-inline-15min');
+      if (el) el.innerHTML = '';
+      const config = {"layout":"month_view","useSlotsViewOnSmallScreen":"true","theme":"auto"};
+      if (service) config.notes = "Interested in: " + service;
       Cal.ns["15min"]("inline", {
         elementOrSelector:"#my-cal-inline-15min",
-        config: {"layout":"month_view","useSlotsViewOnSmallScreen":"true","theme":"auto"},
+        config: config,
         calLink: "homepujan/15min",
       });
       Cal.ns["15min"]("ui", {"cssVarsPerTheme":{"light":{"cal-brand":"#4b1110"},"dark":{"cal-brand":"#d4af39"}},"hideEventTypeDetails":false,"layout":"month_view"});
-      calInitialized = true;
+      calRenderedFor = service;
     }
   }
 
