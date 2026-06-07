@@ -1049,34 +1049,40 @@ async def smtp_diag():
     outcome. Sends no email and never returns the password — only host/port and
     pass/fail with the error class, so we can tell 'connection blocked' (timeout)
     apart from 'wrong password' (auth error). Remove after debugging."""
+    import socket
     info = {"host": SMTP_HOST, "port": SMTP_PORT,
             "user_set": bool(SMTP_USER), "pass_set": bool(SMTP_PASS),
             "from_set": bool(SMTP_FROM)}
-    if not _smtp_ready():
-        info["error"] = "SMTP not configured (SMTP_HOST/SMTP_FROM missing)"
-        return info
+
+    # Raw TCP reachability to several mail endpoints. If the public relays are
+    # reachable but the cPanel host isn't -> host firewalls Railway. If NOTHING
+    # is reachable -> Railway blocks outbound SMTP entirely (use an HTTP API).
+    targets = [
+        ("mail.homepujan.com", 465),
+        ("mail.homepujan.com", 587),
+        ("smtp-relay.brevo.com", 587),
+        ("smtp.gmail.com", 587),
+    ]
 
     def _probe():
-        try:
-            if SMTP_PORT == 465:
-                s = smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, timeout=10)
-            else:
-                s = smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=10)
-                s.starttls()
-            info["connect"] = "ok"
+        tcp = {}
+        for h, p in targets:
             try:
-                s.login(SMTP_USER, SMTP_PASS)
-                info["login"] = "ok"
+                s = socket.create_connection((h, p), timeout=8)
+                s.close()
+                tcp[f"{h}:{p}"] = "open"
             except Exception as e:
-                info["login"] = "fail"
-                info["login_error"] = f"{type(e).__name__}: {e}"
+                tcp[f"{h}:{p}"] = f"{type(e).__name__}: {e}"
+        info["tcp"] = tcp
+        # If the cPanel server is reachable on 465, also test the actual login.
+        if tcp.get("mail.homepujan.com:465") == "open" and _smtp_ready():
             try:
-                s.quit()
-            except Exception:
-                pass
-        except Exception as e:
-            info["connect"] = "fail"
-            info["error"] = f"{type(e).__name__}: {e}"
+                sm = smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, timeout=8)
+                sm.login(SMTP_USER, SMTP_PASS)
+                sm.quit()
+                info["cpanel_login"] = "ok"
+            except Exception as e:
+                info["cpanel_login"] = f"{type(e).__name__}: {e}"
 
     await asyncio.to_thread(_probe)
     return info
