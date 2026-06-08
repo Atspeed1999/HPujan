@@ -78,7 +78,9 @@ def init_db() -> None:
                 ceremony      TEXT,
                 start_iso     TEXT,
                 status        TEXT NOT NULL,   -- booked | rescheduled | cancelled | no_show
-                reminder_sent INTEGER NOT NULL DEFAULT 0,
+                meeting_url   TEXT,             -- video-call join link (Cal metadata.videoCallUrl)
+                reminder_sent     INTEGER NOT NULL DEFAULT 0,  -- the ~60-min reminder
+                reminder_15_sent  INTEGER NOT NULL DEFAULT 0,  -- the ~15-min reminder
                 created_at    TEXT NOT NULL,
                 updated_at    TEXT
             );
@@ -86,6 +88,12 @@ def init_db() -> None:
             CREATE INDEX IF NOT EXISTS idx_consult_start     ON consultations(start_iso);
             CREATE INDEX IF NOT EXISTS idx_consult_cal_uid   ON consultations(cal_uid);
         """)
+        # Migrate DBs created before meeting_url / reminder_15_sent existed.
+        cols = {r[1] for r in c.execute("PRAGMA table_info(consultations)").fetchall()}
+        if 'meeting_url' not in cols:
+            c.execute("ALTER TABLE consultations ADD COLUMN meeting_url TEXT")
+        if 'reminder_15_sent' not in cols:
+            c.execute("ALTER TABLE consultations ADD COLUMN reminder_15_sent INTEGER NOT NULL DEFAULT 0")
 
 
 def _row_to_api(row: sqlite3.Row) -> dict:
@@ -244,6 +252,7 @@ IST = ZoneInfo("Asia/Kolkata")
 
 
 def _consult_row_to_dict(row: sqlite3.Row) -> dict:
+    keys = row.keys()
     return {
         "id": row["id"],
         "cal_uid": row["cal_uid"],
@@ -253,7 +262,9 @@ def _consult_row_to_dict(row: sqlite3.Row) -> dict:
         "ceremony": row["ceremony"],
         "start_iso": row["start_iso"],
         "status": row["status"],
+        "meeting_url": row["meeting_url"] if "meeting_url" in keys else None,
         "reminder_sent": row["reminder_sent"],
+        "reminder_15_sent": row["reminder_15_sent"] if "reminder_15_sent" in keys else 0,
         "created_at": row["created_at"],
         "updated_at": row["updated_at"],
     }
@@ -269,22 +280,25 @@ def db_create_consultation(doc: dict) -> bool:
             c.execute(
                 """INSERT INTO consultations
                    (id, cal_uid, name, email, phone, ceremony, start_iso,
-                    status, reminder_sent, created_at, updated_at)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)""",
+                    meeting_url, status, reminder_sent, created_at, updated_at)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)""",
                 (str(uuid.uuid4()), doc['cal_uid'], doc.get('name'), doc.get('email'),
                  doc.get('phone'), doc.get('ceremony'), doc.get('start_iso'),
-                 doc.get('status', 'booked'), now, now),
+                 doc.get('meeting_url'), doc.get('status', 'booked'), now, now),
             )
-            logger.info("[CONSULT NEW] uid=%s %s <%s> ph=%s",
-                        doc['cal_uid'], doc.get('name'), doc.get('email'), doc.get('phone'))
+            logger.info("[CONSULT NEW] uid=%s %s <%s> ph=%s link=%s",
+                        doc['cal_uid'], doc.get('name'), doc.get('email'),
+                        doc.get('phone'), bool(doc.get('meeting_url')))
             return True
         except sqlite3.IntegrityError:
             c.execute(
                 """UPDATE consultations
-                   SET name=?, email=?, phone=?, ceremony=?, start_iso=?, status=?, updated_at=?
+                   SET name=?, email=?, phone=?, ceremony=?, start_iso=?,
+                       meeting_url=COALESCE(?, meeting_url), status=?, updated_at=?
                    WHERE cal_uid=?""",
                 (doc.get('name'), doc.get('email'), doc.get('phone'), doc.get('ceremony'),
-                 doc.get('start_iso'), doc.get('status', 'booked'), now, doc['cal_uid']),
+                 doc.get('start_iso'), doc.get('meeting_url'),
+                 doc.get('status', 'booked'), now, doc['cal_uid']),
             )
             return False
 
@@ -309,16 +323,18 @@ def db_update_consultation_by_uid(cal_uid: str, updates: dict) -> bool:
 
 
 def db_due_reminders() -> list[dict]:
-    """Booked consults starting within the reminder window that haven't been
-    reminded yet. start_iso is stored normalised to UTC (+00:00) so string
-    comparison against now is safe."""
+    """Booked consults starting within the (longer) reminder window that still
+    need at least one of the two reminders (~60 min and ~15 min before). The loop
+    decides which to send. start_iso is stored normalised to UTC (+00:00) so
+    string comparison against now is safe."""
     now = datetime.now(timezone.utc)
     lower = now.isoformat()
     upper = (now + timedelta(minutes=REMINDER_LEAD_MINUTES)).isoformat()
     with _conn() as c:
         rows = c.execute(
             """SELECT * FROM consultations
-               WHERE status = 'booked' AND reminder_sent = 0
+               WHERE status = 'booked'
+                 AND (reminder_sent = 0 OR reminder_15_sent = 0)
                  AND start_iso IS NOT NULL AND start_iso > ? AND start_iso <= ?
                ORDER BY start_iso ASC""",
             (lower, upper),
@@ -326,9 +342,11 @@ def db_due_reminders() -> list[dict]:
     return [_consult_row_to_dict(r) for r in rows]
 
 
-def db_mark_reminder_sent(consult_id: str) -> None:
+def db_mark_reminder_sent(consult_id: str, kind: str = '60') -> None:
+    """kind '60' marks the hour-before reminder; '15' marks the final reminder."""
+    col = 'reminder_15_sent' if kind == '15' else 'reminder_sent'
     with _conn() as c:
-        c.execute("UPDATE consultations SET reminder_sent = 1 WHERE id = ?", (consult_id,))
+        c.execute(f"UPDATE consultations SET {col} = 1 WHERE id = ?", (consult_id,))
 
 
 def db_query_consultations(status: str | None = None, q: str | None = None, limit: int = 1000) -> list[dict]:
@@ -395,6 +413,16 @@ def parse_cal_booking(payload: dict) -> dict:
 
     uid = payload.get('uid') or payload.get('bookingId') or payload.get('id')
 
+    # Video-call join link. Cal puts it in metadata.videoCallUrl (Google Meet &
+    # Cal Video); fall back to videoCallData.url or a location that's a raw URL.
+    metadata = payload.get('metadata') or {}
+    location = payload.get('location')
+    meeting_url = (
+        metadata.get('videoCallUrl')
+        or (payload.get('videoCallData') or {}).get('url')
+        or (location if isinstance(location, str) and location.startswith('http') else None)
+    )
+
     return {
         'cal_uid': str(uid) if uid is not None else None,
         'name': name,
@@ -402,6 +430,7 @@ def parse_cal_booking(payload: dict) -> dict:
         'phone': str(phone) if phone else None,
         'ceremony': ceremony,
         'start_iso': _parse_iso_to_utc(payload.get('startTime')),
+        'meeting_url': meeting_url,
     }
 
 
@@ -509,12 +538,15 @@ def _owner_detail_table(c: dict) -> str:
     def row(label, value):
         return (f'<tr><td style="padding:4px 12px 4px 0;color:#7A6A6A">{label}</td>'
                 f'<td style="padding:4px 0"><b>{value}</b></td></tr>')
+    join = c.get('meeting_url')
+    join_html = f'<a href="{join}" style="color:#4A0E0E">{join}</a>' if join else '—'
     return ('<table style="font-size:14px;margin:6px 0 16px">'
             + row('Name', c.get('name') or '—')
             + row('Phone', wa)
             + row('Email', c.get('email') or '—')
             + row('Note', c.get('ceremony') or '—')
             + row('When', _fmt_ist(c.get('start_iso')))
+            + row('Join link', join_html)
             + '</table>')
 
 
@@ -524,27 +556,46 @@ def _email_owner_new_consult(c: dict) -> None:
     body = (
         "<p>A new free consultation has just been booked.</p>"
         + _owner_detail_table(c)
-        + f"<p style='font-size:13px;color:#7A6A6A'>A reminder email goes to the guest "
-        f"~{REMINDER_LEAD_MINUTES} min before. If they don't show, mark them no-show in "
-        f"Cal.com to auto-send the reschedule email.</p>"
+        + f"<p style='font-size:13px;color:#7A6A6A'>Reminder emails (with the join link) go "
+        f"to the guest ~{REMINDER_LEAD_MINUTES} min and ~{REMINDER_FINAL_MINUTES} min before. "
+        f"If they don't show, mark them no-show in Cal.com to auto-send the reschedule email.</p>"
     )
     send_email(OWNER_EMAIL, "New consultation booked", _email_shell("New consultation booked", body))
 
 
-def _email_customer_reminder(c: dict) -> bool:
+def _email_customer_reminder(c: dict, soon: bool = False) -> bool:
+    """soon=False → the ~1-hour-before reminder; soon=True → the ~15-min-before one."""
     name = c.get('name') or 'ji'
     when = _fmt_ist(c.get('start_iso'))
+    join = c.get('meeting_url')
+    if join:
+        join_block = (
+            f"<p><a href='{join}' style='display:inline-block;background:#4A0E0E;"
+            f"color:#D4AF37;padding:11px 22px;border-radius:6px;text-decoration:none;"
+            f"font-weight:700'>Join the video call</a></p>"
+            f"<p style='font-size:13px;color:#7A6A6A'>Or paste this into your browser at "
+            f"call time:<br><a href='{join}' style='color:#4A0E0E'>{join}</a></p>"
+        )
+    else:
+        join_block = ("<p>Please join by video using the link in your Cal.com confirmation "
+                      "email or calendar invite.</p>")
+    lead = (f"<p>Your free 15-minute consultation with a {BRAND_NAME} scholar starts "
+            f"<b>in about {REMINDER_FINAL_MINUTES} minutes</b> — at <b>{when}</b>.</p>"
+            if soon else
+            f"<p>This is a gentle reminder of your free 15-minute consultation with a "
+            f"{BRAND_NAME} scholar, coming up at <b>{when}</b>.</p>")
     body = (
         f"<p>Namaste {name},</p>"
-        f"<p>This is a gentle reminder of your free 15-minute consultation with a "
-        f"{BRAND_NAME} scholar at <b>{when}</b>.</p>"
-        f"<p>Please join by video using the link in your original confirmation email.</p>"
-        f"<p>If the timing no longer suits you, you may reschedule any time here:<br>"
+        + lead
+        + join_block
+        + f"<p>If the timing no longer suits you, you may reschedule here:<br>"
         f"<a href='{CAL_REBOOK_URL}' style='color:#4A0E0E'>{CAL_REBOOK_URL}</a></p>"
         f"<p>We look forward to guiding you.</p>"
     )
-    return send_email(c.get('email'), f"Reminder: your {BRAND_NAME} consultation is coming up",
-                      _email_shell("Your consultation is coming up", body))
+    subject = (f"Starting soon: your {BRAND_NAME} consultation" if soon
+               else f"Reminder: your {BRAND_NAME} consultation is coming up")
+    heading = "Starting soon" if soon else "Your consultation is coming up"
+    return send_email(c.get('email'), subject, _email_shell(heading, body))
 
 
 def _email_customer_no_show(c: dict) -> bool:
@@ -627,8 +678,10 @@ OWNER_EMAIL = os.environ.get('OWNER_EMAIL', '').strip()
 BRAND_NAME = 'HomePujan'
 
 # Pre-call reminder: fire when a booked consult starts within this many minutes.
-REMINDER_LEAD_MINUTES = int(os.environ.get('REMINDER_LEAD_MINUTES', '60') or '60')
-REMINDER_POLL_SECONDS = int(os.environ.get('REMINDER_POLL_SECONDS', '600') or '600')
+REMINDER_LEAD_MINUTES = int(os.environ.get('REMINDER_LEAD_MINUTES', '60') or '60')   # first nudge
+REMINDER_FINAL_MINUTES = int(os.environ.get('REMINDER_FINAL_MINUTES', '15') or '15')  # second nudge
+# Poll often enough that the ~15-min nudge lands close to on time.
+REMINDER_POLL_SECONDS = int(os.environ.get('REMINDER_POLL_SECONDS', '180') or '180')
 
 # Backend-authoritative price table. Frontend sends service_id only; amount lives here.
 SERVICE_CATALOG = {
@@ -1012,9 +1065,11 @@ async def cal_webhook(request: Request):
         return {"status": "ok", "event": trigger, "new": is_new}
 
     if trigger == 'BOOKING_RESCHEDULED':
-        updated = db_update_consultation_by_uid(
-            uid, {"start_iso": fields['start_iso'], "status": "booked", "reminder_sent": 0}
-        )
+        updates = {"start_iso": fields['start_iso'], "status": "booked",
+                   "reminder_sent": 0, "reminder_15_sent": 0}
+        if fields.get('meeting_url'):  # only overwrite the link if a new one was sent
+            updates["meeting_url"] = fields['meeting_url']
+        updated = db_update_consultation_by_uid(uid, updates)
         if not updated:
             db_create_consultation(fields)
         return {"status": "ok", "event": trigger}
@@ -1038,6 +1093,24 @@ async def cal_webhook(request: Request):
 
     logger.info("[CAL WEBHOOK] ignored event=%s", trigger)
     return {"status": "ignored", "event": trigger}
+
+
+@api_router.get("/cal/_debug_last")
+async def cal_debug_last():
+    """TEMPORARY: most recent consultation's non-PII fields, to confirm the video
+    join link (meeting_url) is being captured from Cal. No name/email/phone.
+    Remove after verifying."""
+    with _conn() as c:
+        row = c.execute(
+            "SELECT cal_uid, status, start_iso, ceremony, meeting_url, "
+            "reminder_sent, reminder_15_sent, created_at "
+            "FROM consultations ORDER BY created_at DESC LIMIT 1"
+        ).fetchone()
+    if not row:
+        return {"note": "no consultations yet"}
+    d = dict(row)
+    d["meeting_url_captured"] = bool(d.get("meeting_url"))
+    return d
 
 
 # ── ADMIN DASHBOARD ──
@@ -1439,7 +1512,9 @@ def _render_consultations(consults: list[dict], q: str, status: str) -> str:
             phone = c.get('phone') or ''
             contact_phone = (f'<a class="wa" href="{_wa_link(phone)}" target="_blank" rel="noopener">{phone} ↗</a>'
                              if phone else '<small class="muted">no phone</small>')
-            reminded = '✓' if c.get('reminder_sent') else '—'
+            r60 = '60✓' if c.get('reminder_sent') else '<span style="color:#bbb">60·</span>'
+            r15 = '15✓' if c.get('reminder_15_sent') else '<span style="color:#bbb">15·</span>'
+            reminded = f'{r60} {r15}'
             rows.append(f"""
                 <tr>
                   <td>{c.get('name') or '—'}<br/><small class="muted">{c.get('email') or '—'}</small><br/>{contact_phone}</td>
@@ -1486,12 +1561,29 @@ async def _reminder_loop():
     while True:
         try:
             if _email_ready():
+                now = datetime.now(timezone.utc)
                 for c in db_due_reminders():
-                    if not c.get('email'):
-                        db_mark_reminder_sent(c['id'])  # nothing to send to; don't retry
+                    try:
+                        start = datetime.fromisoformat(c['start_iso'].replace('Z', '+00:00'))
+                    except Exception:
                         continue
-                    if await asyncio.to_thread(_email_customer_reminder, c):
-                        db_mark_reminder_sent(c['id'])
+                    mins_to_start = (start - now).total_seconds() / 60.0
+                    if not c.get('email'):
+                        # nothing to send to — mark both so it drops out of the query
+                        db_mark_reminder_sent(c['id'], '60')
+                        db_mark_reminder_sent(c['id'], '15')
+                        continue
+                    if mins_to_start <= REMINDER_FINAL_MINUTES:
+                        # Final (~15-min) nudge. Also marks the hour-one done so the
+                        # row drops out (and last-minute bookings get just one email).
+                        if not c.get('reminder_15_sent'):
+                            if await asyncio.to_thread(_email_customer_reminder, c, True):
+                                db_mark_reminder_sent(c['id'], '15')
+                                db_mark_reminder_sent(c['id'], '60')
+                    elif not c.get('reminder_sent'):
+                        # First (~hour-before) nudge.
+                        if await asyncio.to_thread(_email_customer_reminder, c, False):
+                            db_mark_reminder_sent(c['id'], '60')
         except Exception:
             logger.exception("[REMINDER LOOP] iteration failed")
         await asyncio.sleep(REMINDER_POLL_SECONDS)
