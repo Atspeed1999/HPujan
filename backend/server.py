@@ -1095,24 +1095,6 @@ async def cal_webhook(request: Request):
     return {"status": "ignored", "event": trigger}
 
 
-@api_router.get("/cal/_debug_last")
-async def cal_debug_last():
-    """TEMPORARY: most recent consultation's non-PII fields, to confirm the video
-    join link (meeting_url) is being captured from Cal. No name/email/phone.
-    Remove after verifying."""
-    with _conn() as c:
-        row = c.execute(
-            "SELECT cal_uid, status, start_iso, ceremony, meeting_url, "
-            "reminder_sent, reminder_15_sent, created_at "
-            "FROM consultations ORDER BY created_at DESC LIMIT 1"
-        ).fetchone()
-    if not row:
-        return {"note": "no consultations yet"}
-    d = dict(row)
-    d["meeting_url_captured"] = bool(d.get("meeting_url"))
-    return d
-
-
 # ── ADMIN DASHBOARD ──
 # HTTP Basic auth. Browser shows native login popup. Credentials kept in .env
 # so they're never committed; refresh requires server restart.
