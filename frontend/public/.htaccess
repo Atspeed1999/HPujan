@@ -1,0 +1,62 @@
+# php -- BEGIN cPanel-generated handler, do not edit
+# Set the “ea-php81” package as the default “PHP” programming language.
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php81 .php .php8 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit
+
+# HomePujan — performance, redirects, security. All blocks guarded so they
+# no-op safely if a module is missing.
+
+# ── Canonical host + scheme: force https + non-www (apex) ──
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # http -> https (also honours proxy header)
+  RewriteCond %{HTTPS} off [OR]
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+  # www -> apex
+  RewriteCond %{HTTP_HOST} ^www\.homepujan\.com [NC]
+  RewriteRule ^(.*)$ https://homepujan.com/$1 [R=301,L]
+
+  # /index.html -> /  (collapse duplicate home URL)
+  RewriteCond %{THE_REQUEST} \s/+index\.html[\s?] [NC]
+  RewriteRule ^ / [R=301,L]
+</IfModule>
+
+DirectoryIndex index.html
+
+# ── Compression ──
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml \
+    application/javascript application/json application/xml application/rss+xml \
+    image/svg+xml application/x-font-ttf application/vnd.ms-fontobject font/opentype
+</IfModule>
+
+# ── Browser caching ──
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/jpeg            "access plus 1 year"
+  ExpiresByType image/png             "access plus 1 year"
+  ExpiresByType image/webp            "access plus 1 year"
+  ExpiresByType image/gif             "access plus 1 year"
+  ExpiresByType image/svg+xml         "access plus 1 year"
+  ExpiresByType image/x-icon          "access plus 1 year"
+  ExpiresByType text/css              "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType text/html             "access plus 1 hour"
+</IfModule>
+
+# ── Security headers ──
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  # HSTS only over https
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" "expr=%{HTTPS} == 'on'"
+</IfModule>
+
+# ── Branded 404 ──
+ErrorDocument 404 /404.html
