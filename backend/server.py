@@ -520,11 +520,16 @@ def _fmt_ist(iso: str | None) -> str:
         return iso
 
 
-def _email_shell(heading: str, body_html: str) -> str:
+def _email_shell(heading: str, body_html: str, hero_url: str | None = None) -> str:
+    radius = "0" if hero_url else "8px 8px 0 0"
+    hero = (f'<img src="{hero_url}" alt="HomePujan sacred fire ritual" width="560" '
+            f'style="display:block;width:100%;max-width:560px;height:auto;border:0" />'
+            if hero_url else '')
     return f"""<div style="font-family:Georgia,'Times New Roman',serif;max-width:560px;margin:0 auto;color:#2D2D2D">
-  <div style="background:#4A0E0E;color:#D4AF37;padding:18px 24px;border-radius:8px 8px 0 0">
+  <div style="background:#4A0E0E;color:#D4AF37;padding:18px 24px;border-radius:{radius}">
     <h1 style="margin:0;font-size:18px;letter-spacing:.06em">{BRAND_NAME}</h1>
   </div>
+  {hero}
   <div style="border:1px solid #E5DED0;border-top:none;border-radius:0 0 8px 8px;padding:24px;line-height:1.6">
     <h2 style="color:#4A0E0E;font-size:16px;margin:0 0 14px">{heading}</h2>
     {body_html}
@@ -596,7 +601,7 @@ def _email_customer_confirmation(c: dict) -> bool:
         + "<p>We look forward to guiding you.<br>— The HomePujan Gurukul</p>"
     )
     return send_email(c.get('email'), f"Your {BRAND_NAME} consultation is confirmed 🪔",
-                      _email_shell("Consultation confirmed", body))
+                      _email_shell("Consultation confirmed", body, hero_url=HERO_IMG_URL))
 
 
 def _email_customer_reminder(c: dict, soon: bool = False) -> bool:
@@ -712,6 +717,10 @@ BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email'
 SMTP_FROM = os.environ.get('SMTP_FROM', os.environ.get('SMTP_USER', '')).strip()
 OWNER_EMAIL = os.environ.get('OWNER_EMAIL', '').strip()
 BRAND_NAME = 'HomePujan'
+# Hero banner for branded emails (same sacred-fire image as the site hero).
+HERO_IMG_URL = os.environ.get('HERO_IMG_URL',
+    'https://images.unsplash.com/photo-1630764883473-e8c2056f0589'
+    '?crop=entropy&cs=srgb&fm=jpg&q=80&w=1120&h=360&fit=crop')
 
 # Pre-call reminder: fire when a booked consult starts within this many minutes.
 REMINDER_LEAD_MINUTES = int(os.environ.get('REMINDER_LEAD_MINUTES', '60') or '60')   # first nudge
