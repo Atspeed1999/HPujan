@@ -12,10 +12,8 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
-  # http -> https (also honours proxy header)
-  RewriteCond %{HTTPS} off [OR]
-  RewriteCond %{HTTP:X-Forwarded-Proto} !https
-  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+  # NOTE: http->https is handled by cPanel/AutoSSL already — do NOT add it here
+  # (an explicit rule loops because https requests carry no X-Forwarded-Proto).
 
   # www -> apex
   RewriteCond %{HTTP_HOST} ^www\.homepujan\.com [NC]
