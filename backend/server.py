@@ -563,6 +563,42 @@ def _email_owner_new_consult(c: dict) -> None:
     send_email(OWNER_EMAIL, "New consultation booked", _email_shell("New consultation booked", body))
 
 
+def _email_customer_confirmation(c: dict) -> bool:
+    """Branded HomePujan booking confirmation, sent on BOOKING_CREATED — alongside
+    Cal.com's own plain confirmation (which free plan can't suppress)."""
+    name = c.get('name') or 'ji'
+    when = _fmt_ist(c.get('start_iso'))
+    join = c.get('meeting_url')
+    if join:
+        join_block = (
+            f"<p><a href='{join}' style='display:inline-block;background:#4A0E0E;"
+            f"color:#D4AF37;padding:11px 22px;border-radius:6px;text-decoration:none;"
+            f"font-weight:700'>Join the video call</a></p>"
+            f"<p style='font-size:13px;color:#7A6A6A'>Save this link — paste it into your "
+            f"browser at call time:<br><a href='{join}' style='color:#4A0E0E'>{join}</a></p>"
+        )
+    else:
+        join_block = ("<p>Your video link is in the calendar invite from your booking "
+                      "confirmation.</p>")
+    ceremony = c.get('ceremony')
+    cer_line = f"<p style='color:#7A6A6A;font-size:14px'>{ceremony}</p>" if ceremony else ""
+    body = (
+        f"<p>Namaste {name},</p>"
+        f"<p>Your free 15-minute consultation with a {BRAND_NAME} Gurukul scholar is "
+        f"confirmed for <b>{when}</b>.</p>"
+        + cer_line
+        + join_block
+        + "<p><b>What to expect:</b> a calm, unhurried conversation — no sales. Share your "
+        "Sankalpa (intention) and the scholar will help you choose the right ceremony, "
+        "the auspicious Muhurta, and what it involves.</p>"
+        + f"<p>Need a different time? Reschedule here:<br>"
+        f"<a href='{CAL_REBOOK_URL}' style='color:#4A0E0E'>{CAL_REBOOK_URL}</a></p>"
+        + "<p>We look forward to guiding you.<br>— The HomePujan Gurukul</p>"
+    )
+    return send_email(c.get('email'), f"Your {BRAND_NAME} consultation is confirmed 🪔",
+                      _email_shell("Consultation confirmed", body))
+
+
 def _email_customer_reminder(c: dict, soon: bool = False) -> bool:
     """soon=False → the ~1-hour-before reminder; soon=True → the ~15-min-before one."""
     name = c.get('name') or 'ji'
@@ -1062,6 +1098,7 @@ async def cal_webhook(request: Request):
         is_new = db_create_consultation(fields)
         if is_new:
             _schedule_email(_email_owner_new_consult, fields)
+            _schedule_email(_email_customer_confirmation, fields)
         return {"status": "ok", "event": trigger, "new": is_new}
 
     if trigger == 'BOOKING_RESCHEDULED':
