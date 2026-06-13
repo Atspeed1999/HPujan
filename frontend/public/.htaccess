@@ -22,6 +22,10 @@
   # /index.html -> /  (collapse duplicate home URL)
   RewriteCond %{THE_REQUEST} \s/+index\.html[\s?] [NC]
   RewriteRule ^ / [R=301,L]
+
+  # /landing.html -> /  (retired duplicate home page — keep #anchors)
+  RewriteCond %{THE_REQUEST} \s/+landing\.html[\s?] [NC]
+  RewriteRule ^ / [R=301,L]
 </IfModule>
 
 DirectoryIndex index.html
