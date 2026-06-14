@@ -158,6 +158,11 @@
     .footer-link{color:rgba(255,255,255,0.48);text-decoration:none;font-size:0.875rem;transition:color 0.2s}
     .footer-link:hover{color:#D4AF37}
     .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem;margin-bottom:3rem}
+    /* ── FLOATING WHATSAPP (site-wide, all pages) ── */
+    #wa-float{position:fixed;bottom:2rem;right:2rem;z-index:600;width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(37,211,102,0.35);text-decoration:none;transition:transform 0.2s}
+    #wa-float:hover{transform:scale(1.08)}
+    .wa-pulse{position:absolute;inset:-4px;border-radius:50%;border:2px solid rgba(37,211,102,0.5);animation:pulse 2.5s ease-out infinite}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}70%{opacity:0;transform:scale(1.45)}}
     /* sticky mobile bar */
     .mbar{display:none}
     @media(max-width:820px){
@@ -169,6 +174,7 @@
       .mbar{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:60;gap:10px;padding:10px 14px;background:rgba(42,10,10,.97);border-top:1px solid rgba(212,175,55,.3)}
       .mbar .btn{flex:1;text-align:center;padding:13px}
       body{padding-bottom:68px}
+      #wa-float{bottom:84px}
     }
     @media(max-width:767px){
       .nav-links{display:none}
@@ -216,7 +222,6 @@
       <div class="cta">
         <a class="btn btn-gold" href="https://homepujan.com/services.html?pay=rudra">Book &amp; Pay &middot; Pick Date &amp; Time</a>
         <a class="btn btn-ghost" href="https://cal.com/homepujan/15min" target="_blank" rel="noopener">Free Consultation</a>
-        <a class="btn btn-wa" href="https://wa.me/919667039964?text=Namaste%2C%20I%27d%20like%20to%20book%20a%20Rudrabhishek%20puja." target="_blank" rel="noopener" onclick="gtagSendEvent(); return true;">WhatsApp</a>
       </div>
       <div class="price">Dakshina <b>from &#8377;5,100</b> &nbsp;&middot;&nbsp; ~3 hours &nbsp;&middot;&nbsp; all Samagri included</div>
     </div>
@@ -283,7 +288,6 @@
       <small>~3 hours &middot; all Samagri included</small>
       <a class="btn btn-gold" href="https://homepujan.com/services.html?pay=rudra">Book &amp; Pay &middot; Pick Date &amp; Time</a>
       <a class="btn" href="https://cal.com/homepujan/15min" target="_blank" rel="noopener" style="background:var(--maroon);color:var(--cream);margin-top:10px">Book Free Consultation</a>
-      <a class="btn btn-wa" href="https://wa.me/919667039964?text=Namaste%2C%20I%27d%20like%20to%20book%20a%20Rudrabhishek%20puja." target="_blank" rel="noopener" onclick="gtagSendEvent(); return true;" style="margin-top:10px">Enquire on WhatsApp</a>
       <div class="note">Final dakshina depends on Sankalpa, scale &amp; travel. Confirmed before you commit.</div>
     </div>
   </div></section>
@@ -353,8 +357,14 @@
   <!-- MOBILE STICKY CTA -->
   <div class="mbar">
     <a class="btn btn-gold" href="https://homepujan.com/services.html?pay=rudra">Book &amp; Pay</a>
-    <a class="btn btn-wa" href="https://wa.me/919667039964?text=Namaste%2C%20I%27d%20like%20to%20book%20a%20Rudrabhishek%20puja." target="_blank" rel="noopener" onclick="gtagSendEvent(); return true;">WhatsApp</a>
+    <a class="btn" href="https://cal.com/homepujan/15min" target="_blank" rel="noopener" style="background:var(--maroon);color:var(--cream)">Free Consultation</a>
   </div>
+
+  <!-- FLOATING WHATSAPP (site-wide) -->
+  <a id="wa-float" href="https://wa.me/919667039964?text=Namaste%2C%20I%27d%20like%20to%20enquire%20about%20a%20puja." target="_blank" rel="noopener noreferrer" onclick="gtagSendEvent(); return true;" aria-label="WhatsApp">
+    <div class="wa-pulse"></div>
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652c1.746.943 3.71 1.444 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.48-8.45z"/></svg>
+  </a>
 
   <script>
     // ── SITE HEADER behaviour (matches / and /services.html) ──
