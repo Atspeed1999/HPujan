@@ -2266,5 +2266,19 @@
     });
   });
 </script>
+<!-- Deep-link: /services.html?pay=<serviceId> auto-opens the Pay & Schedule modal (used by dedicated product pages like rudra-abhishek.html) -->
+<script>
+  (function () {
+    var pid = new URLSearchParams(window.location.search).get('pay');
+    if (!pid) return;
+    function tryOpen(n) {
+      if (typeof openPayModal === 'function') { try { openPayModal(pid); } catch (e) {} }
+      else if (n > 0) { setTimeout(function () { tryOpen(n - 1); }, 100); }
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () { tryOpen(20); });
+    } else { tryOpen(20); }
+  })();
+</script>
 </body>
 </html>
