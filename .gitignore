@@ -84,3 +84,9 @@ android-sdk/ -e
 # Environment files
 *.env
 *.env.*
+
+# Local tooling / editor (not part of the site)
+.obsidian/
+.claude/
+.codegraph/
+graphify-out/
