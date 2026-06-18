@@ -90,3 +90,7 @@ android-sdk/ -e
 .claude/
 .codegraph/
 graphify-out/
+
+# Ceremony knowledge notes — internal/competitor commentary, kept off the public repo.
+# (Live pages are GENERATED from these by tools/gen_pages.py and scrubbed of internal text.)
+knowledge/ceremonies/
