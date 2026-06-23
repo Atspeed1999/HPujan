@@ -786,7 +786,7 @@ section[id] { scroll-margin-top: 80px; }
             <svg class="nav-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
           </a>
           <div class="nav-dropdown-menu">
-            <a href="services.html" class="nav-dropdown-item" style="color:#D4AF37;font-weight:700;" data-testid="nav-vedic-library">The Vedic Library — All 27</a>
+            <a href="/services" class="nav-dropdown-item" style="color:#D4AF37;font-weight:700;" data-testid="nav-vedic-library">The Vedic Library — All 29</a>
             <div style="height:1px;background:rgba(212,175,55,0.18);margin:0.2rem 0;"></div>
             <a href="#find-path" class="nav-dropdown-item" data-testid="nav-browse-purpose">Browse by Purpose</a>
             <div style="height:1px;background:rgba(212,175,55,0.18);margin:0.2rem 0;"></div>
@@ -815,7 +815,7 @@ section[id] { scroll-margin-top: 80px; }
   <div id="mob-menu" style="border-top:1px solid rgba(212,175,55,0.18);background:rgba(253,251,247,0.98);backdrop-filter:blur(20px);">
     <div class="max-w-7xl mx-auto px-6 py-6 flex flex-col gap-4">
       <a href="#lineage" class="nav-link py-2" onclick="closeMob()" data-testid="mob-lineage">Lineage</a>
-      <a href="services.html" class="nav-link py-2" style="color:#D4AF37;font-weight:700;" onclick="closeMob()" data-testid="mob-library">The Vedic Library</a>
+      <a href="/services" class="nav-link py-2" style="color:#D4AF37;font-weight:700;" onclick="closeMob()" data-testid="mob-library">The Vedic Library</a>
       <a href="#find-path" class="nav-link py-2" onclick="closeMob()" data-testid="mob-purpose">Browse by Purpose</a>
       <a href="#services" class="nav-link py-2" onclick="closeMob()" data-testid="mob-services">Browse by Need</a>
       <a href="#process" class="nav-link py-2" onclick="closeMob()" data-testid="mob-process">Process</a>
@@ -1153,8 +1153,8 @@ section[id] { scroll-margin-top: 80px; }
 
     <!-- View All Services Button -->
     <div class="text-center mt-14" data-aos="fade-up" data-aos-delay="300">
-      <a href="services.html" class="btn-primary" data-testid="view-all-services-btn">
-        View All 27 Vedic Ceremonies
+      <a href="/services" class="btn-primary" data-testid="view-all-services-btn">
+        View All 29 Vedic Ceremonies
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
       </a>
     </div>
@@ -1963,6 +1963,10 @@ section[id] { scroll-margin-top: 80px; }
 <script type="text/javascript">
   (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
   Cal("init", "15min", {origin:"https://app.cal.com"});
+  // Fire a lead conversion when a free consultation is booked.
+  (function(){ var cb=function(){ if(typeof gtag==='function') gtag('event','generate_lead',{method:'consultation',currency:'INR',value:0}); };
+    Cal("on",{action:"bookingSuccessful",callback:cb});
+    if(Cal.ns&&Cal.ns["15min"]) Cal.ns["15min"]("on",{action:"bookingSuccessful",callback:cb}); })();
 </script>
 
 <script>

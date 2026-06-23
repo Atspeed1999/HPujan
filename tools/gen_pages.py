@@ -210,7 +210,7 @@ def build_head(d):
     L = []
     L.append('  <title>{} at Home — Puja by Gurukul Scholars | HomePujan</title>'.format(esc(d["name"])))
     L.append('  <meta name="description" content="{}"/>'.format(esc(d["meta_desc"])))
-    L.append('  <link rel="canonical" href="https://homepujan.com/{}"/>'.format(d["file"]))
+    L.append('  <link rel="canonical" href="https://homepujan.com/{}"/>'.format(d["clean"]))
     L.append('  <meta name="theme-color" content="#4A0E0E"/>')
     L.append('  <link rel="icon" type="image/png" href="https://homepujan.com/images/logo.png"/>')
     L.append('  <link rel="apple-touch-icon" href="https://homepujan.com/images/logo.png"/>')
@@ -218,7 +218,7 @@ def build_head(d):
     L.append('  <meta property="og:site_name" content="HomePujan"/>')
     L.append('  <meta property="og:title" content="{} at Home — Puja by Gurukul Scholars"/>'.format(esc(d["name"])))
     L.append('  <meta property="og:description" content="{}"/>'.format(esc(d["og_desc"])))
-    L.append('  <meta property="og:url" content="https://homepujan.com/{}"/>'.format(d["file"]))
+    L.append('  <meta property="og:url" content="https://homepujan.com/{}"/>'.format(d["clean"]))
     L.append('  <meta property="og:image" content="{}"/>'.format(d["img_abs"]))
     L.append('  <meta name="twitter:card" content="summary_large_image"/>')
     L.append('  <meta name="twitter:title" content="{} at Home — by Gurukul Scholars | HomePujan"/>'.format(esc(d["name"])))
@@ -238,7 +238,7 @@ def build_head(d):
         "areaServed": "IN",
         "offers": {"@type": "Offer", "price": str(d["price"]), "priceCurrency": "INR",
                    "availability": "https://schema.org/InStock",
-                   "url": "https://homepujan.com/" + d["file"]},
+                   "url": "https://homepujan.com/" + d["clean"]},
     }
     L.append('  <script type="application/ld+json">')
     L.append('  ' + json.dumps(service_ld, ensure_ascii=False))
@@ -256,7 +256,7 @@ def build_head(d):
           "itemListElement": [
               {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://homepujan.com/"},
               {"@type": "ListItem", "position": 2, "name": "The Vedic Library", "item": "https://homepujan.com/services.html"},
-              {"@type": "ListItem", "position": 3, "name": d["name"], "item": "https://homepujan.com/" + d["file"]},
+              {"@type": "ListItem", "position": 3, "name": d["name"], "item": "https://homepujan.com/" + d["clean"]},
           ]}
     L.append('  <script type="application/ld+json">')
     L.append('  ' + json.dumps(bc, ensure_ascii=False))
@@ -448,6 +448,8 @@ def build_page(base, d):
     out = out.replace("openConsultModal('Satya Narayan Katha')",
                       "openConsultModal('{}')".format(jstr(d["name"])))
     out = out.replace("openPayModal('satyanarayan')", "openPayModal('{}')".format(d["slug"]))
+    # Clean URLs: drop .html from internal links to the Vedic Library.
+    out = out.replace("homepujan.com/services.html", "homepujan.com/services")
     # serviceData
     sd = "window.serviceData = {{ {slug}: {{ name: \"{name}\", subtitle: \"{sub}\", priceInr: {price} }} }};".format(
         slug=d["slug"], name=d["name"].replace('"', '\\"'),
@@ -501,7 +503,8 @@ def make_data(slug, fm, sections, card):
     ld_desc = first_sentences(whatis, 2) or oneliner
 
     return {
-        "slug": slug, "file": file, "name": name, "price": price, "dur": dur,
+        "slug": slug, "file": file, "clean": file[:-5] if file.endswith(".html") else file,
+        "name": name, "price": price, "dur": dur,
         "img_abs": img_abs,
         "eyebrow": "{} · {}".format(name, benefit) if benefit else name,
         "sub": benefit or "Vedic Ceremony at Home",

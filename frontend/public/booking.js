@@ -1,4 +1,20 @@
 // HomePujan shared booking dialogs (consult + pay). Host page must define serviceData + load qrcode + Cal init.
+  // --- Conversion tracking. Fires GA4/Ads events via gtag; safe no-op if gtag is absent. ---
+  function hpTrack(name, params) {
+    try { if (typeof gtag === 'function') gtag('event', name, params || {}); } catch (e) {}
+  }
+  // Fire a lead conversion when a free consultation is booked through the Cal.com embed.
+  try {
+    if (typeof Cal === 'function') {
+      var _hpConsultBooked = function () {
+        hpTrack('generate_lead', { method: 'consultation', currency: 'INR', value: 0 });
+      };
+      Cal('on', { action: 'bookingSuccessful', callback: _hpConsultBooked });
+      if (Cal.ns && Cal.ns['15min']) {
+        Cal.ns['15min']('on', { action: 'bookingSuccessful', callback: _hpConsultBooked });
+      }
+    }
+  } catch (e) {}
   let _modalOpenCount = 0;
   function _lockBodyScroll() {
     if (_modalOpenCount > 0) return;
@@ -375,6 +391,14 @@
       payState.upiUri = j.upi_uri;
       payState.amountPaise = j.amount_paise;
       payState.serviceName = j.service_name;
+      // Real booking placed (UPI): a far stronger signal than a WhatsApp click.
+      hpTrack('begin_checkout', {
+        currency: 'INR',
+        value: (j.amount_paise || 0) / 100,
+        transaction_id: j.booking_id,
+        items: [{ item_id: payState.serviceId, item_name: j.service_name,
+                  price: (j.amount_paise || 0) / 100, quantity: 1 }],
+      });
       payRenderUpiBlock(j, customer);
       payGoTo(4);
     } catch (e) {
@@ -441,6 +465,15 @@
   }
 
   function payRenderConfirmation() {
+    // Confirmed payment (Razorpay/Cashfree synchronous success) = a true purchase.
+    hpTrack('purchase', {
+      transaction_id: payState.bookingId,
+      currency: 'INR',
+      value: (payState.amountPaise || 0) / 100,
+      items: [{ item_id: payState.serviceId,
+                item_name: payState.serviceName || (payState.service && payState.service.name),
+                price: (payState.amountPaise || 0) / 100, quantity: 1 }],
+    });
     document.getElementById('pay-confirm-rzp-block').style.display = 'block';
     document.getElementById('pay-upi-block').style.display = 'none';
     const dt = new Date(paySlotIso());
