@@ -87,6 +87,17 @@ def init_db() -> None:
             CREATE INDEX IF NOT EXISTS idx_consult_status    ON consultations(status);
             CREATE INDEX IF NOT EXISTS idx_consult_start     ON consultations(start_iso);
             CREATE INDEX IF NOT EXISTS idx_consult_cal_uid   ON consultations(cal_uid);
+
+            -- CEO cockpit: simple project task board. Admin-entered (no external
+            -- source) — this is the one panel whose data is "real" by being yours.
+            CREATE TABLE IF NOT EXISTS tasks (
+                id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                title       TEXT NOT NULL,
+                done        INTEGER NOT NULL DEFAULT 0,
+                created_at  TEXT NOT NULL,
+                done_at     TEXT
+            );
+            CREATE INDEX IF NOT EXISTS idx_tasks_done ON tasks(done);
         """)
         # Migrate DBs created before meeting_url / reminder_15_sent existed.
         cols = {r[1] for r in c.execute("PRAGMA table_info(consultations)").fetchall()}
@@ -1245,7 +1256,7 @@ _ADMIN_HTML = """<!DOCTYPE html>
 <body>
 <header>
   <h1>HomePujan — Bookings</h1>
-  <div class="meta"><a href="/admin/consultations" style="color:#D4AF37;text-decoration:underline;margin-right:1rem">Consultations →</a>__COUNT__ rows · DB: __DB__</div>
+  <div class="meta"><a href="/admin/cockpit" style="color:#D4AF37;text-decoration:underline;margin-right:1rem">⌂ Cockpit</a><a href="/admin/consultations" style="color:#D4AF37;text-decoration:underline;margin-right:1rem">Consultations →</a>__COUNT__ rows · DB: __DB__</div>
 </header>
 <main>
   __FLASH__
@@ -1615,6 +1626,224 @@ async def _reminder_loop():
         except Exception:
             logger.exception("[REMINDER LOOP] iteration failed")
         await asyncio.sleep(REMINDER_POLL_SECONDS)
+
+
+# ── CEO COCKPIT ──────────────────────────────────────────────────────────────
+# One authenticated hub answering "is everything actually working?" alongside
+# live money / consultation numbers and a simple project task board. Every figure
+# is read from a real source (DB, env config, a live HTTP check) — nothing mocked.
+
+def _esc(s: str) -> str:
+    return (s or '').replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')
+
+
+def db_list_tasks() -> list[dict]:
+    with _conn() as c:
+        rows = c.execute("SELECT * FROM tasks ORDER BY done ASC, created_at DESC").fetchall()
+    return [dict(r) for r in rows]
+
+
+def db_add_task(title: str) -> None:
+    title = (title or '').strip()[:300]
+    if not title:
+        return
+    with _conn() as c:
+        c.execute("INSERT INTO tasks (title, done, created_at) VALUES (?, 0, ?)",
+                  (title, datetime.now(timezone.utc).isoformat()))
+
+
+def db_toggle_task(task_id: int) -> None:
+    with _conn() as c:
+        row = c.execute("SELECT done FROM tasks WHERE id=?", (task_id,)).fetchone()
+        if not row:
+            return
+        new_done = 0 if row['done'] else 1
+        done_at = datetime.now(timezone.utc).isoformat() if new_done else None
+        c.execute("UPDATE tasks SET done=?, done_at=? WHERE id=?", (new_done, done_at, task_id))
+
+
+def db_delete_task(task_id: int) -> None:
+    with _conn() as c:
+        c.execute("DELETE FROM tasks WHERE id=?", (task_id,))
+
+
+def _check_site(url: str) -> tuple[bool, str]:
+    """Best-effort live check of the public site. Never raises into the page."""
+    try:
+        r = requests.get(url, timeout=4, allow_redirects=True)
+        return (r.status_code == 200, f"HTTP {r.status_code}")
+    except Exception as e:
+        return (False, type(e).__name__)
+
+
+_COCKPIT_STYLE = """<style>
+  :root { --maroon:#4A0E0E; --gold:#D4AF37; --ink:#2D2D2D; --line:#E5DED0; }
+  * { box-sizing:border-box; }
+  body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,sans-serif; margin:0; background:#F9F4EC; color:var(--ink); }
+  header { background:var(--maroon); color:var(--gold); padding:1.1rem 1.5rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+  header h1 { font-family:'Cinzel',Georgia,serif; font-size:1.15rem; margin:0; letter-spacing:.06em; }
+  header nav a { color:var(--gold); text-decoration:none; font-size:.8rem; margin-left:1.1rem; border-bottom:1px solid transparent; }
+  header nav a:hover { border-bottom-color:var(--gold); }
+  main { max-width:1180px; margin:1.5rem auto; padding:0 1.5rem; }
+  .seclabel { font-size:.7rem; text-transform:uppercase; letter-spacing:.12em; color:#7A6A6A; font-weight:700; margin:1.6rem 0 .6rem; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:10px; padding:1rem 1.15rem; }
+  .row { display:flex; align-items:center; justify-content:space-between; padding:.5rem 0; border-bottom:1px solid #F0E9DE; font-size:.9rem; gap:1rem; }
+  .row:last-child { border-bottom:none; }
+  .ok { color:#1E7F3E; font-weight:700; }
+  .warn { color:#9A6700; font-weight:700; }
+  .bad { color:#9B1C1C; font-weight:700; }
+  .muted { color:#7A6A6A; }
+  .chips { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.7rem; }
+  .chip { font-size:.78rem; padding:4px 10px; border-radius:999px; font-weight:600; }
+  .chip.on { background:#E2F5E8; color:#1E7F3E; }
+  .chip.off { background:#F1EEE8; color:#8A8175; }
+  .mcs { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:.7rem; }
+  .mc { background:#fff; border:1px solid var(--line); border-radius:10px; padding:.85rem 1rem; }
+  .mc .k { font-size:.66rem; text-transform:uppercase; letter-spacing:.1em; color:#7A6A6A; font-weight:700; }
+  .mc .v { font-family:'Cinzel',Georgia,serif; font-size:1.5rem; font-weight:700; margin-top:3px; }
+  .v.green { color:#1E7F3E; } .v.amber { color:#9A6700; } .v.maroon { color:var(--maroon); } .v.grey { color:#8A8175; }
+  ul.tasks { list-style:none; margin:0; padding:0; }
+  ul.tasks li { display:flex; align-items:center; gap:.6rem; padding:.5rem 0; border-bottom:1px solid #F0E9DE; font-size:.92rem; }
+  ul.tasks li.done span.t { text-decoration:line-through; color:#9A9186; }
+  ul.tasks form { display:inline; margin:0; }
+  .tbtn { border:none; background:transparent; cursor:pointer; font-size:1rem; padding:2px 6px; line-height:1; }
+  .tbtn.chk { color:#1E7F3E; } .tbtn.del { color:#B07A5A; margin-left:auto; }
+  .addform { display:flex; gap:.5rem; margin-bottom:.9rem; }
+  .addform input { flex:1; padding:.55rem .7rem; border:1px solid var(--line); border-radius:7px; font-size:.9rem; font-family:inherit; }
+  .addform button { padding:.55rem 1.2rem; background:var(--maroon); color:var(--gold); border:none; border-radius:7px; font-weight:600; cursor:pointer; }
+  .greyed { opacity:.62; font-size:.86rem; line-height:1.8; }
+  .src { font-size:.7rem; color:#9A9186; margin-top:.6rem; }
+</style>"""
+
+
+def _render_cockpit() -> str:
+    with _conn() as c:
+        paid = c.execute("SELECT COUNT(*) n, COALESCE(SUM(amount_paise),0) s FROM bookings WHERE status='paid'").fetchone()
+        pend = c.execute("SELECT COUNT(*) n, COALESCE(SUM(amount_paise),0) s FROM bookings WHERE status='pending_upi'").fetchone()
+        crea = c.execute("SELECT COUNT(*) n, COALESCE(SUM(amount_paise),0) s FROM bookings WHERE status='created'").fetchone()
+    cc = db_consult_status_counts()
+    consult_total = sum(cc.values())
+    booked = cc.get('booked', 0)
+
+    def has(k):
+        return bool(os.environ.get(k, '').strip())
+
+    site_ok, site_detail = _check_site('https://homepujan.com')
+    pay_mode = os.environ.get('PAYMENT_MODE', 'unset')
+    commit = (os.environ.get('RAILWAY_GIT_COMMIT_SHA', '') or '')[:7] or 'local'
+
+    site_cls = 'ok' if site_ok else 'bad'
+    site_word = 'up' if site_ok else 'DOWN'
+    pay_stopgap = pay_mode == 'upi_qr'
+    pay_cls = 'warn' if pay_stopgap else 'ok'
+    pay_word = 'UPI stopgap (no card gateway yet)' if pay_stopgap else f'card gateway · {pay_mode}'
+
+    integrations = [
+        ('Razorpay', has('RAZORPAY_KEY_ID') and has('RAZORPAY_KEY_SECRET')),
+        ('UPI payment', has('UPI_VPA')),
+        ('WhatsApp', has('WHATSAPP_NUMBER')),
+        ('Admin login', has('ADMIN_PASSWORD')),
+        ('Cal.com webhook', has('CAL_WEBHOOK_SECRET')),
+        ('Email alerts', _email_ready()),
+        ('Google GSC/GA4', has('GOOGLE_OAUTH_REFRESH_TOKEN')),
+        ('Google Ads', has('GOOGLE_ADS_DEVELOPER_TOKEN')),
+    ]
+    chips = ''.join(
+        f'<span class="chip {"on" if on else "off"}">{"● " if on else "○ "}{name}</span>'
+        for name, on in integrations
+    )
+
+    tasks = db_list_tasks()
+    open_count = sum(1 for t in tasks if not t['done'])
+    if tasks:
+        task_items = ''.join(
+            f'<li class="{"done" if t["done"] else ""}">'
+            f'<form method="post" action="/admin/tasks/{t["id"]}/toggle"><button class="tbtn chk" type="submit" title="toggle done">{"✓" if t["done"] else "○"}</button></form>'
+            f'<span class="t">{_esc(t["title"])}</span>'
+            f'<form method="post" action="/admin/tasks/{t["id"]}/delete"><button class="tbtn del" type="submit" title="delete">✕</button></form>'
+            f'</li>'
+            for t in tasks
+        )
+    else:
+        task_items = '<li class="muted" style="border:none">No tasks yet — add your first one above.</li>'
+
+    return f"""<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>HomePujan — CEO Cockpit</title>
+{_COCKPIT_STYLE}
+</head><body>
+<header>
+  <h1>HomePujan — CEO Cockpit</h1>
+  <nav><a href="/admin">Bookings →</a><a href="/admin/consultations">Consultations →</a></nav>
+</header>
+<main>
+  <div class="seclabel">Is it actually working?</div>
+  <div class="card">
+    <div class="row"><span>Live site (homepujan.com)</span><span class="{site_cls}">{site_word} · {site_detail}</span></div>
+    <div class="row"><span>Backend (this server)</span><span class="ok">up · serving this page</span></div>
+    <div class="row"><span>Payment mode</span><span class="{pay_cls}">{pay_word}</span></div>
+    <div class="row"><span>Deployed version</span><span class="muted">{commit}</span></div>
+    <div class="chips">{chips}</div>
+    <div class="src">● connected · ○ not connected — read live from server config &amp; a real HTTP check, just now</div>
+  </div>
+
+  <div class="seclabel">Money (live bookings)</div>
+  <div class="mcs">
+    <div class="mc"><div class="k">Collected (paid)</div><div class="v green">₹{paid['s']/100:,.0f}</div><div class="muted">{paid['n']} orders</div></div>
+    <div class="mc"><div class="k">Pending UPI — confirm</div><div class="v amber">₹{pend['s']/100:,.0f}</div><div class="muted">{pend['n']} orders</div></div>
+    <div class="mc"><div class="k">Abandoned</div><div class="v grey">₹{crea['s']/100:,.0f}</div><div class="muted">{crea['n']} orders</div></div>
+    <div class="mc"><div class="k">Consultations</div><div class="v maroon">{consult_total}</div><div class="muted">{booked} booked</div></div>
+  </div>
+  <div class="src">source: live bookings.db &amp; consultations table</div>
+
+  <div class="seclabel">Project tasks</div>
+  <div class="card">
+    <form class="addform" method="post" action="/admin/tasks/add">
+      <input name="title" placeholder="Add a task… e.g. confirm the pending UPI payments" maxlength="300" required/>
+      <button type="submit">Add</button>
+    </form>
+    <ul class="tasks">{task_items}</ul>
+    <div class="src">{open_count} open · your own board, stored on the server</div>
+  </div>
+
+  <div class="seclabel">Not connected yet — shown honestly, never faked</div>
+  <div class="card greyed">
+    SEO &amp; traffic — wiring next (Google data already flows via tools/google_pull.py)<br/>
+    Social media — connect later<br/>
+    Google Ads — pending Google Basic-access approval
+  </div>
+</main>
+</body></html>"""
+
+
+@app.get("/admin/cockpit", response_class=HTMLResponse)
+async def admin_cockpit(_user: str = Depends(require_admin)):
+    return HTMLResponse(_render_cockpit())
+
+
+@app.post("/admin/tasks/add")
+async def admin_task_add(request: Request, _user: str = Depends(require_admin)):
+    from fastapi.responses import RedirectResponse
+    from urllib.parse import parse_qs
+    raw = (await request.body()).decode('utf-8', 'ignore')
+    title = parse_qs(raw).get('title', [''])[0]
+    db_add_task(title)
+    return RedirectResponse(url="/admin/cockpit", status_code=303)
+
+
+@app.post("/admin/tasks/{task_id}/toggle")
+async def admin_task_toggle(task_id: int, _user: str = Depends(require_admin)):
+    from fastapi.responses import RedirectResponse
+    db_toggle_task(task_id)
+    return RedirectResponse(url="/admin/cockpit", status_code=303)
+
+
+@app.post("/admin/tasks/{task_id}/delete")
+async def admin_task_delete(task_id: int, _user: str = Depends(require_admin)):
+    from fastapi.responses import RedirectResponse
+    db_delete_task(task_id)
+    return RedirectResponse(url="/admin/cockpit", status_code=303)
 
 
 # Mount router + CORS + startup
