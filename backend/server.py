@@ -98,6 +98,14 @@ def init_db() -> None:
                 done_at     TEXT
             );
             CREATE INDEX IF NOT EXISTS idx_tasks_done ON tasks(done);
+
+            -- Generic cache (used by the SEO panel to store the last Google pull
+            -- so cockpit page loads are instant; refreshed by a background task).
+            CREATE TABLE IF NOT EXISTS app_cache (
+                key        TEXT PRIMARY KEY,
+                data       TEXT NOT NULL,
+                fetched_at TEXT NOT NULL
+            );
         """)
         # Migrate DBs created before meeting_url / reminder_15_sent existed.
         cols = {r[1] for r in c.execute("PRAGMA table_info(consultations)").fetchall()}
@@ -1628,6 +1636,228 @@ async def _reminder_loop():
         await asyncio.sleep(REMINDER_POLL_SECONDS)
 
 
+# ── SEO & TRAFFIC DATA (Google Search Console + GA4) ─────────────────────────
+# Ported from tools/google_pull.py to run server-side. READ-ONLY. Cached in
+# SQLite (app_cache) so the cockpit is instant; refreshed by a background task.
+# Degrades gracefully: missing creds or API errors are captured, never crash.
+
+GSC_SITE_URL = os.environ.get('GSC_SITE_URL', '')
+GA4_PROPERTY_ID = os.environ.get('GA4_PROPERTY_ID', '')
+GOOGLE_OAUTH_CLIENT_ID = os.environ.get('GOOGLE_OAUTH_CLIENT_ID', '')
+GOOGLE_OAUTH_CLIENT_SECRET = os.environ.get('GOOGLE_OAUTH_CLIENT_SECRET', '')
+GOOGLE_OAUTH_REFRESH_TOKEN = os.environ.get('GOOGLE_OAUTH_REFRESH_TOKEN', '')
+_GOOGLE_SCOPES = [
+    "https://www.googleapis.com/auth/webmasters.readonly",
+    "https://www.googleapis.com/auth/analytics.readonly",
+]
+
+
+def _seo_creds_ready() -> bool:
+    return all([GSC_SITE_URL, GA4_PROPERTY_ID, GOOGLE_OAUTH_CLIENT_ID,
+                GOOGLE_OAUTH_CLIENT_SECRET, GOOGLE_OAUTH_REFRESH_TOKEN])
+
+
+def _google_creds():
+    from google.oauth2.credentials import Credentials
+    return Credentials(
+        token=None,
+        refresh_token=GOOGLE_OAUTH_REFRESH_TOKEN,
+        client_id=GOOGLE_OAUTH_CLIENT_ID,
+        client_secret=GOOGLE_OAUTH_CLIENT_SECRET,
+        token_uri="https://oauth2.googleapis.com/token",
+        scopes=_GOOGLE_SCOPES,
+    )
+
+
+def fetch_seo_snapshot(days: int = 28) -> dict:
+    """Pull GSC + GA4 into one JSON-able dict. Per-source errors are captured."""
+    end = datetime.now(timezone.utc).date()
+    start = end - timedelta(days=days)
+    s, e = start.isoformat(), end.isoformat()
+    snap = {"days": days, "start": s, "end": e,
+            "fetched_at": datetime.now(timezone.utc).isoformat(),
+            "gsc": None, "ga4": None, "gsc_error": None, "ga4_error": None}
+    if not _seo_creds_ready():
+        snap["gsc_error"] = snap["ga4_error"] = "Google credentials not configured on this server"
+        return snap
+    creds = _google_creds()
+
+    try:
+        from googleapiclient.discovery import build
+        svc = build("searchconsole", "v1", credentials=creds, cache_discovery=False)
+
+        def gq(dims, limit=10):
+            return svc.searchanalytics().query(siteUrl=GSC_SITE_URL, body={
+                "startDate": s, "endDate": e, "dimensions": dims, "rowLimit": limit,
+            }).execute().get("rows", [])
+
+        tot = svc.searchanalytics().query(siteUrl=GSC_SITE_URL, body={
+            "startDate": s, "endDate": e}).execute().get("rows", [{}])
+        t = tot[0] if tot else {}
+        snap["gsc"] = {
+            "clicks": int(t.get("clicks", 0)),
+            "impressions": int(t.get("impressions", 0)),
+            "ctr": float(t.get("ctr", 0.0)),
+            "position": float(t.get("position", 0.0)),
+            "queries": [{"q": r["keys"][0], "clicks": int(r["clicks"]),
+                         "impressions": int(r["impressions"]), "position": float(r["position"])}
+                        for r in gq(["query"])],
+            "pages": [{"url": r["keys"][0], "clicks": int(r["clicks"]),
+                       "impressions": int(r["impressions"]), "position": float(r["position"])}
+                      for r in gq(["page"])],
+        }
+    except Exception as ex:
+        snap["gsc_error"] = f"{type(ex).__name__}: {ex}"[:300]
+
+    try:
+        from google.analytics.data_v1beta import BetaAnalyticsDataClient
+        from google.analytics.data_v1beta.types import (
+            RunReportRequest, DateRange, Dimension, Metric)
+        client = BetaAnalyticsDataClient(credentials=creds)
+
+        def run(dims, mets, limit=15):
+            return client.run_report(RunReportRequest(
+                property=f"properties/{GA4_PROPERTY_ID}",
+                date_ranges=[DateRange(start_date=s, end_date=e)],
+                dimensions=[Dimension(name=d) for d in dims],
+                metrics=[Metric(name=m) for m in mets], limit=limit))
+
+        ch = run(["sessionDefaultChannelGroup"], ["sessions", "totalUsers", "conversions"])
+        channels = [{"name": r.dimension_values[0].value,
+                     "sessions": int(float(r.metric_values[0].value or 0)),
+                     "users": int(float(r.metric_values[1].value or 0)),
+                     "conversions": int(float(r.metric_values[2].value or 0))}
+                    for r in ch.rows]
+        ev = run(["eventName"], ["eventCount", "conversions"], limit=25)
+        events = [{"name": r.dimension_values[0].value,
+                   "count": int(float(r.metric_values[0].value or 0)),
+                   "conversions": int(float(r.metric_values[1].value or 0))}
+                  for r in ev.rows]
+        snap["ga4"] = {
+            "sessions": sum(c["sessions"] for c in channels),
+            "users": sum(c["users"] for c in channels),
+            "conversions": sum(c["conversions"] for c in channels),
+            "channels": channels,
+            "events": [e2 for e2 in events if e2["conversions"] > 0],
+        }
+    except Exception as ex:
+        snap["ga4_error"] = f"{type(ex).__name__}: {ex}"[:300]
+
+    return snap
+
+
+def _cache_get(key: str) -> dict | None:
+    with _conn() as c:
+        row = c.execute("SELECT data, fetched_at FROM app_cache WHERE key=?", (key,)).fetchone()
+    if not row:
+        return None
+    try:
+        return json.loads(row["data"])
+    except Exception:
+        return None
+
+
+def _cache_set(key: str, data: dict) -> None:
+    with _conn() as c:
+        c.execute(
+            "INSERT INTO app_cache(key, data, fetched_at) VALUES(?,?,?) "
+            "ON CONFLICT(key) DO UPDATE SET data=excluded.data, fetched_at=excluded.fetched_at",
+            (key, json.dumps(data), datetime.now(timezone.utc).isoformat()))
+
+
+def refresh_seo_cache(days: int = 28) -> dict:
+    snap = fetch_seo_snapshot(days)
+    _cache_set("seo_snapshot", snap)
+    return snap
+
+
+def get_seo_cached() -> dict | None:
+    return _cache_get("seo_snapshot")
+
+
+async def _seo_refresh_loop():
+    """Refresh the SEO snapshot at startup, then every 6h. Runs the blocking
+    Google calls in a thread so the event loop is never stalled."""
+    while True:
+        try:
+            if _seo_creds_ready():
+                await asyncio.to_thread(refresh_seo_cache, 28)
+                logger.info("SEO snapshot refreshed")
+            else:
+                logger.info("SEO refresh skipped — Google creds not configured")
+        except Exception as e:
+            logger.warning("SEO refresh failed: %s", e)
+        await asyncio.sleep(6 * 3600)
+
+
+def _render_seo_section(seo: dict | None) -> str:
+    if not seo:
+        if not _seo_creds_ready():
+            return ('<div class="seclabel">SEO &amp; traffic</div>'
+                    '<div class="card greyed">Google credentials are not on this server yet — '
+                    'add the Google OAuth env vars on Railway to switch this on.</div>')
+        return ('<div class="seclabel">SEO &amp; traffic</div>'
+                '<div class="card greyed">Not fetched yet — hit Refresh in a moment.</div>')
+
+    fetched = _fmt_dt(seo.get("fetched_at")) if seo.get("fetched_at") else '—'
+    days = seo.get("days", 28)
+    refresh_btn = ('<form method="post" action="/admin/seo/refresh" style="margin:0">'
+                   '<button type="submit" style="background:transparent;border:1px solid #C9BFA8;'
+                   'color:#7A6A6A;border-radius:6px;padding:4px 11px;font-size:.74rem;cursor:pointer">'
+                   '↻ Refresh</button></form>')
+    head = (f'<div class="subhead"><div class="seclabel" style="margin:0">SEO &amp; traffic '
+            f'<span class="muted" style="font-weight:400;text-transform:none;letter-spacing:0">'
+            f'· last {days} days · updated {fetched}</span></div>{refresh_btn}</div>')
+
+    g = seo.get("gsc")
+    if g:
+        gsc_cards = (
+            '<div class="mcs">'
+            f'<div class="mc"><div class="k">Clicks (Google search)</div><div class="v maroon">{g["clicks"]:,}</div></div>'
+            f'<div class="mc"><div class="k">Impressions</div><div class="v maroon">{g["impressions"]:,}</div></div>'
+            f'<div class="mc"><div class="k">Click-through rate</div><div class="v maroon">{g["ctr"]:.1%}</div></div>'
+            f'<div class="mc"><div class="k">Avg position</div><div class="v maroon">{g["position"]:.1f}</div></div>'
+            '</div>')
+        rows_q = ''.join(
+            f'<div class="row"><span>{_esc(x["q"])}</span>'
+            f'<span class="muted">{x["clicks"]} clk · {x["impressions"]} imp · pos {x["position"]:.1f}</span></div>'
+            for x in g["queries"][:8]) or '<div class="muted">No search queries yet.</div>'
+        gsc_block = (gsc_cards
+                     + '<div class="card" style="margin-top:.7rem"><div class="k" style="margin-bottom:.3rem">Top search terms bringing people to you</div>'
+                     + rows_q + '</div>')
+    else:
+        gsc_block = f'<div class="card greyed">Search Console error — {_esc(seo.get("gsc_error") or "unknown")}</div>'
+
+    a = seo.get("ga4")
+    if a:
+        ga_cards = (
+            '<div class="mcs">'
+            f'<div class="mc"><div class="k">Visitors</div><div class="v green">{a["users"]:,}</div></div>'
+            f'<div class="mc"><div class="k">Sessions</div><div class="v green">{a["sessions"]:,}</div></div>'
+            f'<div class="mc"><div class="k">Conversions</div><div class="v green">{a["conversions"]:,}</div></div>'
+            '</div>')
+        rows_ch = ''.join(
+            f'<div class="row"><span>{_esc(c["name"])}</span>'
+            f'<span class="muted">{c["sessions"]} sessions · {c["users"]} visitors · {c["conversions"]} conv</span></div>'
+            for c in a["channels"][:8]) or '<div class="muted">No channel data.</div>'
+        if a["events"]:
+            rows_ev = ''.join(
+                f'<div class="row"><span>{_esc(ev["name"])}</span>'
+                f'<span class="ok">{ev["conversions"]} conversions</span></div>'
+                for ev in a["events"][:8])
+            ev_block = ('<div class="card" style="margin-top:.7rem"><div class="k" style="margin-bottom:.3rem">Key conversions</div>'
+                        + rows_ev + '</div>')
+        else:
+            ev_block = ''
+        ga_block = (ga_cards
+                    + '<div class="card" style="margin-top:.7rem"><div class="k" style="margin-bottom:.3rem">Where visitors come from</div>'
+                    + rows_ch + '</div>' + ev_block)
+    else:
+        ga_block = f'<div class="card greyed">Analytics error — {_esc(seo.get("ga4_error") or "unknown")}</div>'
+
+    return head + gsc_block + '<div style="height:.5rem"></div>' + ga_block
+
+
 # ── CEO COCKPIT ──────────────────────────────────────────────────────────────
 # One authenticated hub answering "is everything actually working?" alongside
 # live money / consultation numbers and a simple project task board. Every figure
@@ -1711,6 +1941,7 @@ _COCKPIT_STYLE = """<style>
   .addform { display:flex; gap:.5rem; margin-bottom:.9rem; }
   .addform input { flex:1; padding:.55rem .7rem; border:1px solid var(--line); border-radius:7px; font-size:.9rem; font-family:inherit; }
   .addform button { padding:.55rem 1.2rem; background:var(--maroon); color:var(--gold); border:none; border-radius:7px; font-weight:600; cursor:pointer; }
+  .subhead { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin:1.6rem 0 .6rem; }
   .greyed { opacity:.62; font-size:.86rem; line-height:1.8; }
   .src { font-size:.7rem; color:#9A9186; margin-top:.6rem; }
 </style>"""
@@ -1752,6 +1983,8 @@ def _render_cockpit() -> str:
         f'<span class="chip {"on" if on else "off"}">{"● " if on else "○ "}{name}</span>'
         for name, on in integrations
     )
+
+    seo_html = _render_seo_section(get_seo_cached())
 
     tasks = db_list_tasks()
     open_count = sum(1 for t in tasks if not t['done'])
@@ -1797,6 +2030,8 @@ def _render_cockpit() -> str:
   </div>
   <div class="src">source: live bookings.db &amp; consultations table</div>
 
+  {seo_html}
+
   <div class="seclabel">Project tasks</div>
   <div class="card">
     <form class="addform" method="post" action="/admin/tasks/add">
@@ -1809,7 +2044,6 @@ def _render_cockpit() -> str:
 
   <div class="seclabel">Not connected yet — shown honestly, never faked</div>
   <div class="card greyed">
-    SEO &amp; traffic — wiring next (Google data already flows via tools/google_pull.py)<br/>
     Social media — connect later<br/>
     Google Ads — pending Google Basic-access approval
   </div>
@@ -1820,6 +2054,16 @@ def _render_cockpit() -> str:
 @app.get("/admin/cockpit", response_class=HTMLResponse)
 async def admin_cockpit(_user: str = Depends(require_admin)):
     return HTMLResponse(_render_cockpit())
+
+
+@app.post("/admin/seo/refresh")
+async def admin_seo_refresh(_user: str = Depends(require_admin)):
+    from fastapi.responses import RedirectResponse
+    try:
+        await asyncio.to_thread(refresh_seo_cache, 28)
+    except Exception as e:
+        logger.warning("Manual SEO refresh failed: %s", e)
+    return RedirectResponse(url="/admin/cockpit", status_code=303)
 
 
 @app.post("/admin/tasks/add")
@@ -1865,3 +2109,5 @@ async def on_startup():
     asyncio.create_task(_reminder_loop())
     logger.info("Consultation reminder loop started (lead=%dm, poll=%ds, email=%s)",
                 REMINDER_LEAD_MINUTES, REMINDER_POLL_SECONDS, "on" if _email_ready() else "off")
+    asyncio.create_task(_seo_refresh_loop())
+    logger.info("SEO refresh loop started (creds=%s)", "on" if _seo_creds_ready() else "off")

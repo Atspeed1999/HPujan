@@ -4,3 +4,7 @@ python-dotenv>=1.0.1
 requests>=2.31.0
 pydantic>=2.6.4
 email-validator>=2.2.0
+# SEO/traffic panel: read Google Search Console + GA4 server-side (read-only).
+google-auth>=2.30.0
+google-api-python-client>=2.130.0
+google-analytics-data>=0.18.0
