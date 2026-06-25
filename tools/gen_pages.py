@@ -274,7 +274,7 @@ def build_hero(d):
         <a class="btn btn-gold" href="#" onclick="openPayModal('{slug}');return false;">Book &amp; Pay &middot; Pick Date &amp; Time</a>
         <a class="btn btn-ghost" href="#" onclick="openConsultModal('{cn}');return false;">Free Consultation</a>
       </div>
-      <div class="price">Dakshina <b>from {price}</b> &nbsp;&middot;&nbsp; {dur} &nbsp;&middot;&nbsp; all Samagri included</div>
+      <div class="price">Dakshina <b>from {price}</b> &nbsp;&middot;&nbsp; {dur} &nbsp;&middot;&nbsp; samagri coordinated on your consultation</div>
     </div>
     <div class="hero-img">
       <img src="{img}" alt="{alt}" onerror="this.onerror=null;this.src='https://homepujan.com/images/logo.png';this.style.objectFit='contain';this.style.background='#FFFEFB';"/>
@@ -320,7 +320,7 @@ def build_samagri(d):
     s = d["samagri"]
     cards = []
     if s["puja"]:
-        cards.append(_sam_card("Puja Samagri &mdash; we bring", s["puja"]))
+        cards.append(_sam_card("Puja Samagri (typical)", s["puja"]))
     # NOTE: 'extra' (non-standard) samagri blocks are deliberately NOT rendered —
     # in the notes they carry internal scholar/ops caveats, not customer content.
     if s["havan"]:
@@ -338,9 +338,9 @@ def build_samagri(d):
     elif len(cards) == 2:
         grid_style = ' style="grid-template-columns:1fr 1fr;max-width:720px"'
     return '''  <section class="block"><div class="wrap">
-    <div class="kicker">What we bring &amp; what you provide</div>
+    <div class="kicker">Samagri for your puja</div>
     <h2 class="title">Every item of Samagri, accounted for</h2>
-    <p class="lede">Our scholar arrives with all the puja Samagri. You only arrange a few household items and a clean space — nothing to source or worry about.</p>
+    <p class="lede">The exact samagri is confirmed with you on your free consultation, so nothing's missed — you'll know just what to keep ready before the day.</p>
     <div class="sam-grid"{gs}>
 {cards}
     </div>
@@ -386,7 +386,7 @@ def build_pricing(d):
     <div class="pcard">
       <div class="from">Dakshina from</div>
       <div class="amt">{price}</div>
-      <small>{dur} &middot; all Samagri included</small>
+      <small>{dur} &middot; samagri coordinated on your consultation</small>
       <a class="btn btn-gold" href="#" onclick="openPayModal('{slug}');return false;">Book &amp; Pay &middot; Pick Date &amp; Time</a>
       <a class="btn" href="#" onclick="openConsultModal('{cn}');return false;" style="background:var(--maroon);color:var(--cream);margin-top:10px">Book Free Consultation</a>
       <div class="note">Final dakshina depends on Sankalpa, scale &amp; travel. Confirmed before you commit.</div>
@@ -496,7 +496,7 @@ def make_data(slug, fm, sections, card):
             "It starts from ₹{:,} and varies with the scale of the ceremony, your specific Sankalpa, and the scholar's travel. The exact amount is always confirmed during your free consultation — never any hidden fees.".format(price),
         ))
 
-    meta_desc = "Book {} at home — {} From ₹{:,}, all Samagri included, performed by Gurukul scholars.".format(
+    meta_desc = "Book {} at home — {} From ₹{:,}, samagri coordinated on your consultation, performed by Gurukul scholars.".format(
         name, first_sentences(oneliner, 1).rstrip("."), price)
     meta_desc = collapse(meta_desc)[:300]
     og_desc = collapse(oneliner)
@@ -515,7 +515,7 @@ def make_data(slug, fm, sections, card):
         "why": why, "timing": timing,
         "included": included or [
             "A certified Gurukul scholar, travelling to your home",
-            "All premium Samagri for the puja",
+            "Samagri guidance, coordinated on your consultation",
             "Aarti and post-ritual prasad",
             "A 15-minute pre-ritual consultation",
         ],

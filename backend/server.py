@@ -749,8 +749,8 @@ REMINDER_POLL_SECONDS = int(os.environ.get('REMINDER_POLL_SECONDS', '180') or '1
 
 # Backend-authoritative price table. Frontend sends service_id only; amount lives here.
 SERVICE_CATALOG = {
-    'satyanarayan':  {'name': 'Satya Narayan Katha',           'price_paise':  110000},
-    'gayatri':       {'name': 'Gayatri Jaap',                  'price_paise':  110000},
+    'satyanarayan':  {'name': 'Satya Narayan Katha',           'price_paise':  210000},
+    'gayatri':       {'name': 'Gayatri Jaap',                  'price_paise':  210000},
     'shaanti':       {'name': 'Shaanti Hawan',                 'price_paise':  210000},
     'vastu':         {'name': 'Vastu Dosh Nivaran',            'price_paise': 1000000},
     'kaalsarp':      {'name': 'Kaal Sarp Puja',                'price_paise':  510000},
@@ -761,12 +761,12 @@ SERVICE_CATALOG = {
     'karyavikas':    {'name': 'Karya Vikas Pujan',             'price_paise': 1000000},
     'kuberlakshmi':  {'name': 'Dhan Kuber Lakshmi Aradhana',   'price_paise':  510000},
     'sundarkand':    {'name': 'Sundarkand Path',               'price_paise': 1000000},
-    'mrityunjay':    {'name': 'Maha Mrityunjay Jaap',          'price_paise':  110000},
+    'mrityunjay':    {'name': 'Maha Mrityunjay Jaap',          'price_paise':  210000},
     'karnavedh':     {'name': 'Karna Ved Sanskaar',            'price_paise':  510000},
-    'agnihotra':     {'name': 'Agnihotra',                     'price_paise':  110000},
+    'agnihotra':     {'name': 'Agnihotra',                     'price_paise':  210000},
     'brahmayajj':    {'name': 'Brahmayajj',                    'price_paise':  210000},
     'gaudaan':       {'name': 'Gau Daan',                      'price_paise':  210000},
-    'chhapanbhog':   {'name': 'Chhapan Bhog',                  'price_paise':  110000},
+    'chhapanbhog':   {'name': 'Chhapan Bhog',                  'price_paise':  210000},
     'janamdiwas':    {'name': 'Janam Diwas Hawan',             'price_paise':  210000},
     'namkaran':      {'name': 'Naam Karan',                    'price_paise':  210000},
     'vivah':         {'name': 'Vivah Sanskaar',                'price_paise': 1100000},
@@ -775,7 +775,7 @@ SERVICE_CATALOG = {
     'lagan':         {'name': 'Lagan',                         'price_paise':  210000},
     'vedaarambh':    {'name': 'Ved Aarambh',                   'price_paise': 1100000},
     'pitrapujan':    {'name': 'Pitra Dosh / Pitra Pujan',      'price_paise':  510000},
-    'antiyeshti':    {'name': 'Antiyeshti',                    'price_paise':  110000},
+    'antiyeshti':    {'name': 'Antiyeshti',                    'price_paise':  210000},
     'grahpravesh':   {'name': 'Grah Pravesh',                  'price_paise':  210000},
     'bhoomipujan':   {'name': 'Bhoomi Pujan',                  'price_paise':  210000},
 }
