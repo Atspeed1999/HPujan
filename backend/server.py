@@ -2044,8 +2044,7 @@ def _render_cockpit() -> str:
 
   <div class="seclabel">Not connected yet — shown honestly, never faked</div>
   <div class="card greyed">
-    Social media — connect later<br/>
-    Google Ads — set up &amp; conversions tracking live (begin_checkout, purchase, lead imported into Ads). API key not pasted into this server yet — only needed to show ad stats on this dashboard.
+    Social media — connect later
   </div>
 </main>
 </body></html>"""
